@@ -10,6 +10,7 @@ import Helpers._
 import _root_.net.liftweb.mapper.{DB, ConnectionManager, Schemifier, DefaultConnectionIdentifier, StandardDBVendor}
 import _root_.java.sql.{Connection, DriverManager}
 import _root_.com.draga.bsg.model._
+import _root_.com.draga.gallery.model._
 
 
 /**Site
@@ -26,8 +27,9 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("com.draga.bsg")
+    LiftRules.addToPackages("com.draga.gallery")
     Schemifier.schemify(true, Log.infoF _, User,
-			MechType, MechVariant, ImageCategory, ImageBlob, ImageInfo)
+			ImageCategory, ImageBlob, ImageInfo)
 
     // Build SiteMap
     val entries =
