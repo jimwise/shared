@@ -1,0 +1,18 @@
+<lift:surround with="default" at="content">
+  <p>
+    New Category:
+    <lift:Image.newCategory form="post">
+      <nc:name />
+      <nc:create />
+    </lift:Image.newCategory>
+    <table>
+      <lift:Image.editCategories form="post" multipart="true">
+	<tr>
+	  <td><ec:name /></td>
+	  <td><ec:save /></td>
+	  <td><ec:delete /></td>
+	</tr>
+      </lift:Image.editCategories>
+    </table>
+  </p>
+</lift:surround>
