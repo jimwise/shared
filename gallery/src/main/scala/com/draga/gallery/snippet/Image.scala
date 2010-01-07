@@ -65,7 +65,6 @@ class Image extends StatefulSnippet {
   }
 
   def doCategories(in: NodeSeq): NodeSeq = {
-    val ch = ImageCategory.choices
     bind("c", in, 
 	 "categories" ->
 	   SHtml.select(ImageCategory.choices, S.param("category"),
