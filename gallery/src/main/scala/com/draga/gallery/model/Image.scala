@@ -15,15 +15,14 @@ class ImageCategory  extends LongKeyedMapper[ImageCategory] with IdPK {
   def getSingleton = ImageCategory
  
   object name extends MappedPoliteString(this, 128) {
+    override def dbIndexed_? = true
     override def defaultValue = ""
 
-    private def noSlashes(s: String) : List[FieldError] = {
-      Log.error("noSlashes called")
+    private def noSlashes(s: String) : List[FieldError] =
       if (s.contains("/"))
 	List(FieldError(this, Text("Category name \"" + s + "\" may not contain \"/\"")))
       else
 	Nil
-    }
 
     override def validations =
       valMinLen(1, "Category name must not be empty") _ ::
@@ -62,7 +61,21 @@ class ImageInfo extends LongKeyedMapper[ImageInfo] with IdPK {
   object mimeType extends MappedPoliteString(this, 64)
   object name extends MappedPoliteString(this, 256) {
     override def dbIndexed_? = true
+    override def defaultValue = ""
+
+    private def noSlashes(s: String) : List[FieldError] =
+      if (s.contains("/"))
+	List(FieldError(this, Text("Image name \"" + s + "\" may not contain \"/\"")))
+      else
+	Nil
+
+    override def validations =
+      valMinLen(1, "Image name must not be empty") _ ::
+      valUnique("Image name must be unique") _ ::
+      noSlashes _ ::
+      super.validations
   }
+
   object category extends MappedLongForeignKey(this, ImageCategory)
   object blob extends MappedLongForeignKey(this, ImageBlob)
 

@@ -37,14 +37,22 @@ class Image extends StatefulSnippet {
       case x if x.length == 0 =>
 	S.error("Empty file uploaded")
       case x =>
-        val blob = ImageBlob.create.image(x).saveMe
-	ImageInfo.create
+        val blob = ImageBlob.create.image(x)
+	val img = ImageInfo.create
 	  .name(fp.fileName)
 	  .mimeType(fp.mimeType)
 	  .category(ImageCategory.byName(category))
-	  .blob(blob)
-	  .saveMe
-	S.notice("Thanks for the upload")
+	// we don't use saveImage, as we don't want to save the blob if we don't
+        // validate, so a bit of a two-step is needed
+	img.validate match {
+	  case Nil =>
+	    blob.saveMe
+	    img.blob(blob)
+	    img.saveMe
+	    S.notice("Thanks for the upload")
+	  case err =>
+	    S.error(err)
+	}
     }
   }
 
@@ -68,6 +76,17 @@ class Image extends StatefulSnippet {
 	S.error(err)
     }
   }
+
+  private def saveImage (i: ImageInfo): Unit = {
+    i.validate match {
+      case Nil =>
+	i.saveMe
+	S.notice("Changes saved")
+      case err =>
+	S.error(err)
+    }
+  }
+
 
   def doCategories(in: NodeSeq): NodeSeq = {
     bind("c", in, 
@@ -103,7 +122,6 @@ class Image extends StatefulSnippet {
 	 "category" -> SHtml.select(ch, Full(category.toString),
 				    {c : String => category(c)}),
 	 "file" -> SHtml.fileUpload(saveFile _))
-	// XXX submit, to validate
   }
 
   def doShowAll(in: NodeSeq): NodeSeq = {
@@ -143,8 +161,9 @@ class Image extends StatefulSnippet {
 		 "category" -> SHtml.select(ImageCategory.choices, 
 					    i.category.obj.map(_.name.toString), 
 					    {s => i.category(ImageCategory.byName(s))}),
-		 "submit" -> SHtml.submit("Save Changes", {() => i.saveMe}), // XXX validate?  S.notice?
-		 "delete" -> SHtml.link("/gallery/images/", {() => deleteImage(i)}, Text("delete")),
+		 "submit" -> SHtml.submit("Save Changes", {() => saveImage(i)}),
+		 "delete" -> SHtml.link("/gallery/images/",
+					{() => deleteImage(i)}, Text("delete")),
 		 AttrBindParam("imgUrl", i.url, "src")
 	       )
 	  case _ => 
