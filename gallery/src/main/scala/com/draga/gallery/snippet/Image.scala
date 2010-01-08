@@ -59,9 +59,14 @@ class Image extends StatefulSnippet {
     S.notice("Category deleted")
   }
 
-  private def createCategory(s: String): Unit = {
-    ImageCategory.create.name(s).saveMe
-    S.notice("Category created")
+  private def saveCategory(i: ImageCategory): Unit = {
+    i.validate match {
+      case Nil =>
+	i.saveMe
+	S.notice("Changes saved")
+      case err =>
+	S.error(err)
+    }
   }
 
   def doCategories(in: NodeSeq): NodeSeq = {
@@ -77,18 +82,20 @@ class Image extends StatefulSnippet {
       bind("ec", in, 
 	   "name" -> i.name.toForm,
 	   // XXX XXX need to validate (see below)
-	   "save" -> SHtml.submit("Save Changes", {() => i.saveMe}),
+	   "save" -> SHtml.submit("Save Changes", {() => saveCategory(i)}),
 	   "delete" -> SHtml.link("/gallery/categories",
 				  {() => i.deleteWithImages},
 				  Text("delete"))
 	 )})
 
-  def doNewCategory(in: NodeSeq): NodeSeq =
+  def doNewCategory(in: NodeSeq): NodeSeq = {
+    var newCat = ImageCategory.create
     bind("nc", in,
 	 // XXX XXX need to validate (at least no /)
-	 "name" -> SHtml.text("name", createCategory _),
-	 "create" -> SHtml.submit("Create", {() => })
+	 "name" -> newCat.name.toForm,
+	 "create" -> SHtml.submit("Create", {() => saveCategory(newCat)})
        )
+  }
  
   def doUpload(in: NodeSeq): NodeSeq = {
     val ch = ImageCategory.choices

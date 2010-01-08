@@ -4,6 +4,7 @@ import _root_.net.liftweb.mapper._
 import _root_.net.liftweb.util._
 import _root_.net.liftweb.common._
 import _root_.net.liftweb.http._
+import _root_.net.liftweb.util._
 import Helpers._
 import _root_.scala.xml._
 
@@ -13,7 +14,23 @@ import _root_.scala.xml._
 class ImageCategory  extends LongKeyedMapper[ImageCategory] with IdPK {
   def getSingleton = ImageCategory
  
-  object name extends MappedPoliteString(this, 128)
+  object name extends MappedPoliteString(this, 128) {
+    override def defaultValue = ""
+
+    private def noSlashes(s: String) : List[FieldError] = {
+      Log.error("noSlashes called")
+      if (s.contains("/"))
+	List(FieldError(this, Text("Category name \"" + s + "\" may not contain \"/\"")))
+      else
+	Nil
+    }
+
+    override def validations =
+      valMinLen(1, "Category name must not be empty") _ ::
+      valUnique("Category name must be unique") _ ::
+      noSlashes _ ::
+      super.validations
+  }
 
   def deleteWithImages {
     ImageInfo.findAll(By(ImageInfo.category, this)).map(_.deleteWithBlob)
