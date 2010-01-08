@@ -40,8 +40,10 @@ class ImageCategory  extends LongKeyedMapper[ImageCategory] with IdPK {
 object ImageCategory extends ImageCategory with LongKeyedMetaMapper[ImageCategory] {
   def choices = ImageCategory.findAll.map({ i => (i.name.toString, i.name.toString) })
   def default : Long = ImageCategory.find().map(_.id.toLong).openOr(-1) // -1 only if no cats yet
-  def byName (s: String) : Long =
-    ImageCategory.find(By(ImageCategory.name, s)).map(_.id.toLong).openOr(ImageCategory.default)
+  def byName (s: String) : Box[Long] =
+    ImageCategory.find(By(ImageCategory.name, s)).map(_.id.toLong)
+  def byId (i: Long) : Box[String] =
+    ImageCategory.findByKey(i).map(_.name.is)
 }
 
 class ImageBlob extends LongKeyedMapper[ImageBlob] with IdPK {
@@ -76,7 +78,13 @@ class ImageInfo extends LongKeyedMapper[ImageInfo] with IdPK {
       super.validations
   }
 
-  object category extends MappedLongForeignKey(this, ImageCategory)
+  object category extends MappedLongForeignKey(this, ImageCategory) {
+    override def _toForm = 
+      Full(SHtml.select(ImageCategory.choices, 
+			ImageCategory.byId(this),
+			{f => set(ImageCategory.byName(f).openOr(ImageCategory.default))}))
+  }
+
   object blob extends MappedLongForeignKey(this, ImageBlob)
 
   def deleteWithBlob {

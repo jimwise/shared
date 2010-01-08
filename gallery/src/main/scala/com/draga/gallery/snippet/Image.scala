@@ -41,7 +41,7 @@ class Image extends StatefulSnippet {
 	val img = ImageInfo.create
 	  .name(fp.fileName)
 	  .mimeType(fp.mimeType)
-	  .category(ImageCategory.byName(category))
+	  .category(ImageCategory.byName(category).openOr(ImageCategory.default))
 	// we don't use saveImage, as we don't want to save the blob if we don't
         // validate, so a bit of a two-step is needed
 	img.validate match {
@@ -100,7 +100,6 @@ class Image extends StatefulSnippet {
     ImageCategory.findAll.flatMap({i =>
       bind("ec", in, 
 	   "name" -> i.name.toForm,
-	   // XXX XXX need to validate (see below)
 	   "save" -> SHtml.submit("Save Changes", {() => saveCategory(i)}),
 	   "delete" -> SHtml.link("/gallery/categories",
 				  {() => i.deleteWithImages},
@@ -110,7 +109,6 @@ class Image extends StatefulSnippet {
   def doNewCategory(in: NodeSeq): NodeSeq = {
     var newCat = ImageCategory.create
     bind("nc", in,
-	 // XXX XXX need to validate (at least no /)
 	 "name" -> newCat.name.toForm,
 	 "create" -> SHtml.submit("Create", {() => saveCategory(newCat)})
        )
@@ -130,8 +128,6 @@ class Image extends StatefulSnippet {
 	"showAll", ns, 
 	"name" -> i.name.is,
 	"link" ->
-	  // {n: NodeSeq => SHtml.link("/gallery/image/" + i.id.is,
-	  // 			    {() => }, doBinding(n, i))},
 	  {n: NodeSeq => <a href={"/gallery/image/" + i.id.is}>{doBinding(n, i)}</a>},
 	// right now, we can only view one category, so redundant, but keep for now...
 	"category" -> 
@@ -144,7 +140,7 @@ class Image extends StatefulSnippet {
     // XXX XXX better yet, can we not partial match, and let it fall through? In Boot?)...
     val catName = S.param("category").openOr("")
     ImageInfo.findAll(
-      By(ImageInfo.category, ImageCategory.byName(catName)),
+      By(ImageInfo.category, ImageCategory.byName(catName).openOr(ImageCategory.default)),
       OrderBy(ImageInfo.name, Ascending)
     ).flatMap({i => doBinding(in, i)})
   }
@@ -155,12 +151,8 @@ class Image extends StatefulSnippet {
 	ImageInfo.findByKey(selected) match {
 	  case Full(i) =>
 	    bind("showOne", in,
-		 // "name" -> SHtml.ajaxText(i.name, {s => Noop},)
 		 "name" -> i.name.toForm,
-		 // "category" -> i.category.obj.map(_.name.toString).openOr("-"),
-		 "category" -> SHtml.select(ImageCategory.choices, 
-					    i.category.obj.map(_.name.toString), 
-					    {s => i.category(ImageCategory.byName(s))}),
+		 "category" -> i.category.toForm,
 		 "submit" -> SHtml.submit("Save Changes", {() => saveImage(i)}),
 		 "delete" -> SHtml.link("/gallery/images/",
 					{() => deleteImage(i)}, Text("delete")),
