@@ -10,8 +10,13 @@ package com.draga.blackjack.BlackJack
 
 import com.draga.blackjack.Cards._
 
-object BlackJack {
-  def value (c: Card) : Int = c.value match {
+object CardWrapper {
+   implicit def wrapCard(c: Card) = new CardWrapper(c)
+}
+import CardWrapper._
+
+class CardWrapper (val card: Card) {
+  def value : Int = card.v match {
     case Ace => 1
     case Two => 2
     case Three => 3
@@ -92,10 +97,10 @@ class Hand (d : Boolean) {
   // return all possible values for a hand, considering aces
 
   def values : List[Int] = {
-    var v = cards.map(c => BlackJack.value(c)).reduceLeft((a, b) => a + b)
+    var v = cards.map(c => c.value).reduceLeft((a, b) => a + b)
     var handval = List(v)
 
-    def isAce(c : Card) : Boolean = (BlackJack.value(c) == 1)
+    def isAce(c : Card) : Boolean = (c.value == 1)
 
     for (x <- cards.filter(isAce)) {
       handval = handval.flatMap(a => List(a, a+10))

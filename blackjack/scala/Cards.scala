@@ -28,9 +28,9 @@ final case object Jack extends value
 final case object Queen extends value
 final case object King extends value
 
-class Card (s: suit, v: value) {
-  val suit = s
-  val value = v
+class Card (su: suit, va: value) {
+  val s = su
+  val v = va
   override def toString = v + " of " + s
 }
 
