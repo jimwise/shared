@@ -10,8 +10,8 @@ package com.draga.blackjack.BlackJack
 
 import com.draga.blackjack.Cards._
 
-class Card (s : suit, v : value) extends AbstractCard (s, v) {
-  override def value : Int = v match {
+object BlackJack {
+  def value (c: Card) : Int = c.value match {
     case Ace => 1
     case Two => 2
     case Three => 3
@@ -26,12 +26,6 @@ class Card (s : suit, v : value) extends AbstractCard (s, v) {
     case Queen => 10
     case King => 10
   }
-}
-
-object Shoe extends AbstractShoe[Card] {
-  override val decksInShoe = 3
-  override val onedeck = 
-    for (s <- suits; v <- values) yield new Card(s,v)
 }
 
 class Hand (d : Boolean) {
@@ -98,10 +92,10 @@ class Hand (d : Boolean) {
   // return all possible values for a hand, considering aces
 
   def values : List[Int] = {
-    var v = cards.map(c => c.value).reduceLeft((a, b) => a + b)
+    var v = cards.map(c => BlackJack.value(c)).reduceLeft((a, b) => a + b)
     var handval = List(v)
 
-    def isAce(c : Card) : Boolean = (c.value == 1)
+    def isAce(c : Card) : Boolean = (BlackJack.value(c) == 1)
 
     for (x <- cards.filter(isAce)) {
       handval = handval.flatMap(a => List(a, a+10))

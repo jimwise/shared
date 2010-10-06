@@ -28,26 +28,26 @@ final case object Jack extends value
 final case object Queen extends value
 final case object King extends value
 
-abstract class AbstractCard (s: suit, v: value) {
+class Card (s: suit, v: value) {
+  val suit = s
+  val value = v
   override def toString = v + " of " + s
-  def value : Int
 }
 
-abstract class AbstractShoe[A <: AbstractCard] {
-  val decksInShoe : Int
-  // XXX should use List (see draw!), but need to rewrite shuffle
-  private var cards : Array[A] = Array()
-  private val rand = new scala.util.Random();
-
+object Cards {
   val suits = Array(Hearts, Diamonds, Clubs, Spades)
   val values = Array(Ace, Two, Three, Four, Five, Six, Seven,
                              Eight, Nine, Ten, Jack, Queen, King)
+  val oneDeck: Array[Card] = for (s <- suits; v <- values) yield new Card(s,v)
+}
 
-  val onedeck : Array[A]  
-  // XXX XXX XXX originally, this was a for-comprehension:
-  //    for (s <- suits; v <- values) yield new A(s,v)
-  // but scala doesn't seem to allow this to be parametrized
-  // so child classes must override
+object Shoe {
+  // XXX should be configurable
+  val decksInShoe = 6
+  // XXX should use List (see draw!), but need to rewrite shuffle
+  private var cards : Array[Card] = Array()
+  private val rand = new scala.util.Random();
+
 
   //    Shuffle due to John Lees-Miller at
   //      http://jdleesmiller.blogspot.com/2008/12/shuffles-surprises-and-scala.html
@@ -65,14 +65,13 @@ abstract class AbstractShoe[A <: AbstractCard] {
   def shuffle : Unit = {
     var i : Int = 0
     cards = Array()
-    while (i < decksInShoe) {
-      cards = cards ++ onedeck
-      i+=1
+    for (i <- 1.to(decksInShoe)) {
+      cards = cards ++ Cards.oneDeck
     }
     fisherYatesShuffle(cards)
   }
 
-  def draw : A = {
+  def draw : Card = {
     if (cards.isEmpty) shuffle
 
     val c = cards.first
