@@ -43,7 +43,7 @@ object Main {
     var respln = Console.readLine
     if (respln != "")
       resp = respln(0)
-    resp.toLowerCase
+    resp.toLower
   }
   def getresp(prompt1 : String, prompt2 : String, allowed : List[Char], 
 	      default : Char) : Char = {
@@ -73,7 +73,7 @@ object Main {
   def getbet(min: Double, table_limit: Double) : Double = {
     // XXX check actual min/table_limit rules
     // XXX XXX XXX number formatting
-    val limit = Math.min(table_limit, player_purse)
+    val limit = math.min(table_limit, player_purse)
     var resp = Console.readLine(
       "Please enter a bet (min = $%.2f, limit = $%.2f) [$%.2f] ",
       min, limit, player_last_bet)

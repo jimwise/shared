@@ -97,7 +97,7 @@ class Hand (d : Boolean) {
   // return all possible values for a hand, considering aces
 
   def values : List[Int] = {
-    var v = cards.map(c => c.value).reduceLeft((a, b) => a + b)
+    var v = cards.map(_.value).reduceLeft((a, b) => a + b)
     var handval = List(v)
 
     def isAce(c : Card) : Boolean = (c.value == 1)
@@ -105,13 +105,13 @@ class Hand (d : Boolean) {
     for (x <- cards.filter(isAce)) {
       handval = handval.flatMap(a => List(a, a+10))
     }
-    handval.sort((a,b) => a < b).removeDuplicates
+    handval.sortWith((a,b) => a < b).distinct
   }
 
   // return the best non-busted value for a hand, considering aces
   // returns zero if hand is busted
   def value : Int = {
     val good = values.filter(21 >=)
-    if (good == List()) 0 else good.reduceLeft(Math.max)
+    if (good == List()) 0 else good.reduceLeft(math.max)
   }
 }

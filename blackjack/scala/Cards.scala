@@ -74,7 +74,7 @@ object Shoe {
   def draw : Card = {
     if (cards.isEmpty) shuffle
 
-    val c = cards.first
+    val c = cards.head
     cards = cards.drop(1)
     c
   }
