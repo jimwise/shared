@@ -46,7 +46,6 @@ object Shoe {
   private var cards : Array[Card] = Array()
   private val rand = new scala.util.Random();
 
-
   //    Shuffle due to John Lees-Miller at
   //      http://jdleesmiller.blogspot.com/2008/12/shuffles-surprises-and-scala.html
 
