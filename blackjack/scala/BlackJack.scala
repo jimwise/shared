@@ -104,7 +104,7 @@ class Hand (d : Boolean) {
     for (x <- cards.filter(_.isAce)) {
       handval = handval.flatMap(a => List(a, a+10))
     }
-    handval.sortWith((a,b) => a < b).distinct
+    handval.sortWith(_ < _).distinct
   }
 
   // return the best non-busted value for a hand, considering aces
