@@ -26,10 +26,7 @@ class CardWrapper (val card: Card) {
     case Seven => 7
     case Eight => 8
     case Nine => 9
-    case Ten => 10
-    case Jack => 10
-    case Queen => 10
-    case King => 10
+    case Ten | Jack | Queen | King => 10
   }
   def isAce : Boolean = (card.v == Ace)
 }
@@ -98,7 +95,7 @@ class Hand (d : Boolean) {
   // return all possible values for a hand, considering aces
 
   def values : List[Int] = {
-    var v = cards.map(_.value).reduceLeft((a, b) => a + b)
+    var v = cards.map(_.value).reduceLeft(_ + _)
     var handval = List(v)
 
     for (x <- cards.filter(_.isAce)) {
