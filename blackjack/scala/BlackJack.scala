@@ -31,6 +31,7 @@ class CardWrapper (val card: Card) {
     case Queen => 10
     case King => 10
   }
+  def isAce : Boolean = (card.v == Ace)
 }
 
 class Hand (d : Boolean) {
@@ -100,9 +101,7 @@ class Hand (d : Boolean) {
     var v = cards.map(_.value).reduceLeft((a, b) => a + b)
     var handval = List(v)
 
-    def isAce(c : Card) : Boolean = (c.value == 1)
-
-    for (x <- cards.filter(isAce)) {
+    for (x <- cards.filter(_.isAce)) {
       handval = handval.flatMap(a => List(a, a+10))
     }
     handval.sortWith((a,b) => a < b).distinct
