@@ -44,7 +44,7 @@ object Shoe {
   val decksInShoe = 6
   // XXX should use List (see draw!), but need to rewrite shuffle
   private var cards : Array[Card] = Array()
-  private val rand = new scala.util.Random();
+  private val rand = new util.Random();
 
   //    Shuffle due to John Lees-Miller at
   //      http://jdleesmiller.blogspot.com/2008/12/shuffles-surprises-and-scala.html
@@ -62,8 +62,8 @@ object Shoe {
   def shuffle : Unit = {
     var i : Int = 0
     cards = Array()
-    for (i <- 1.to(decksInShoe)) {
-      cards = cards ++ Cards.oneDeck
+    for (i <- 1 to decksInShoe) {
+      cards ++= Cards.oneDeck
     }
     fisherYatesShuffle(cards)
   }
