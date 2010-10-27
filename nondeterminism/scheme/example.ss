@@ -2,7 +2,6 @@
 (import (draga nondeterminism))
 
 ;; Choose 2 example  (see _On Lisp_, sec, 22.1 (pp. 286-289)
-
 (define (choose-2)
   (let ([x (choose '(1 2))])
     (if (odd? x) (fail) x)))
