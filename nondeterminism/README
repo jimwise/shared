@@ -1,0 +1,15 @@
+This directory contains two implementations of choose/fail nondeterministic
+programming with branch cut described in Chapter 22 of Paul Graham's _On
+Lisp_[1].
+
+The directory `scheme' contains Paul Graham's scheme implementation, with a
+few tweaks to bring it into an R6RS world.
+
+The directory `c' contains choose/fail and the scheme examples demonstrating
+its use reworked in c, using preprocessor macros and setjmp/longjmp.
+Mark/cut is not yet implemented.
+
+  [1] Graham, Paul, _On Lisp_, Prentice Hall, 1993, ISBN 0130305529.
+      Available online at
+
+      	http://www.paulgraham.com/onlisp.html

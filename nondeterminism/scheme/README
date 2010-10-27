@@ -1,0 +1,8 @@
+This directory contains the scheme implementation of choose/fail
+nondeterministic programming with branch cut described in Chapter 22 of Paul
+Graham's _On Lisp_, along with the scheme examples of its use given therein.
+
+I've done nothing major with this code, just updated a few idioms, and
+bundled it up as an R6RS compatible library module.
+
+I've tested this with Petite Chez Scheme 8.0.

@@ -1,0 +1,12 @@
+This directory contains a implementation of choose/fail nondeterministic
+programming, as described in Chapter 22 of Paul Graham's _On
+Lisp_, along with two of the scheme examples given therein... in C.
+
+choose and fail are implemented as pre-processor macros CHOOSE() and
+FAIL().  They have one important limitation as compared to their scheme
+counterparts -- if the function which has called CHOOSE() returns, a
+subsequent FAIL() produces an undefined result.  In this sense, this
+implementation is closer to the Common Lisp choose-bind implementation given
+in section 22.4.
+
+Branch cuts are not yet implemented.
