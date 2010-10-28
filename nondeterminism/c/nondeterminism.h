@@ -7,31 +7,34 @@ extern "C" {
 
 #include <setjmp.h>
 
-  struct _path {
+  struct nd_path {
     int t;
     jmp_buf j;
   };
 
-  extern struct _path _paths[];
-  extern int _currpath;
+  extern struct nd_path nd_paths[];
+  extern int nd_currpath;
+  extern int nd_debug;
 
   void nd_reset (void);
 
   /* Must be a macro, as we cannot longjmp into a function we've returned from  */
   /* chcs is T[n], x gets choice */
-#define choose(x, n, chcs)					\
-  {								\
-    int _chc = n - 1;						\
-    _currpath++;						\
-    _paths[_currpath].t = 0;					\
-    setjmp(_paths[_currpath].j);				\
-    printf("CHOOSE (%x): _chc = %d\n", &_chc, _chc);		\
-    if (_chc == -1) {						\
-      printf ("empty choices -- failing\n");			\
-      _currpath--;						\
-      fail();							\
-    }								\
-    x = chcs[_chc--];						\
+#define choose(x, n, chcs)						\
+  {									\
+    int nd_chc = n - 1;							\
+    nd_currpath++;							\
+    nd_paths[nd_currpath].t = 0;					\
+    setjmp(nd_paths[nd_currpath].j);					\
+    if (nd_debug)							\
+      printf("CHOOSE (%x): _chc = %d\n", &nd_chc, nd_chc);		\
+    if (nd_chc == -1) {							\
+      if (nd_debug)							\
+	printf ("CHOOSE (%x): empty choices -- failing\n", &nd_chc);	\
+      nd_currpath--;							\
+      fail();								\
+    }									\
+    x = chcs[nd_chc--];							\
   }
 
   void fail (void);

@@ -5,32 +5,38 @@
 #define MAX_DEPTH 100		/* could move to linked list later */
 #define CUT_MARKER -1
 
-struct _path _paths[MAX_DEPTH];
-int _currpath = -1;
+struct nd_path nd_paths[MAX_DEPTH];
+int nd_currpath = -1;
+int nd_debug = 0;
 
 void
 nd_reset (void) {
-  _currpath = -1;
+  nd_currpath = -1;
 }
 
 void
 fail (void) {
-  /* printf("FAIL: _currpath = %d\n", _currpath); */
-  while (_paths[_currpath].t == CUT_MARKER)
-    _currpath--;
-  if (_currpath > -1)
-    longjmp(_paths[_currpath].j, -1);
+  if (nd_debug)
+    printf("FAIL: nd_currpath = %d\n", nd_currpath);
+  while (nd_paths[nd_currpath].t == CUT_MARKER)
+    nd_currpath--;
+  if (nd_currpath > -1)
+    longjmp(nd_paths[nd_currpath].j, -1);
+  else {
+    printf("FAIL\n");
+    exit(0);
+  }
 }
   
 void
 mark (void) {
-  _paths[++_currpath].t = CUT_MARKER;
+  nd_paths[++nd_currpath].t = CUT_MARKER;
 }
 
 void
 cut (void) {
-  while ((_currpath > -1) && (_paths[_currpath].t != CUT_MARKER))
-    _currpath--;
-  /* _paths has now been unwound back to before last _cut_marker */
+  while ((nd_currpath > -1) && (nd_paths[nd_currpath].t != CUT_MARKER))
+    nd_currpath--;
+  /* nd_paths has now been unwound back to before last _cut_marker */
 }
 
