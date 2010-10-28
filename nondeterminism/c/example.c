@@ -9,9 +9,9 @@ void
 choose_2 (void) {
   int x;
   int ch[] = {2, 1};
-  CHOOSE(x, 2, ch);
+  choose(x, 2, ch);
   if (x != 2) {
-    FAIL();
+    fail();
   }
   printf("we chose: %d\n", x);
 }
@@ -21,12 +21,12 @@ void
 parlor_trick (int sum) {
   int x1, x2;
   int ch[] = {0, 1, 2, 3, 4, 5};
-  CHOOSE(x1, 6, ch);
-  CHOOSE(x2, 6, ch);
+  choose(x1, 6, ch);
+  choose(x2, 6, ch);
   if ((x1 + x2) == sum) {
     printf("%d is the sum of %d and %d\n", sum, x1, x2);
   } else {
-    FAIL();
+    fail();
   }
 }
 
@@ -45,24 +45,25 @@ find_boxes (void) {
   int box, store;
   int oneortwo[] = {2, 1};
 
-  CHOOSE(city, 3, cities);
-  MARK();
-  CHOOSE(store, 2, oneortwo);
-  CHOOSE(box, 2, oneortwo);
+  choose(city, 3, cities);
+  mark();
+  choose(store, 2, oneortwo);
+  choose(box, 2, oneortwo);
   printf("(%s %d %d) ", city, store, box);
   if (coinp(city, store, box)) {
-    CUT();
+    cut();
     printf("C ");
   }
-  FAIL();
+  fail();
+  printf("\n");
 }
 
 int
 main (int argc, char **argv) {
   choose_2();
-  ND_RESET();
+  nd_reset();
   parlor_trick(7);
-  ND_RESET();
+  nd_reset();
   find_boxes();
   exit(0);
 }

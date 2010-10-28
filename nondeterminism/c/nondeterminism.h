@@ -7,51 +7,35 @@ extern "C" {
 
 #include <setjmp.h>
 
-#define ND_MAX_DEPTH 100
+  struct _path {
+    int t;
+    jmp_buf j;
+  };
 
-/*
- * WARNING:  Implementation specific:                                        
- *  we assume an uninitialized jmpbuf is != any initialized jmpbuf!
- */
-int _currpath = -1;
-jmp_buf _paths[ND_MAX_DEPTH];
-jmp_buf _cut_marker;
+  extern struct _path _paths[];
+  extern int _currpath;
 
-#define ND_RESET() _currpath = -1; /* setjmp(_paths[0]); _currpath = 0; */
+  void nd_reset (void);
 
+  /* Must be a macro, as we cannot longjmp into a function we've returned from  */
   /* chcs is T[n], x gets choice */
-#define CHOOSE(x, n, chcs)			\
+#define choose(x, n, chcs)			\
   {						\
-    /* printf("CHOOSE\n"); */			\
     int _chc = n - 1;				\
-    setjmp(_paths[++_currpath]);		\
-    /* printf("_chc = %d\n", _chc); */		\
+    _currpath++;				\
+    _paths[_currpath].t = 0;			\
+    setjmp(_paths[_currpath].j);		\
+    printf("CHOOSE: _chc = %d\n", _chc);	\
     if (_chc == -1) {				\
-      --_currpath;				\
-      FAIL();					\
+      _currpath--;				\
+      fail();					\
     }						\
     x = chcs[_chc--];				\
   }
-  
-#define FAIL()						\
-  {							\
-    /* printf("FAIL: _currpath = %d\n", _currpath); */	\
-    if (_paths[_currpath] == _cut_marker) {		\
-      _currpath--;					\
-    }							\
-    if (_currpath > -1) {				\
-      longjmp(_paths[_currpath], -1);			\
-    }							\
-  }
 
-#define MARK() memcpy(_paths[++_currpath], _cut_marker, sizeof(jmp_buf));
-
-#define CUT()								\
-  {									\
-    while ((_currpath > -1) && (_paths[_currpath--] != _cut_marker))	\
-      ; /* do nothing */						\
-    /* _paths has now been unwound back to before last _cut_marker */	\
-  }
+  void fail (void);
+  void mark (void);
+  void cut (void);
 
 #ifdef  __cplusplus
 }
