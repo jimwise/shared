@@ -14,4 +14,5 @@ main (int argc, char **argv) {
     fail();
   }
   printf("we chose: %d\n", x);
+  exit(0);
 }

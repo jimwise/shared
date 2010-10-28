@@ -1,5 +1,4 @@
-BIN=	example
-SRCS=	example.c nondeterminism.c
+BIN=	choose2 parlortrick findboxes
 INCS=	nondeterminism.h
 
 CC=gcc
@@ -7,8 +6,8 @@ CFLAGS=	-g
 
 all: $(BIN)
 
-$(BIN): $(SRCS) $(INCS)
-	$(CC) $(CFLAGS) -o $(BIN) $(SRCS) 
+%: %.o nondeterminism.o
+	$(CC) $(CFLAGS) -o $@ $< nondeterminism.o
 
 clean:
-	rm -f $(BIN)
+	rm -f $(BIN) *.o
