@@ -1,4 +1,5 @@
 BIN=	example
+CFLAGS=	-g
 
 all: $(BIN)
 
