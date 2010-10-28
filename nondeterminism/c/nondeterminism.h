@@ -19,18 +19,19 @@ extern "C" {
 
   /* Must be a macro, as we cannot longjmp into a function we've returned from  */
   /* chcs is T[n], x gets choice */
-#define choose(x, n, chcs)			\
-  {						\
-    int _chc = n - 1;				\
-    _currpath++;				\
-    _paths[_currpath].t = 0;			\
-    setjmp(_paths[_currpath].j);		\
-    printf("CHOOSE: _chc = %d\n", _chc);	\
-    if (_chc == -1) {				\
-      _currpath--;				\
-      fail();					\
-    }						\
-    x = chcs[_chc--];				\
+#define choose(x, n, chcs)					\
+  {								\
+    int _chc = n - 1;						\
+    _currpath++;						\
+    _paths[_currpath].t = 0;					\
+    setjmp(_paths[_currpath].j);				\
+    printf("CHOOSE (%x): _chc = %d\n", &_chc, _chc);		\
+    if (_chc == -1) {						\
+      printf ("empty choices -- failing\n");			\
+      _currpath--;						\
+      fail();							\
+    }								\
+    x = chcs[_chc--];						\
   }
 
   void fail (void);

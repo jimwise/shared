@@ -1,6 +1,8 @@
 BIN=	example
 SRCS=	example.c nondeterminism.c
 INCS=	nondeterminism.h
+
+CC=gcc
 CFLAGS=	-g
 
 all: $(BIN)

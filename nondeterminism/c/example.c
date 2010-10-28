@@ -46,12 +46,12 @@ find_boxes (void) {
   int oneortwo[] = {2, 1};
 
   choose(city, 3, cities);
-  mark();
+  /* mark(); */
   choose(store, 2, oneortwo);
   choose(box, 2, oneortwo);
   printf("(%s %d %d) ", city, store, box);
   if (coinp(city, store, box)) {
-    cut();
+    /* cut(); */
     printf("C ");
   }
   fail();
@@ -60,10 +60,10 @@ find_boxes (void) {
 
 int
 main (int argc, char **argv) {
-  choose_2();
-  nd_reset();
-  parlor_trick(7);
-  nd_reset();
+  /* choose_2(); */
+  /* nd_reset(); */
+  /* parlor_trick(7); */
+  /* nd_reset(); */
   find_boxes();
   exit(0);
 }

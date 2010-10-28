@@ -15,7 +15,7 @@ nd_reset (void) {
 
 void
 fail (void) {
-  printf("FAIL: _currpath = %d\n", _currpath);
+  /* printf("FAIL: _currpath = %d\n", _currpath); */
   while (_paths[_currpath].t == CUT_MARKER)
     _currpath--;
   if (_currpath > -1)
