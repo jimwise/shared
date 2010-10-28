@@ -1,10 +1,9 @@
-This directory contains a (currently partially working -- nested choose() is
-broken) implementation of choose/fail nondeterministic programming, as
-described in Chapter 22 of Paul Graham's _On Lisp_, along with two of the
-scheme examples given therein... in C.
+This directory contains an implementation of choose/fail nondeterministic
+programming, as described in Chapter 22 of Paul Graham's _On Lisp_, along
+with two of the scheme examples given therein, in C.
 
 choose and fail are implemented as a pre-processor macros, choose() and a
-function fail().  They have two important limitations as compared to their
+function, fail().  They have two important limitations as compared to their
 scheme counterparts:
 
   a.) if the function which has called choose() returns, a subsequent fail()
