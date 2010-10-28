@@ -20,7 +20,7 @@ choose_2 (void) {
 void
 parlor_trick (int sum) {
   int x1, x2;
-  int ch[] = {0, 1, 2, 3, 4, 5};
+  int ch[] = {5, 4, 3, 2, 1, 0};
   choose(x1, 6, ch);
   choose(x2, 6, ch);
   if ((x1 + x2) == sum) {

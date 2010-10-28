@@ -1,4 +1,5 @@
 #include <setjmp.h>
+#include <stdio.h>
 #include "nondeterminism.h"
 
 #define MAX_DEPTH 100		/* could move to linked list later */
@@ -14,7 +15,7 @@ nd_reset (void) {
 
 void
 fail (void) {
-  /* printf("FAIL: _currpath = %d\n", _currpath); */
+  printf("FAIL: _currpath = %d\n", _currpath);
   while (_paths[_currpath].t == CUT_MARKER)
     _currpath--;
   if (_currpath > -1)
