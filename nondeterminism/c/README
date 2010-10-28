@@ -14,5 +14,3 @@ scheme counterparts:
 
   b.) choices must be specified from lowest preference to highest, instead
       of vice versa -- this simplifies the macros substantially
-
-Branch cuts are not yet tested.
