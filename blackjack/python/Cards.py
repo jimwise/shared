@@ -5,8 +5,8 @@ import random
 
 decksinshoe = 6
  
-suits = ['hearts', 'diamonds', 'clubs', 'spades']
-cards = [ 'ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'jack', 'queen', 'king' ]
+suits = ['Hearts', 'Diamonds', 'Clubs', 'Spades']
+cards = [ 'Ace', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'Jack', 'Queen', 'King' ]
 
 class Card:
     suit = None
