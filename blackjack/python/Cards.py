@@ -32,7 +32,7 @@ def shuffle():
 def draw():
     # a real shoe is reshuffled at a defined point before empty...
     if shoe == []:
-        print "Refilling shoe with", decksinshoe, "decks"
+        print("Refilling shoe with", decksinshoe, "decks")
         shuffle()
 
     return shoe.pop()
