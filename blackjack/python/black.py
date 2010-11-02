@@ -26,13 +26,6 @@ def deal():
     dealer_hand.add(Cards.draw())
     show_hands()
 
-def show_hands(reveal=0):
-    print("Dealer has:")
-    dealer_hand.show(reveal)
-    print()
-    print("Player has:")
-    player_hand.show()
-
 def playerplays():
     global player_purse
     first_draw = True
@@ -122,7 +115,11 @@ def play_one_hand():
         return
     
     print()
-    show_hands(reveal=True)
+    print("Dealer has:")
+    dealer_hand.show(reveal)
+    print()
+    print("Player has:")
+    player_hand.show()
     print()
 
     if dealersbest > playersbest:
