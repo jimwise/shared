@@ -1,7 +1,9 @@
 #!/usr/pkg/bin/python2.4
 
-import Cards
+from __future__ import print_function
 from functools import reduce
+
+import Cards
 
 # yes, ace needs special treatment
 vals = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]

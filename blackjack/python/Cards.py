@@ -1,5 +1,6 @@
 #!/usr/pkg/bin/python2.4
 
+from __future__ import print_function
 import random
 
 decksinshoe = 6
