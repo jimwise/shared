@@ -7,7 +7,7 @@ from functools import reduce
 vals = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]
 
 # may be clearer just to write out the dict
-cardvals = dict(zip(Cards.cards, vals))
+cardvals = dict(list(zip(Cards.cards, vals)))
 
 class Hand:
     cards = []
@@ -30,11 +30,11 @@ class Hand:
     def hit(self):
         """hit a hand, and return new value()"""
         card = Cards.draw()
-        print card.name()
+        print(card.name())
         self.add(card)
         self.showvalue(reveal=True)
         if self.busted():
-            print "[BUST]"
+            print("[BUST]")
             return 0
         else:
             return self.value()
@@ -45,30 +45,30 @@ class Hand:
         card will be kept hidden"""
         # XXX use __repr__?  str?
         if self.cards == []:
-            print "[no cards]"
+            print("[no cards]")
             return
         else:
             if reveal or not self.dealer:
-                print " ", self.cards[0].name()
+                print(" ", self.cards[0].name())
             else:
-                print "  one face down card"
+                print("  one face down card")
 
             for card in self.cards[1:]:
-                print " ", card.name()
+                print(" ", card.name())
 
         self.showvalue(reveal)
 
         if self.bet > 0:
-            print "Bet: $%.2f" % self.bet
+            print("Bet: $%.2f" % self.bet)
 
     def showvalue(self, reveal=False):
         """print value of a hand
         will show value as 'Total Value: ???' if hand has a card in the hole and 'reveal'
         is not set"""
         if self.dealer and not reveal:
-            print "Total value: ???"
+            print("Total value: ???")
         else:
-            print "Total value:", "/".join(map(str, self.values()))
+            print("Total value:", "/".join(map(str, list(self.values()))))
     
     def busted(self):
         """return True if a hand is busted"""
@@ -104,7 +104,7 @@ class Hand:
     def value(self):
         """return the best non-busted value for a hand, considering aces
         returns zero if hand is busted"""
-        good = filter(lambda x: x<=21, self.values())
+        good = [x for x in list(self.values()) if x<=21]
         if good == []:
             return 0
 
