@@ -25,10 +25,10 @@ def deal():
     show_hands()
 
 def show_hands(reveal=0):
-    print "Dealer has:"
+    print("Dealer has:")
     dealer_hand.show(reveal)
-    print
-    print "Player has:"
+    print()
+    print("Player has:")
     player_hand.show()
 
 def playerplays():
@@ -36,7 +36,7 @@ def playerplays():
     first_draw = True
     # XXX - insurance
     if player_hand.blackjack():
-        print "[BLACKJACK]"
+        print("[BLACKJACK]")
         return 21
     
     while True:                    # actually, until we bust or stand
@@ -55,44 +55,44 @@ def playerplays():
                 ["h", "s"], "")
 
         if action == "h":
-            print "You draw the",
+            print("You draw the", end=' ')
             if player_hand.hit() == 0:
                 return 0
             # XXX some casinos allow DD after split.  some don't (confirm)
             first_draw = False
         elif action == "s":
-            print "You stand"
+            print("You stand")
             return player_hand.value()
         elif action == "d":
             if player_purse < table_min:
-                print "You cannot afford to double down!"
+                print("You cannot afford to double down!")
                 continue
             newbet = getbet(table_min, player_hand.bet)
             player_hand.bet += newbet
             player_purse -= newbet
-            print "You draw the",
+            print("You draw the", end=' ')
             return player_hand.hit()
         elif action == "u":
-            print "You surrender."
+            print("You surrender.")
             player_purse += 0.5 * player_hand.bet
             return 0
 
 def dealerplays():
     if dealer_hand.blackjack():
-        print "[BLACKJACK]"
+        print("[BLACKJACK]")
         return 21
 
-    print "The dealer reveals the", dealer_hand.cards[0].name()
+    print("The dealer reveals the", dealer_hand.cards[0].name())
     dealer_hand.showvalue(reveal=True)
 
     while True:
         # XXX XXX should dealer hit a soft 17?  should this be configurable?
         if dealer_hand.value() < 17:
-            print "Dealer draws the",
+            print("Dealer draws the", end=' ')
             if dealer_hand.hit() == 0:
                 return 0
         else:
-            print "Dealer stands"
+            print("Dealer stands")
             return dealer_hand.value()
 
 def play_one_hand():
@@ -103,35 +103,35 @@ def play_one_hand():
     deal()
     playersbest = playerplays()
     if playersbest == 0:
-        print "Dealer wins"
+        print("Dealer wins")
         return
     if player_hand.blackjack() and not dealer_hand.blackjack():
-        print "Player wins"
+        print("Player wins")
         # XXX XXX 3:2 (configurable) on blackjack
         player_purse += 2.5 * player_hand.bet
         return
 
-    print
+    print()
 
     dealersbest = dealerplays()
     if dealersbest == 0:
-        print "Player wins"
+        print("Player wins")
         player_purse += 2 * player_hand.bet
         return
     
-    print
+    print()
     show_hands(reveal=True)
-    print
+    print()
 
     if dealersbest > playersbest:
-        print "Dealer wins"
+        print("Dealer wins")
         return
     elif playersbest > dealersbest:
-        print "Player wins"
+        print("Player wins")
         player_purse += 2 * player_hand.bet
         return
     else:
-        print "Push"
+        print("Push")
         player_purse += player_hand.bet
         return
 
@@ -139,7 +139,7 @@ def play_one_hand():
 def getbet(table_min, table_limit):
     global player_last_bet, player_purse
     # XXX check actual min/table_limit rules
-    print ("Please enter a bet (min = $%.2f, limit = $%.2f) [%.2f]: " % (table_min, min(player_purse, table_limit), player_last_bet)),
+    print(("Please enter a bet (min = $%.2f, limit = $%.2f) [%.2f]: " % (table_min, min(player_purse, table_limit), player_last_bet)), end=' ')
     while True:
         resp = sys.stdin.readline()[:-1]
         if resp == '':
@@ -150,17 +150,17 @@ def getbet(table_min, table_limit):
             try:
                 bet = float(resp)
             except ValueError:
-                print "Bet must be a number of dollars, try again: ",
+                print("Bet must be a number of dollars, try again: ", end=' ')
                 continue
 
         if bet < table_min:
-            print "Bet must be at least $%.2f, try again: ",
+            print("Bet must be at least $%.2f, try again: ", end=' ')
             continue
         if bet % table_min != 0:
-            print "Bet must be in an increment of $%d.00, try again: " % min,
+            print("Bet must be in an increment of $%d.00, try again: " % min, end=' ')
             continue
         if bet > table_limit:
-            print "Bet must be less than or equal to $%d.00, try again: " % table_limit,
+            print("Bet must be less than or equal to $%d.00, try again: " % table_limit, end=' ')
             continue
 
         # if we get here, bet is good
@@ -168,7 +168,7 @@ def getbet(table_min, table_limit):
         return bet
 
 def getresp(prompt1, prompt2, allowed, default):
-    print prompt1,
+    print(prompt1, end=' ')
     while True:
         resp = sys.stdin.readline()
         if resp[-1] == "\n":
@@ -178,10 +178,10 @@ def getresp(prompt1, prompt2, allowed, default):
             return resp
         if resp == '' and default != '':
             return default
-        print prompt2,
+        print(prompt2, end=' ')
 
 if __name__ == "__main__":
-    print "You have: $%.2f" % player_purse
+    print("You have: $%.2f" % player_purse)
     while True:
         player_hand.muck()
         dealer_hand.muck()
@@ -189,10 +189,10 @@ if __name__ == "__main__":
         play_one_hand()
 
         if player_purse < table_min:
-            print "You're out of money!"
+            print("You're out of money!")
             sys.exit(0)
 
-        print "You have: $%.2f" % player_purse
+        print("You have: $%.2f" % player_purse)
 
         cont = getresp(
             "Continue ([Y]es or [N]o) ([Y]N)? ",
