@@ -1,6 +1,7 @@
 #!/usr/pkg/bin/python2.4
 
 import Cards
+from functools import reduce
 
 # yes, ace needs special treatment
 vals = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]
