@@ -30,108 +30,99 @@
  * pedant comes with absolutely NO WARRANTY.
  */
 
-#include	<stdlib.h>
-#include	<stdio.h>
-#include	<limits.h>
-#include	<console.h>
+#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
 
-/*
- * play with these to change the size and location of the world.
- * the default is good for a mac SE
- */
-#define	XMAX		60
-#define	YMAX		44
-#define	XLOC		100
-#define	YLOC		40
-#define	FONTSIZE	6
+#include <curses.h>
 
 /* don't touch these */
-#define	LEFT	1
-#define	UP		2
-#define	RIGHT	3
-#define DOWN	4
-#define STARTX	(XMAX / 2)
-#define	STARTY	(YMAX / 2)
-#define	TRUE	1
-#define	FALSE	0
+typedef enum {LEFT, UP, RIGHT, DOWN} dir_t;
 
-char	world[XMAX+1][YMAX+1];	/* an extra of each to allow true indexing */
-int		dir = LEFT, xcur = STARTX, ycur = STARTY;
+char	*usage = "usage: %s [-ht] [<number-of-steps>]\n";
+char	*help =
+  "  -h	show this help\n"
+  "  -t	turn on trace mode\n";
 
-int		step (void);
+char	**world;
+dir_t	dir = LEFT;
+int	xcur, ycur, xmax, ymax;
+
+int	step (void);
 void	report (int turn);
 
-void
-main (void)
-{
-	int 	argc;
-	char 	**argv, *end;
-	int		trace = 0;
-	unsigned long int	index, xedni, count;
+int
+main (int argc, char **argv) {
+  char 	*end;
+  int	trace = 0;
+  int 	c, x, y;
+  unsigned long	n, count;
+  WINDOW *win;
+
+  while ((c = getopt(argc, argv, "ht")) != -1) {
+    switch(c) {
+    case 'h':
+      printf(usage, argv[0]);
+      printf(help);
+      exit(0);
+      break;
+    case 't':
+      trace = 1;
+      break;
+    case '?':
+      fprintf(stderr, usage, argv[0]);
+      exit(1);
+    }
+  }
+
+  if (optind == argc) {
+    count = ULONG_MAX;
+  } else {
+    count = strtoul(argv[optind], &end, 0);
+    if ((count == 0) || (count == ULONG_MAX)) {
+      fprintf(stderr, "Unable to parse count of %s\n", argv[1]);
+      exit(1);
+    }
+  }
+  
+  win = initscr();
+  getmaxyx(win, ymax, xmax);
+  ycur = ymax / 2;
+  xcur = xmax / 2;
+  cbreak();
+  noecho();
+  clear();
+  refresh();
+
+  world = malloc((xmax + 1) * sizeof(char));
+  for (x = 0; x <= xmax; x++) {
+    world[x] = malloc((ymax + 1) * sizeof(char));
+    for (y = 0; y <= ymax; y++)
+      world[x][y] = ' ';
+  }
 	
-	/* get and parse argv */
-	argc = ccommand(&argv);
-	
-	if ((argc > 3) || (argc < 2))
-	{
-		printf("usage: pedant [-t] <Number-of-Steps>\n");
-		exit(1);
-	}
-	else if (argc > 2)
-	{
-		if (strcmp(argv[1], "-t"))
-		{
-			printf("usage: pedant [-t] <Number-of-Steps>\n");
-			exit(1);
-		}
-		trace = 1;
-		count = strtoul(argv[2], &end, 0);
-	}
-	else
-	{
-		count = strtoul(argv[1], &end, 0);
-	}
-	
-	if ((count == 0) || (count == ULONG_MAX))
-	{
-		printf("Unable to parse count of %s\n", argv[1]);
-		exit(2);
-	}
-	
-	/* get ready */
-	chide(stdout);
-	
-	console_options.top = YLOC;
-	console_options.left = XLOC;
-	console_options.nrows = YMAX;
-	console_options.ncols = XMAX;
-	console_options.title = "\pPedAnt";
-	console_options.txSize = FONTSIZE;
-	console_options.procID = 5;
-	
-	freopenc(NULL, stdout);
-	freopenc(stdout, stdin);
-	csetmode(C_RAW, stdin);
-	
-	for (xedni = 0; xedni <= YMAX; xedni++)
-		for (index = 0; index <= XMAX; index++);
-			world[index][xedni] = ' ';
-	
-	/* go */
-	for (index=1; index<=count; index++)
-	{
-		if (trace)
-			report(index);
-		if (step())
-		{
-			cgotoxy(1, 1, stdout);
-			printf("Fell off edge of world on turn %lu.\n", index);
-			break;
-		}
-	}
+  for (n=1; n<count; n++) {
+    if (step()) {
+      mvprintw(0, 0, "Fell off edge of world on turn %lu. <<Press any key>>", n);
+      move(ycur, xcur);
+      refresh();
+      getch();
+      break;
+    }
+    if (trace)
+      report(n);
+  }
+  if (n == count) {
+    mvprintw(0, 0, "Simulation ended on turn %lu. <<Press any key>>", n);
+    getch();
+  }
+  endwin();
+  exit(0);
 }
 
-#define TOGGLE(c)	(((c)==' ') ? '¥' : ' ')
+#define TOGGLE(c)	(((c)==' ') ? '*' : ' ')
 #define RTURN(x)	(((x)==DOWN) ? LEFT : (x) + 1)
 #define	LTURN(x)	(((x)==LEFT) ? DOWN : (x) - 1)
 
@@ -142,40 +133,41 @@ main (void)
 int
 step (void)
 {
-	/* First, the current square is toggled */
-	world[xcur][ycur] = TOGGLE(world[xcur][ycur]);
-	cgotoxy(xcur, ycur, stdout);
-	putchar(world[xcur][ycur]);
+  /* First, the current square is toggled */
+  world[xcur][ycur] = TOGGLE(world[xcur][ycur]);
+  move(ycur, xcur);
+  delch();
+  insch(world[xcur][ycur]);
+  refresh();
 	
-	/* Second, the ant moves one square in the current direction */
-	switch (dir)
-	{
-		case LEFT:
-			if (xcur-- < 1)
-				return TRUE;
-			break;
-		case UP:
-			if (ycur-- < 1)
-				return TRUE;
-			break;
-		case RIGHT:
-			if (xcur++ > XMAX)
-				return TRUE;
-			break;
-		default:
-			if (ycur++ > YMAX)
-				return TRUE;
-			break;
-	}
+  /* Second, the ant moves one square in the current direction */
+  switch (dir) {
+  case LEFT:
+    if (--xcur < 0)
+      return TRUE;
+    break;
+  case UP:
+    if (--ycur < 0)
+      return TRUE;
+    break;
+  case RIGHT:
+    if (++xcur > xmax)
+      return TRUE;
+    break;
+  default:
+    if (++ycur > ymax)
+      return TRUE;
+    break;
+  }
 	
-	/* Finally, direction is changed based on the current square */
+  /* Finally, direction is changed based on the current square */
 	
-	if (world[xcur][ycur] == ' ')
-		dir = LTURN(dir);
-	else
-		dir = RTURN(dir);
+  if (world[xcur][ycur] == ' ')
+    dir = LTURN(dir);
+  else
+    dir = RTURN(dir);
 		
-	return FALSE;
+  return FALSE;
 }
 
 /*
@@ -184,9 +176,9 @@ step (void)
 void
 report(int turn)
 {
-	cgotoxy(1,1, stdout);
-	printf("Turn: %d; Location: %d, %d ; Direction: %d. <<Press any Key>>",
-				turn, xcur, ycur, dir);
-	while(getc(stdin) == EOF)
-		;
+  mvprintw(0, 0, "Turn: %d; Location: %d, %d ; Direction: %d. <<Press any Key>>",
+	   turn, xcur, ycur, dir);
+  move(ycur, xcur);
+  refresh();
+  getch();
 }
