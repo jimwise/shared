@@ -17,13 +17,8 @@
  * pedant runs in trace mode, stopping after each turn to report, and wait
  * for a key press.
  *
- * To build this code, include it and the <ANSI> library in a Think C project.
- * It has only been tested with Think C 5.0, but should work with any
- * version thereafter, and possibly versions before.  A port to any other
- * compiler or platform would require a change in the code which uses the
- * Think C console interface.
+ * pedant is copyright (c) 1995, Jim Wise
  *
- * pedant is copyright © 1995, Jim Wise
  * You may redistribute this code freely.
  * You may modify and redistribute this code freely as long as you retain
  * this paragraph and an indication that the code has been modified.

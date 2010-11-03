@@ -2,13 +2,8 @@
  * onedee.c -- a simple two dimensional cellular automoton with a variable
  * ruleset, based on the work of Stephen Wolfram.
  *
- * To build this code, include it and the <ANSI> library in a Think C project.
- * It has only been tested with Think C 5.0, but should work with any
- * version thereafter, and possibly versions before.  A port to any other
- * compiler or platform would require a change in the code which uses the
- * Think C console interface.
+ * onedee is copyright (c) 1995, Jim Wise
  *
- * pedant is copyright © 1995, Jim Wise
  * You may redistribute this code freely.
  * You may modify and redistribute this code freely as long as you retain
  * this paragraph and an indication that the code has been modified.
@@ -29,7 +24,7 @@
 #define	TURNS		30
 #define	FONTSIZE	9
 #define	INVERSE		0
-#define	GLYPH		'¥'
+#define	GLYPH		'+'
 #endif
 
 #define	TOP		120
@@ -61,41 +56,41 @@ void
 main (void)
 {
 #ifndef	ALL_RULES
-	getrules();
+  getrules();
 #endif
 
 #ifdef	ALL_RULES
-	console_options.top = TOP - 70;
-	console_options.left = LEFT;
-	console_options.nrows = 2;
-	console_options.ncols = 8;
-	console_options.title = "\pRules";
-	console_options.txSize = 12;
-	console_options.procID = 5;
+  console_options.top = TOP - 70;
+  console_options.left = LEFT;
+  console_options.nrows = 2;
+  console_options.ncols = 8;
+  console_options.title = "\pRules";
+  console_options.txSize = 12;
+  console_options.procID = 5;
 	
-	rulewin = fopenc();
-	cinverse(1, rulewin);
+  rulewin = fopenc();
+  cinverse(1, rulewin);
 #endif
-	console_options.top = TOP;
-	console_options.left = LEFT;
-	console_options.nrows = TURNS;
-	console_options.ncols = XMAX;
-	console_options.title = "\pTwoDee";
-	console_options.txSize = FONTSIZE;
-	console_options.procID = 5;
+  console_options.top = TOP;
+  console_options.left = LEFT;
+  console_options.nrows = TURNS;
+  console_options.ncols = XMAX;
+  console_options.title = "\pTwoDee";
+  console_options.txSize = FONTSIZE;
+  console_options.procID = 5;
 	
-	freopenc(NULL, stdout);
-	freopenc(stdout, stdin);
-	cinverse(INVERSE, stdout);
+  freopenc(NULL, stdout);
+  freopenc(stdout, stdin);
+  cinverse(INVERSE, stdout);
 	
 #ifdef	ALL_RULES
-	cgotoxy(1,1, rulewin);
-	fprintf(rulewin, "%c%c%c%c%c%c%c%c", '0'|0x80, '1'|0x80, '2'|0x80, '3'|0x80,
-				'4'|0x80, '5'|0x80, '6'|0x80, '7'|0x80);
-	runall();
+  cgotoxy(1,1, rulewin);
+  fprintf(rulewin, "%c%c%c%c%c%c%c%c", '0'|0x80, '1'|0x80, '2'|0x80, '3'|0x80,
+	  '4'|0x80, '5'|0x80, '6'|0x80, '7'|0x80);
+  runall();
 #else
-	getboard();
-	run();
+  getboard();
+  run();
 #endif
 }
 
@@ -107,22 +102,22 @@ main (void)
 void
 getrules (void)
 {
-	int		l, m, r, x = -1;
-	char	c;
+  int		l, m, r, x = -1;
+  char	c;
 	
-	/* this is silly, but allows easy expansion to more relevant squares... */
-	for (l=0;l<=1;l++)
-		for (m=0;m<=1;m++)
-			for (r=0;r<=1;r++)
-			{
-				do
-				{
-					printf("%d%d%d --> ", l, m, r);
-					scanf("%d", &x);
-				}
-				while ((x != 0) && (x != 1));
-				rules[l][m][r] = x;
-			}
+  /* this is silly, but allows easy expansion to more relevant squares... */
+  for (l=0;l<=1;l++)
+    for (m=0;m<=1;m++)
+      for (r=0;r<=1;r++)
+	{
+	  do
+	    {
+	      printf("%d%d%d --> ", l, m, r);
+	      scanf("%d", &x);
+	    }
+	  while ((x != 0) && (x != 1));
+	  rules[l][m][r] = x;
+	}
 }
 
 /*
@@ -132,12 +127,12 @@ getrules (void)
 void
 getboard (void)
 {
-	int		x;
+  int		x;
 	
-	for (x=0; x<=XMAX+2; x++)
-		world[current][x] = 0;
+  for (x=0; x<=XMAX+2; x++)
+    world[current][x] = 0;
 	
-	world[current][XMAX/2] = 1;
+  world[current][XMAX/2] = 1;
 }
 
 /*
@@ -147,20 +142,20 @@ getboard (void)
 void
 run (void)
 {
-	int		x, y;
+  int		x, y;
 	
-	cgotoxy(1,1, stdout);
-	ccleos(stdout);
+  cgotoxy(1,1, stdout);
+  ccleos(stdout);
 	
-	for (x=1; x<=TURNS; x++)
-	{
-		putline();
-		for(y=1; y<=XMAX; y++)
-			/* here's the guts of it... */
-			world[OTHER(current)][y] =
-				rules[world[current][y-1]][world[current][y]][world[current][y+1]];
-		current = OTHER(current);
-	}
+  for (x=1; x<=TURNS; x++)
+    {
+      putline();
+      for(y=1; y<=XMAX; y++)
+	/* here's the guts of it... */
+	world[OTHER(current)][y] =
+	  rules[world[current][y-1]][world[current][y]][world[current][y+1]];
+      current = OTHER(current);
+    }
 }
 
 /*
@@ -170,10 +165,10 @@ run (void)
 void
 putline (void)
 {
-	int		x;
+  int		x;
 	
-	for (x=1; x<=XMAX; x++)
-		putc(CHAR(world[current][x]), stdout);
+  for (x=1; x<=XMAX; x++)
+    putc(CHAR(world[current][x]), stdout);
 }
 
 #ifdef	ALL_RULES
@@ -184,15 +179,15 @@ putline (void)
 void
 runall (void)
 {
-	unsigned char	ruleno;
+  unsigned char	ruleno;
 	
-	for (ruleno = 0; ruleno <= 256; ruleno++)
-	{
-		setrules(ruleno);
-		getboard();
-		run();
-		getc(stdin);
-	}
+  for (ruleno = 0; ruleno <= 256; ruleno++)
+    {
+      setrules(ruleno);
+      getboard();
+      run();
+      getc(stdin);
+    }
 }
 
 /*
@@ -202,19 +197,19 @@ runall (void)
 void
 setrules (unsigned char ruleno)
 {
-	int				l, m, r;
-	unsigned char	mask = 1;
+  int				l, m, r;
+  unsigned char	mask = 1;
 	
-	cgotoxy(1,2, rulewin);
+  cgotoxy(1,2, rulewin);
 	
-	for (l=0;l<=1;l++)
-		for (m=0;m<=1;m++)
-			for (r=0;r<=1;r++)
+  for (l=0;l<=1;l++)
+    for (m=0;m<=1;m++)
+      for (r=0;r<=1;r++)
 	{
-		rules[l][m][r] = (ruleno & mask) > 0;
-		mask <<= 1;
-		fprintf(rulewin, "%1d", rules[l][m][r]);
+	  rules[l][m][r] = (ruleno & mask) > 0;
+	  mask <<= 1;
+	  fprintf(rulewin, "%1d", rules[l][m][r]);
 	}
-	fflush(rulewin);
+  fflush(rulewin);
 }
 #endif
