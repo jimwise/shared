@@ -10,25 +10,14 @@
  * pedant comes with absolutely NO WARRANTY.
  */
 
-#include	<stdio.h>
-#include	<console.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <curses.h>
 
-#ifdef	SMALL
-#define	XMAX		200
-#define	TURNS		160
-#define	FONTSIZE	1
-#define	INVERSE		1
-#define	GLYPH		(' '|0x80)
-#else
+#define ALL_RULES
+
 #define	XMAX		90
 #define	TURNS		30
-#define	FONTSIZE	9
-#define	INVERSE		0
-#define	GLYPH		'+'
-#endif
-
-#define	TOP		120
-#define	LEFT	20
 
 void	getrules (void);
 void	getboard (void);
@@ -36,7 +25,7 @@ void	run (void);
 void	putline (void);
 
 #define	OTHER(a)	((a) ? 0 : 1)
-#define	CHAR(x)		((x) ? GLYPH : ' ')
+#define	CHAR(x)		((x) ? '*' : ' ')
 
 /*
  * the rules structure is an array indexed by the values of each of three relevant cells.
@@ -48,50 +37,34 @@ int		current = 0;
 
 #ifdef	ALL_RULES
 void	runall (void);
-void	setrules (unsigned char);
+void	setrules (unsigned int);
 FILE	*rulewin;
 #endif
 
-void
-main (void)
+int
+main (int argc, char **argv)
 {
 #ifndef	ALL_RULES
   getrules();
 #endif
 
-#ifdef	ALL_RULES
-  console_options.top = TOP - 70;
-  console_options.left = LEFT;
-  console_options.nrows = 2;
-  console_options.ncols = 8;
-  console_options.title = "\pRules";
-  console_options.txSize = 12;
-  console_options.procID = 5;
-	
-  rulewin = fopenc();
-  cinverse(1, rulewin);
-#endif
-  console_options.top = TOP;
-  console_options.left = LEFT;
-  console_options.nrows = TURNS;
-  console_options.ncols = XMAX;
-  console_options.title = "\pTwoDee";
-  console_options.txSize = FONTSIZE;
-  console_options.procID = 5;
-	
-  freopenc(NULL, stdout);
-  freopenc(stdout, stdin);
-  cinverse(INVERSE, stdout);
+  initscr();
+  cbreak();
+  noecho();
+  clear();
+  refresh();
 	
 #ifdef	ALL_RULES
-  cgotoxy(1,1, rulewin);
-  fprintf(rulewin, "%c%c%c%c%c%c%c%c", '0'|0x80, '1'|0x80, '2'|0x80, '3'|0x80,
-	  '4'|0x80, '5'|0x80, '6'|0x80, '7'|0x80);
+  attron(A_REVERSE);
+  mvprintw(0, 0, "01234567");
+  attroff(A_REVERSE);
   runall();
 #else
   getboard();
   run();
 #endif
+
+  exit(0);
 }
 
 /*
@@ -103,7 +76,6 @@ void
 getrules (void)
 {
   int		l, m, r, x = -1;
-  char	c;
 	
   /* this is silly, but allows easy expansion to more relevant squares... */
   for (l=0;l<=1;l++)
@@ -143,11 +115,11 @@ void
 run (void)
 {
   int		x, y;
+
+  clear();
+  refresh();
 	
-  cgotoxy(1,1, stdout);
-  ccleos(stdout);
-	
-  for (x=1; x<=TURNS; x++)
+  for (x=0; x<TURNS; x++)
     {
       putline();
       for(y=1; y<=XMAX; y++)
@@ -179,9 +151,9 @@ putline (void)
 void
 runall (void)
 {
-  unsigned char	ruleno;
+  unsigned int	ruleno;
 	
-  for (ruleno = 0; ruleno <= 256; ruleno++)
+  for (ruleno = 0; ruleno <= 255; ruleno++)
     {
       setrules(ruleno);
       getboard();
@@ -195,20 +167,19 @@ runall (void)
  */
 
 void
-setrules (unsigned char ruleno)
+setrules (unsigned int ruleno)
 {
   int				l, m, r;
   unsigned char	mask = 1;
-	
-  cgotoxy(1,2, rulewin);
-	
+
+  move(0,1);
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
       for (r=0;r<=1;r++)
 	{
 	  rules[l][m][r] = (ruleno & mask) > 0;
 	  mask <<= 1;
-	  fprintf(rulewin, "%1d", rules[l][m][r]);
+	  printf("%1d", rules[l][m][r]);
 	}
   fflush(rulewin);
 }
