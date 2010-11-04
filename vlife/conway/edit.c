@@ -99,7 +99,7 @@ edit (int which)
 				return(1);
 				break;
 			case 'c':
-				clear(which);
+				clear_board(which);
 				display(which);
 				continue; 
 			default:

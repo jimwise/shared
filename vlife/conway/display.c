@@ -112,13 +112,13 @@ filemenu (int which)
 		switch (c)
 		{
 			case 'l':
-				clear(which);
+				clear_board(which);
 				if (!getname(fname))
 				{
 					if (load(which, fname))
 					{
 						message("Could not load board from file %s", fname);
-						clear(which);
+						clear_board(which);
 					}
 					else
 						message("Board loaded from file %s", fname);

@@ -59,7 +59,7 @@
  * compiler, you will need to code the following functions:
  *
  *				void	init (int *, char ***);
- *				void	clear (int);
+ *				void	clear_board (int);
  *				int		callback (int, int);
  *				void	display (int);
  *				int		edit (int);
@@ -104,7 +104,7 @@ int
 main (int argc, char **argv)
 {
 	init(&argc, &argv);
-	clear(BOARD_A);
+	clear_board(BOARD_A);
 	
 	while ( 1 )
 	{	
@@ -117,11 +117,11 @@ main (int argc, char **argv)
 }
 
 /*
- * clear() -- clear a board
+ * clear_board() -- clear a board
  */
 
 void
-clear (int which)
+clear_board (int which)
 {
 	int	index, xedni;
 	

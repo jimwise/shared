@@ -55,7 +55,7 @@ int	getboard (int, int, int);
 /* machine-dependent routines */
 
 void	init (int *, char ***);
-void	clear (int);
+void	clear_board (int);
 int	callback (int, int);
 void	display (int);
 int	edit (int);
