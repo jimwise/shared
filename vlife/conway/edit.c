@@ -13,7 +13,6 @@
 #include	<stdio.h>
 #include	<console.h>
 #include	"life.h"
-#include	"thinklife.h"
 
 #define		MOVECURSOR(delta_x, delta_y)	\
 				cgotoxy(xcur, ycur, stdout);	\

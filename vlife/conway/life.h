@@ -81,3 +81,23 @@ extern Board	world[3];
 #else
 #define	DEBUG(a)
 #endif
+
+#define	FONTSIZE	9
+
+#define	XLOC		10
+#define	YLOC		50
+
+#ifdef NO_FILE
+#define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [C]lear; [G]o; [Q]uit"
+#else
+#define	NAMELEN			512
+#define	MENUSTR			"[L]oad; [S]ave; [R]eturn"
+#define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [F]ile; [C]lear; [G]o; [Q]uit"
+#endif
+
+#define	CHAR(x)		((x) ? '¥' : ' ')
+
+#ifndef NO_FILE
+void	filemenu (int which);
+int		getname (char *);
+#endif

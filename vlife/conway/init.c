@@ -12,7 +12,6 @@
 
 #include	<console.h>
 #include	"life.h"
-#include	"thinklife.h"
 
 extern int		count, trace;
 

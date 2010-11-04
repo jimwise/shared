@@ -13,7 +13,6 @@
 #include	<console.h>
 #include	<stdio.h>
 #include	"life.h"
-#include	"thinklife.h"
 
 /*
  * callback() -- called every turn
