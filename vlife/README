@@ -6,4 +6,4 @@ more modern environment.  What's here:
   conway -- John Conway's `game of life'.  Not yet converted from Think C.
 
   misc -- two smaller programs (Langton's `virtual ant', and Wolfram's
-       	  one-dimensional cellular automaton.  Fully converted.
+       	  one-dimensional cellular automaton).  Fully converted.
