@@ -14,7 +14,7 @@
 #include <stdlib.h>
 #include <curses.h>
 
-#define ALL_RULES
+/* #define ALL_RULES */
 
 #define	XMAX		90
 #define	TURNS		30
@@ -31,22 +31,46 @@ void	putline (void);
  * the rules structure is an array indexed by the values of each of three relevant cells.
  */
  
-int		rules[2][2][2];
-int		world[2][XMAX+2];	/* two fencepost cells to allow for normal treatment of edges */
-int		current = 0;
+int	rules[2][2][2];
+int	world[2][XMAX+2];	/* two fencepost cells to allow for normal treatment of edges */
+int	current = 0;
+int	allrules = 0, trace = 0;
 
-#ifdef	ALL_RULES
+char	*usage = "usage: %s [-ha]\n";
+char	*help =
+  "  -h	show this help\n"
+  "  -a	run all 256 possible rulesets, instead of prompting for one\n"
+  "  -t	turn on trace mode\n";
+
 void	runall (void);
 void	setrules (unsigned int);
-FILE	*rulewin;
-#endif
 
 int
 main (int argc, char **argv)
 {
-#ifndef	ALL_RULES
-  getrules();
-#endif
+  int c;
+
+  while ((c = getopt(argc, argv, "hat")) != -1) {
+    switch(c) {
+    case 'h':
+      printf(usage, argv[0]);
+      printf(help);
+      exit(0);
+      break;
+    case 'a':
+      allrules = 1;
+      break;
+    case 't':
+      trace = 1;
+      break;
+    case '?':
+      fprintf(stderr, usage, argv[0]);
+      exit(1);
+    }
+  }
+
+  if (!allrules)
+    getrules();
 
   initscr();
   cbreak();
@@ -54,16 +78,17 @@ main (int argc, char **argv)
   clear();
   refresh();
 	
-#ifdef	ALL_RULES
-  attron(A_REVERSE);
-  mvprintw(0, 0, "01234567");
-  attroff(A_REVERSE);
-  runall();
-#else
-  getboard();
-  run();
-#endif
+  if (allrules) {
+    attron(A_REVERSE);
+    mvprintw(0, 0, "01234567");
+    attroff(A_REVERSE);
+    runall();
+  } else {
+    getboard();
+    run();
+  }
 
+  endwin();
   exit(0);
 }
 
@@ -116,7 +141,8 @@ run (void)
 {
   int		x, y;
 
-  clear();
+  move(1,0);
+  clrtobot();
   refresh();
 	
   for (x=0; x<TURNS; x++)
@@ -138,12 +164,12 @@ void
 putline (void)
 {
   int		x;
-	
+
   for (x=1; x<=XMAX; x++)
-    putc(CHAR(world[current][x]), stdout);
+    putchar(CHAR(world[current][x]));
+  putchar('\n');
 }
 
-#ifdef	ALL_RULES
 /*
  * runall() -- run all possible combinations
  */
@@ -158,7 +184,7 @@ runall (void)
       setrules(ruleno);
       getboard();
       run();
-      getc(stdin);
+      getch();
     }
 }
 
@@ -172,15 +198,13 @@ setrules (unsigned int ruleno)
   int				l, m, r;
   unsigned char	mask = 1;
 
-  move(0,1);
+  /* move(0,1); */
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
       for (r=0;r<=1;r++)
 	{
 	  rules[l][m][r] = (ruleno & mask) > 0;
 	  mask <<= 1;
-	  printf("%1d", rules[l][m][r]);
+	  /* printf("%1d", rules[l][m][r]); */
 	}
-  fflush(rulewin);
 }
-#endif
