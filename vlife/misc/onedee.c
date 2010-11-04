@@ -103,17 +103,16 @@ main (int argc, char **argv)
 void
 getrules (void)
 {
-  int		l, m, r, x = -1;
-	
+  int l, m, r, x = -1;
   /* this is silly, but allows easy expansion to more relevant squares... */
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
       for (r=0;r<=1;r++) {
-	do {
-	  printf("%d%d%d --> ", l, m, r);
-	  scanf("%d", &x);
-	} while ((x != 0) && (x != 1));
-	rules[l][m][r] = x;
+  	do {
+  	  printf("%d%d%d --> ", l, m, r);
+  	  scanf("%d", &x);
+  	} while ((x != 0) && (x != 1));
+  	rules[l][m][r] = x;
       }
 }
 
@@ -145,7 +144,7 @@ run (void)
   clrtobot();
   refresh();
 	
-  for (x=0; x<TURNS; x++)
+  for (x=0; x<(rows - 2); x++)
     {
       putline();
       for(y=1; y<=XMAX; y++)
