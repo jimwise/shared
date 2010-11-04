@@ -1,0 +1,9 @@
+This directory contains updated versions of some very old (1995) little
+programs I wrote to play with various virtual life sims.  The originals were
+written for MacOS 7, using Think C, and I'm slowly converting these to a
+more modern environment.  What's here:
+
+  conway -- John Conway's `game of life'.  Not yet converted from Think C.
+
+  misc -- two smaller programs (Langton's `virtual ant', and Wolfram's
+       	  one-dimensional cellular automaton.  Fully converted.
