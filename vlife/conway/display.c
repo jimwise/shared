@@ -199,3 +199,26 @@ getname(char *name)
 	DEBUG("Got Name");
 	return(!strlen(name));
 }
+
+
+/*
+ * callback() -- called every turn
+ * Returns 1 to keep running, 0 to stop
+ */
+ 
+int
+callback (int turn, int current)
+{
+	char c;
+	
+	/* Don't use message() to avoid pause */
+	cgotoxy(1, YMAX+1, stdout);
+	printf("Turn : %6d ; <Press any key to interrupt>", turn);
+	ccleol(stdout);
+	
+	c = getc(stdin);
+	if (c == EOF)
+		return(1);
+	else
+		return(0);
+}
