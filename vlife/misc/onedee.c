@@ -27,6 +27,8 @@ void	putline (void);
 #define	OTHER(a)	((a) ? 0 : 1)
 #define	CHAR(x)		((x) ? '*' : ' ')
 
+int	rows, cols;
+
 /*
  * the rules structure is an array indexed by the values of each of three relevant cells.
  */
@@ -49,6 +51,7 @@ int
 main (int argc, char **argv)
 {
   int c;
+  WINDOW *win;
 
   while ((c = getopt(argc, argv, "hat")) != -1) {
     switch(c) {
@@ -72,20 +75,20 @@ main (int argc, char **argv)
   if (!allrules)
     getrules();
 
-  initscr();
+  win = initscr();
+  getmaxyx(win, rows, cols);
+  curs_set(0);
   cbreak();
   noecho();
   clear();
   refresh();
 	
   if (allrules) {
-    attron(A_REVERSE);
-    mvprintw(0, 0, "01234567");
-    attroff(A_REVERSE);
     runall();
   } else {
     getboard();
     run();
+    getch();
   }
 
   endwin();
@@ -105,16 +108,13 @@ getrules (void)
   /* this is silly, but allows easy expansion to more relevant squares... */
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
-      for (r=0;r<=1;r++)
-	{
-	  do
-	    {
-	      printf("%d%d%d --> ", l, m, r);
-	      scanf("%d", &x);
-	    }
-	  while ((x != 0) && (x != 1));
-	  rules[l][m][r] = x;
-	}
+      for (r=0;r<=1;r++) {
+	do {
+	  printf("%d%d%d --> ", l, m, r);
+	  scanf("%d", &x);
+	} while ((x != 0) && (x != 1));
+	rules[l][m][r] = x;
+      }
 }
 
 /*
@@ -141,7 +141,7 @@ run (void)
 {
   int		x, y;
 
-  move(1,0);
+  move(2,0);
   clrtobot();
   refresh();
 	
@@ -166,8 +166,9 @@ putline (void)
   int		x;
 
   for (x=1; x<=XMAX; x++)
-    putchar(CHAR(world[current][x]));
-  putchar('\n');
+    insch(CHAR(world[current][x]));
+  insch('\n');
+  refresh();
 }
 
 /*
@@ -198,13 +199,17 @@ setrules (unsigned int ruleno)
   int				l, m, r;
   unsigned char	mask = 1;
 
-  /* move(0,1); */
+  attron(A_REVERSE);
+  mvprintw(0, 0, "01234567");
+  attroff(A_REVERSE);
+  move(1, 0);
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
       for (r=0;r<=1;r++)
 	{
 	  rules[l][m][r] = (ruleno & mask) > 0;
 	  mask <<= 1;
-	  /* printf("%1d", rules[l][m][r]); */
+	  printw("%1d", rules[l][m][r]);
 	}
+  refresh();
 }
