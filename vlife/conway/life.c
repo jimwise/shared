@@ -94,13 +94,13 @@
  * life comes with absolutely NO WARRANTY.
  */
 
-#define		WORLD		/* Avoids External definition of World... kinda ugly, but hey. */
-#include	"life.h"
+#include <stdlib.h>
+#include "life.h"
 
 Board	world[3];
 int		current = BOARD_A, turn = 1;
 
-void
+int
 main (int argc, char **argv)
 {
 	init(&argc, &argv);
@@ -112,6 +112,8 @@ main (int argc, char **argv)
 			break;
 		run();
 	}
+
+	exit(0);
 }
 
 /*

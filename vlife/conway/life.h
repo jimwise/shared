@@ -68,9 +68,7 @@ int		getcell (void);
 int		putcell (int);
 #endif
 
-#ifndef	WORLD		/* So we don't redefine it in life.c */
 extern Board	world[3];
-#endif
 
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))

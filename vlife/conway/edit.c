@@ -10,9 +10,9 @@
  * life comes with absolutely NO WARRANTY.
  */
 
-#include	<stdio.h>
-#include	<console.h>
-#include	"life.h"
+#include <stdio.h>
+#include <curses.h>
+#include "life.h"
 
 #define		MOVECURSOR(delta_x, delta_y)	\
 				cgotoxy(xcur, ycur, stdout);	\
@@ -42,6 +42,7 @@ edit (int which)
 	
 	while ( 1 )
 	{
+	  
 		cgotoxy(xcur, ycur, stdout);
 		putc('%', stdout);
 		
