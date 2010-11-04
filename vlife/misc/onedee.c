@@ -16,9 +16,6 @@
 
 /* #define ALL_RULES */
 
-#define	XMAX		90
-#define	TURNS		30
-
 void	getrules (void);
 void	getboard (void);
 void	run (void);
@@ -34,7 +31,7 @@ int	rows, cols;
  */
  
 int	rules[2][2][2];
-int	world[2][XMAX+2];	/* two fencepost cells to allow for normal treatment of edges */
+int	*world[2];
 int	current = 0;
 int	allrules = 0, trace = 0;
 
@@ -104,6 +101,7 @@ void
 getrules (void)
 {
   int l, m, r, x = -1;
+
   /* this is silly, but allows easy expansion to more relevant squares... */
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
@@ -123,12 +121,11 @@ getrules (void)
 void
 getboard (void)
 {
-  int		x;
-	
-  for (x=0; x<=XMAX+2; x++)
-    world[current][x] = 0;
-	
-  world[current][XMAX/2] = 1;
+  /* two fencepost cells to allow for normal treatment of edges */
+  world[0] = calloc((cols + 2), sizeof(int));
+  world[1] = calloc((cols + 2), sizeof(int));
+
+  world[0][cols/2 + 1] = 1;
 }
 
 /*
@@ -144,15 +141,14 @@ run (void)
   clrtobot();
   refresh();
 	
-  for (x=0; x<(rows - 2); x++)
-    {
-      putline();
-      for(y=1; y<=XMAX; y++)
-	/* here's the guts of it... */
-	world[OTHER(current)][y] =
-	  rules[world[current][y-1]][world[current][y]][world[current][y+1]];
-      current = OTHER(current);
-    }
+  for (x=0; x<(rows - 2); x++) {
+    putline();
+    for (y=1; y<=cols; y++)
+      /* here's the guts of it... */
+      world[OTHER(current)][y] =
+	rules[world[current][y-1]][world[current][y]][world[current][y+1]];
+    current = OTHER(current);
+  }
 }
 
 /*
@@ -164,7 +160,7 @@ putline (void)
 {
   int		x;
 
-  for (x=1; x<=XMAX; x++)
+  for (x=1; x<cols+2; x++)
     insch(CHAR(world[current][x]));
   insch('\n');
   refresh();
@@ -179,13 +175,12 @@ runall (void)
 {
   unsigned int	ruleno;
 	
-  for (ruleno = 0; ruleno <= 255; ruleno++)
-    {
-      setrules(ruleno);
-      getboard();
-      run();
-      getch();
-    }
+  for (ruleno = 0; ruleno <= 255; ruleno++) {
+    setrules(ruleno);
+    getboard();
+    run();
+    getch();
+  }
 }
 
 /*
@@ -204,11 +199,10 @@ setrules (unsigned int ruleno)
   move(1, 0);
   for (l=0;l<=1;l++)
     for (m=0;m<=1;m++)
-      for (r=0;r<=1;r++)
-	{
-	  rules[l][m][r] = (ruleno & mask) > 0;
-	  mask <<= 1;
-	  printw("%1d", rules[l][m][r]);
-	}
+      for (r=0;r<=1;r++) {
+	rules[l][m][r] = (ruleno & mask) > 0;
+	mask <<= 1;
+	printw("%1d", rules[l][m][r]);
+      }
   refresh();
 }
