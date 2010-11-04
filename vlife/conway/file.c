@@ -31,8 +31,6 @@ static int		x_min, x_max, y_min, y_max;
 int
 save(int which, char *name)
 {
-	int		index, xedni;
-	
 	findbounds(which);
 	
 	if (openfile(name, WRITEFILE))
@@ -76,7 +74,7 @@ save(int which, char *name)
 int
 load (int which, char *name)
 {
-	int index, xedni, x_size, y_size;
+	int x_size, y_size;
 	
 	if (openfile(name, READFILE))
 	{
