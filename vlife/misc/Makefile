@@ -6,11 +6,12 @@ CPPFLAGS= -D__EXTENSIONS__
 LIBS= -lcurses
 
 all: onedee pedant
+
 onedee: onedee.o
-	$(CC) -o onedee onedee.o -lcurses
+	$(CC) -o onedee onedee.o $(LIBS)
 
 pedant: pedant.o
-	$(CC) -o pedant pedant.o -lcurses
+	$(CC) -o pedant pedant.o $(LIBS)
 
 clean:
 	rm onedee.o onedee pedant.o pedant
