@@ -14,8 +14,6 @@
 #include <stdlib.h>
 #include <curses.h>
 
-/* #define ALL_RULES */
-
 void	getrules (void);
 void	getboard (void);
 void	run (void);
