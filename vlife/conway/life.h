@@ -10,62 +10,65 @@
  * life comes with absolutely NO WARRANTY.
  */
 
-#define	VERSION_STR		"1.2c"
+#ifndef LIFE_H
+#define LIFE_H
+
+#define	VERSION_STR		"1.3"
 
 /* default settings for these two... should be overridden by specific builds */
 #ifndef	XMAX
-#define	XMAX		80
+#define	XMAX	80
 #endif
 #ifndef	YMAX
-#define	YMAX		23
+#define	YMAX	23
 #endif
 
 /* board selectors */
-#define	BOARD_A		0
-#define	BOARD_B		1
+#define	BOARD_A	0
+#define	BOARD_B	1
 
 /* (abstract) file open modes */
 #define WRITEFILE	0
 #define	READFILE	1
 
 /* board file magic words */
-#define FILE_HEADERSTRING		"Life, copyright 1995, Jim Wise\nFile Format Version 1.0\n\n"
-#define FILE_SIZESTRING			"Board Size "
-#define	FILE_SEPSTRING			"----------\n"
-#define FILE_SIZEFMT			"%d x %d\n"
+#define FILE_HEADERSTRING	"Life, copyright 1995, Jim Wise\nFile Format Version 1.0\n\n"
+#define FILE_SIZESTRING		"Board Size "
+#define	FILE_SEPSTRING		"----------\n"
+#define FILE_SIZEFMT		"%d x %d\n"
 
-typedef unsigned char	Board [XMAX+1][YMAX+1];
+typedef unsigned char Board [XMAX+1][YMAX+1];
 
 /* shared routines */
 
 void	run (void);
 void	generation (int, int);
-int		determine (int, int, int);
+int	determine (int, int, int);
 #ifndef	NO_FILE
-int		save (int, char *);
-int		load (int, char *);
+int	save (int, char *);
+int	load (int, char *);
 void	findbounds (int);
-int		putboard (int);
-int		getboard (int, int, int);
+int	putboard (int);
+int	getboard (int, int, int);
 #endif
 
 /* machine-dependent routines */
 
 void	init (int *, char ***);
 void	clear (int);
-int		callback (int, int);
+int	callback (int, int);
 void	display (int);
-int		edit (int);
+int	edit (int);
 void	message(char *, ...);
 #ifndef	NO_FILE
-int		openfile (char *, int);
-int		closefile (void);
-int		putstring (char *, ...);
-int		checkstring (char *, ...);
-int		getsize (int *, int *);
-int		putsize (int, int);
-int		getcell (void);
-int		putcell (int);
+int	openfile (char *, int);
+int	closefile (void);
+int	putstring (char *, ...);
+int	checkstring (char *, ...);
+int	getsize (int *, int *);
+int	putsize (int, int);
+int	getcell (void);
+int	putcell (int);
 #endif
 
 extern Board	world[3];
@@ -82,20 +85,22 @@ extern Board	world[3];
 
 #define	FONTSIZE	9
 
-#define	XLOC		10
-#define	YLOC		50
+#define	XLOC	10
+#define	YLOC	50
 
 #ifdef NO_FILE
 #define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [C]lear; [G]o; [Q]uit"
 #else
-#define	NAMELEN			512
-#define	MENUSTR			"[L]oad; [S]ave; [R]eturn"
+#define	NAMELEN		512
+#define	MENUSTR		"[L]oad; [S]ave; [R]eturn"
 #define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [F]ile; [C]lear; [G]o; [Q]uit"
 #endif
 
-#define	CHAR(x)		((x) ? '¥' : ' ')
+#define	CHAR(x)	((x) ? '¥' : ' ')
 
 #ifndef NO_FILE
 void	filemenu (int which);
-int		getname (char *);
+int	getname (char *);
+#endif
+
 #endif
