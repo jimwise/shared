@@ -1,10 +1,10 @@
 What's here:
 
-blackjack -- a simple blackjack program, implemented three times in three
+blackjack -- a simple blackjack program, implemented four times in four
 	     languages 
 
-gallery -- an image gallery learning project, based on dpp's image upload
-           example
+gallery -- an image gallery learning project in Scala and Liftweb, based on
+           dpp's image upload example
 
 nondeterminism -- An implementation of Paul Graham's nondeterminism examples
 	          from _On Lisp_ Chapter 22... in C
