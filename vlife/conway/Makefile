@@ -6,7 +6,7 @@ CPPFLAGS= -D__EXTENSIONS__
 LIBS= -lcurses
 
 BIN= life
-OBJS= ansifile.o display.o edit.o file.o generation.o life.o
+OBJS= display.o edit.o file.o generation.o life.o
 
 all: $(BIN)
 
