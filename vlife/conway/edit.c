@@ -14,11 +14,11 @@
 #include <curses.h>
 #include "life.h"
 
-#define		MOVECURSOR(delta_x, delta_y)	\
-				cgotoxy(xcur, ycur, stdout);	\
-				putc(CHAR(world[which][xcur][ycur]), stdout);	\
-				xcur = MAX(MIN(xcur + delta_x, XMAX), 1);	\
-				ycur = MAX(MIN(ycur + delta_y, YMAX), 1)	
+#define	MOVECURSOR(delta_x, delta_y)		\
+  cgotoxy(xcur, ycur, stdout);			\
+  putc(CHAR(world[which][xcur][ycur]), stdout);	\
+  xcur = MAX(MIN(xcur + delta_x, XMAX), 1);	\
+  ycur = MAX(MIN(ycur + delta_y, YMAX), 1)	
 					
 /*
  * edit() -- allow the user to set up the board.
@@ -28,82 +28,78 @@
  */
 
 int
-edit (int which)
-{
-	char	c;
-	int		xcur = 1, ycur = 1;
+edit (int which) {
+  char	c;
+  int	xcur = 1, ycur = 1;
 	
-	display(which);
+  display(which);
 			
-	/* Don't use message() to avoid pause */
-	cgotoxy(1, YMAX+1, stdout);
-	printf(EDIT_INSTSTR);
-	ccleol(stdout);
+  /* Don't use message() to avoid pause */
+  cgotoxy(1, YMAX+1, stdout);
+  printf(EDIT_INSTSTR);
+  ccleol(stdout);
 	
-	while ( 1 )
-	{
-	  
-		cgotoxy(xcur, ycur, stdout);
-		putc('%', stdout);
+  while (1) {
+    cgotoxy(xcur, ycur, stdout);
+    putc('%', stdout);
 		
-		c = getc(stdin);
+    c = getc(stdin);
 		
-		switch (c)
-		{
-			case 'h':
-			case '4':
-				MOVECURSOR(-1, 0);
-				break;
-			case '7':
-				MOVECURSOR(-1, -1);
-				break;
-			case 'k':
-			case '8':
-				MOVECURSOR(0, -1);
-				break;
-			case '9':
-				MOVECURSOR(1, -1);
-				break;
-			case 'l':
-			case '6':
-				MOVECURSOR(1, 0);
-				break;
-			case '3':
-				MOVECURSOR(1, 1);
-				break;
-			case 'j':
-			case '2':
-				MOVECURSOR(0, 1);
-				break;
-			case '1':
-				MOVECURSOR(-1, 1);
-				break;
-			case ' ':
-			case '5':
-				world[which][xcur][ycur] = OTHER(world[which][xcur][ycur]);
-				break;
+    switch (c) {
+    case 'h':
+    case '4':
+      MOVECURSOR(-1, 0);
+    break;
+    case '7':
+      MOVECURSOR(-1, -1);
+      break;
+    case 'k':
+    case '8':
+      MOVECURSOR(0, -1);
+    break;
+    case '9':
+      MOVECURSOR(1, -1);
+      break;
+    case 'l':
+    case '6':
+      MOVECURSOR(1, 0);
+    break;
+    case '3':
+      MOVECURSOR(1, 1);
+      break;
+    case 'j':
+    case '2':
+      MOVECURSOR(0, 1);
+    break;
+    case '1':
+      MOVECURSOR(-1, 1);
+      break;
+    case ' ':
+    case '5':
+      world[which][xcur][ycur] = OTHER(world[which][xcur][ycur]);
+    break;
 #ifndef	NO_FILE
-			case 'f':
-				filemenu(which);
-				cgotoxy(1, YMAX+1, stdout);
-				printf(EDIT_INSTSTR);
-				ccleol(stdout);
-				break;
+    case 'f':
+      filemenu(which);
+      cgotoxy(1, YMAX+1, stdout);
+      printf(EDIT_INSTSTR);
+      ccleol(stdout);
+      break;
 #endif
-			case 'q':
-				return(0);
-				break;
-			case 'g':
-				cgotoxy(xcur, ycur, stdout);
-				putc(CHAR(world[which][xcur][ycur]), stdout);
-				return(1);
-				break;
-			case 'c':
-				clear_board(which);
-				display(which);
-				continue; 
-			default:
-				continue;
-		}
-	}
+    case 'q':
+      return(0);
+      break;
+    case 'g':
+      cgotoxy(xcur, ycur, stdout);
+      putc(CHAR(world[which][xcur][ycur]), stdout);
+      return(1);
+      break;
+    case 'c':
+      clear_board(which);
+      display(which);
+      continue; 
+    default:
+      continue;
+    }
+  }
 }

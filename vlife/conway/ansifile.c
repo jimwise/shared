@@ -10,16 +10,16 @@
  * life comes with absolutely NO WARRANTY.
  */
 
-#include	<stdlib.h>
-#include	<stdio.h>
-#include	<stdarg.h>
-#include	<string.h>
-#include	"life.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include "life.h"
 
 /* size of buffer for checkstring() */
-#define		CHECK_LEN	1024
+#define	CHECK_LEN	1024
 
-static FILE		*boardfile;
+static FILE	*boardfile;
 
 /*
  * openfile() -- open a file as the current board file.
@@ -28,14 +28,13 @@ static FILE		*boardfile;
  */
  
 int
-openfile (char *name, int mode)
-{
-	if (mode)
-		boardfile = fopen(name, "rb");
-	else
-		boardfile = fopen(name, "wb");
+openfile (char *name, int mode) {
+  if (mode)
+    boardfile = fopen(name, "rb");
+  else
+    boardfile = fopen(name, "wb");
 		
-	return(boardfile == NULL);
+  return(boardfile == NULL);
 }
 
 /*
@@ -44,9 +43,8 @@ openfile (char *name, int mode)
  */
 
 int
-closefile (void)
-{
-	return(fclose(boardfile));
+closefile (void) {
+  return(fclose(boardfile));
 }	
 
 /*
@@ -55,18 +53,17 @@ closefile (void)
  */
  
 int
-putstring (char *format, ...)
-{
-	va_list args;
-	int		retval;
+putstring (char *format, ...) {
+  va_list args;
+  int		retval;
 	
-	va_start(args, format);
+  va_start(args, format);
 	
-	retval = !(vfprintf(boardfile, format, args));
+  retval = !(vfprintf(boardfile, format, args));
 	
-	va_end(args);
+  va_end(args);
 	
-	return(retval);
+  return(retval);
 }
 
 /*
@@ -76,26 +73,25 @@ putstring (char *format, ...)
  */
  
 int
-checkstring (char *format, ...)
-{
-	va_list args;
-	char	checkstring[CHECK_LEN + 1];
+checkstring (char *format, ...) {
+  va_list args;
+  char	checkstring[CHECK_LEN + 1];
 	
-	/* This isn't adequate, but is better than nothing */
-	if (strlen(format) > CHECK_LEN)
-	{
-		message("Cannot read, data chunk too large");
-		return(1);
-	}
+  /* This isn't adequate, but is better than nothing */
+  if (strlen(format) > CHECK_LEN)
+    {
+      message("Cannot read, data chunk too large");
+      return(1);
+    }
 	
-	va_start(args, format);
-	vsprintf(checkstring, format, args);
-	va_end(args);	
+  va_start(args, format);
+  vsprintf(checkstring, format, args);
+  va_end(args);	
 	
-	if (fscanf(boardfile, checkstring) == EOF)
-		return(1);
-	else
-		return(0);
+  if (fscanf(boardfile, checkstring) == EOF)
+    return(1);
+  else
+    return(0);
 }
  
 /*
@@ -105,9 +101,8 @@ checkstring (char *format, ...)
  */
 
 int
-putsize (int x_size, int y_size)
-{
-	return(putstring(FILE_SIZEFMT, x_size, y_size));
+putsize (int x_size, int y_size) {
+  return(putstring(FILE_SIZEFMT, x_size, y_size));
 }
 
 /*
@@ -116,12 +111,11 @@ putsize (int x_size, int y_size)
  */
  
 int
-getsize (int *x_size, int *y_size)
-{
-	if (fscanf(boardfile, FILE_SIZEFMT, x_size, y_size) != 2)
-		return(1);
-	else
-		return(0);
+getsize (int *x_size, int *y_size) {
+  if (fscanf(boardfile, FILE_SIZEFMT, x_size, y_size) != 2)
+    return(1);
+  else
+    return(0);
 }
 
 /*
@@ -130,11 +124,10 @@ getsize (int *x_size, int *y_size)
  */
 
 int
-putcell (int value)
-{
-	int 	outc = value ? 'X' : ' ';
+putcell (int value) {
+  int 	outc = value ? 'X' : ' ';
 	
-	return (fputc(outc, boardfile) == EOF);
+  return (fputc(outc, boardfile) == EOF);
 }
 
 /*
@@ -143,22 +136,20 @@ putcell (int value)
  */
 
 int
-getcell (void)
-{
-	char	c;
+getcell (void) {
+  char	c;
 	
-	c = getc(boardfile);
+  c = getc(boardfile);
 	
-	switch(c)
-	{
-		case 'X':
-			return(1);
-			break;
-		case ' ':
-			return(0);
-			break;
-		default:
-			return(-1);
-			break;
-	}
+  switch(c) {
+  case 'X':
+    return(1);
+    break;
+  case ' ':
+    return(0);
+    break;
+  default:
+    return(-1);
+    break;
+  }
 }

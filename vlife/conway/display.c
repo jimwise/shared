@@ -10,40 +10,38 @@
  * life comes with absolutely NO WARRANTY.
  */
 
-#include	<stdlib.h>
-#include	<stdio.h>
-#include	<stdarg.h>
-#include	<string.h>
-#include	<console.h>
-#include	"life.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
+#include <console.h>
+#include "life.h"
 
-
-extern int		count, trace;
+extern int count, trace;
 
 void
-init (int *Argc, char ***Argv)
-{	
-	console_options.top = YLOC;
-	console_options.left = XLOC;
-	console_options.nrows = YMAX+1; /* extra for status bar */
-	console_options.ncols = XMAX;
-	console_options.title = "\pConway's Life";
-	console_options.txSize = FONTSIZE;
-	console_options.pause_atexit = 0;
-	console_options.procID = 5;
+init (int *Argc, char ***Argv) {	
+  console_options.top = YLOC;
+  console_options.left = XLOC;
+  console_options.nrows = YMAX+1; /* extra for status bar */
+  console_options.ncols = XMAX;
+  console_options.title = "\pConway's Life";
+  console_options.txSize = FONTSIZE;
+  console_options.pause_atexit = 0;
+  console_options.procID = 5;
 	
-	freopenc(NULL, stdout);
-	freopenc(stdout, stdin);
-	csetmode(C_RAW, stdin);
+  freopenc(NULL, stdout);
+  freopenc(stdout, stdin);
+  csetmode(C_RAW, stdin);
 	
-	/* Published interface?  We don't need no steenkin' published interface */
-	/* WHACK!  Ok...  500 times... */
-	/*		"I will not use unpublished internal variables." */
-	/*		"I will not use unpublished internal variables." */
-	/*		... 	*/
-	_ftype = 'TEXT';
+  /* Published interface?  We don't need no steenkin' published interface */
+  /* WHACK!  Ok...  500 times... */
+  /*		"I will not use unpublished internal variables." */
+  /*		"I will not use unpublished internal variables." */
+  /*		... 	*/
+  _ftype = 'TEXT';
 	
-	message("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
+  message("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
 }
 
 /*
@@ -53,15 +51,14 @@ init (int *Argc, char ***Argv)
  */
  
 void
-display (int which)
-{
-	int		index, xedni;
+display (int which) {
+  int		index, xedni;
 	
-	cgotoxy(1, 1, stdout);
+  cgotoxy(1, 1, stdout);
 	
-	for (index=1; index<=YMAX; index++)
-		for (xedni=1; xedni<=XMAX; xedni++)
-			putc(CHAR(world[which][xedni][index]), stdout);
+  for (index=1; index<=YMAX; index++)
+    for (xedni=1; xedni<=XMAX; xedni++)
+      putc(CHAR(world[which][xedni][index]), stdout);
 }
 
 /*
@@ -69,25 +66,24 @@ display (int which)
  */
 
 void
-message(char *format, ...)
-{
-	va_list		args;
-	char		*newfmt;
+message(char *format, ...) {
+  va_list		args;
+  char		*newfmt;
 	
-	newfmt = malloc(strlen(format) + 19);
-	sprintf(newfmt, "%s; <<Press any Key>>", format);
-	free(newfmt);
+  newfmt = malloc(strlen(format) + 19);
+  sprintf(newfmt, "%s; <<Press any Key>>", format);
+  free(newfmt);
 	
-	va_start(args, format);
+  va_start(args, format);
 	
-	cgotoxy(1, YMAX+1, stdout);
-	vprintf(newfmt, args);
-	ccleol(stdout);
+  cgotoxy(1, YMAX+1, stdout);
+  vprintf(newfmt, args);
+  ccleol(stdout);
 	
-	va_end(args);
+  va_end(args);
 	
-	while(getc(stdin) == EOF)
-		;
+  while(getc(stdin) == EOF)
+    ;
 }
 
 
@@ -96,57 +92,51 @@ message(char *format, ...)
  */
  
 void
-filemenu (int which)
-{
-	int		flag = 1;
-	char	c, fname[NAMELEN];
+filemenu (int which) {
+  int		flag = 1;
+  char	c, fname[NAMELEN];
 
-	cgotoxy(1, YMAX+1, stdout);
-	printf(MENUSTR);
-	ccleol(stdout);
+  cgotoxy(1, YMAX+1, stdout);
+  printf(MENUSTR);
+  ccleol(stdout);
 	
-	while (flag)
-	{
-		c = getc(stdin);
+  while (flag) {
+    c = getc(stdin);
 		
-		switch (c)
-		{
-			case 'l':
-				clear_board(which);
-				if (!getname(fname))
-				{
-					if (load(which, fname))
-					{
-						message("Could not load board from file %s", fname);
-						clear_board(which);
-					}
-					else
-						message("Board loaded from file %s", fname);
-				}
-				display(which);
-				cgotoxy(1, YMAX+1, stdout);
-				printf(MENUSTR);
-				ccleol(stdout);
-				break;
-			case 's':
-				if (!getname(fname))
-				{
-					if (save(which, fname))
-						message("Could not save board to file %s", fname);
-					else
-						message("Board saved to file %s", fname);
-				}
-				cgotoxy(1, YMAX+1, stdout);
-				printf(MENUSTR);
-				ccleol(stdout);
-				break;
-			case 'r':
-				flag = 0;
-				break;
-			default:
-				break;
-		}
+    switch (c) {
+    case 'l':
+      clear_board(which);
+      if (!getname(fname)) {
+	if (load(which, fname))	{
+	  message("Could not load board from file %s", fname);
+	  clear_board(which);
+	} else {
+	  message("Board loaded from file %s", fname);
 	}
+      }
+      display(which);
+      cgotoxy(1, YMAX+1, stdout);
+      printf(MENUSTR);
+      ccleol(stdout);
+      break;
+    case 's':
+      if (!getname(fname)) {
+	if (save(which, fname))
+	  message("Could not save board to file %s", fname);
+	else
+	  message("Board saved to file %s", fname);
+      }
+      cgotoxy(1, YMAX+1, stdout);
+      printf(MENUSTR);
+      ccleol(stdout);
+      break;
+    case 'r':
+      flag = 0;
+      break;
+    default:
+      break;
+    }
+  }
 }
 
 /*
@@ -155,49 +145,45 @@ filemenu (int which)
  */
 
 int
-getname(char *name)
-{
-	int		counter = 0;
-	char	c;
+getname(char *name) {
+  int		counter = 0;
+  char	c;
 	
-	cgotoxy(1, YMAX+1, stdout);
-	printf("Enter FileName: ");
-	ccleol(stdout);
+  cgotoxy(1, YMAX+1, stdout);
+  printf("Enter FileName: ");
+  ccleol(stdout);
 	
-	while ( 1 )
-	{
-		c = getc(stdin);
-		if (c == EOF)
-			continue;
-		if (c == '\r')
-			break;
-		if (c == '\b')
-		{
-			putc('\b', stdout);
-			putc(' ', stdout);
-			putc('\b', stdout);
-			counter--;
-			continue;
-		}
+  while (1) {
+    c = getc(stdin);
+    if (c == EOF)
+      continue;
+    if (c == '\r')
+      break;
+    if (c == '\b'){
+      putc('\b', stdout);
+      putc(' ', stdout);
+      putc('\b', stdout);
+      counter--;
+      continue;
+    }
 		
-		putc(c, stdout);
-		name[counter] = c;
+    putc(c, stdout);
+    name[counter] = c;
 		
-		counter++;
-		if (counter == NAMELEN)
-		{
-			message("Name is too long");
-			counter = 0;
-			cgotoxy(1, YMAX+1, stdout);
-			printf("Enter FileName: ");
-			ccleol(stdout);
-			continue;
-		}
-	}
+    counter++;
+    if (counter == NAMELEN)	{
+      message("Name is too long");
+      counter = 0;
+      cgotoxy(1, YMAX+1, stdout);
+      printf("Enter FileName: ");
+      ccleol(stdout);
+      continue;
+    }
+  }
 	
-	name[counter] = '\0';
-	DEBUG("Got Name");
-	return(!strlen(name));
+  name[counter] = '\0';
+  DEBUG("Got Name");
+  return(!strlen(name));
 }
 
 
@@ -207,18 +193,17 @@ getname(char *name)
  */
  
 int
-callback (int turn, int current)
-{
-	char c;
+callback (int turn, int current) {
+  char c;
 	
-	/* Don't use message() to avoid pause */
-	cgotoxy(1, YMAX+1, stdout);
-	printf("Turn : %6d ; <Press any key to interrupt>", turn);
-	ccleol(stdout);
+  /* Don't use message() to avoid pause */
+  cgotoxy(1, YMAX+1, stdout);
+  printf("Turn : %6d ; <Press any key to interrupt>", turn);
+  ccleol(stdout);
 	
-	c = getc(stdin);
-	if (c == EOF)
-		return(1);
-	else
-		return(0);
+  c = getc(stdin);
+  if (c == EOF)
+    return(1);
+  else
+    return(0);
 }

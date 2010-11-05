@@ -10,7 +10,7 @@
  * life comes with absolutely NO WARRANTY.
  */
 
-#include	"life.h"
+#include "life.h"
 
 /*
  * generation() -- given two board selectors, generate the next generation
@@ -18,13 +18,12 @@
  */
 
 void
-generation (int from, int to)
-{
-	int index, xedni;
+generation (int from, int to) {
+  int index, xedni;
 	
-	for (index=1; index<=YMAX; index++)
-		for (xedni=1; xedni<=XMAX; xedni++)
-			world[to][xedni][index] = determine(from, xedni, index);
+  for (index=1; index<=YMAX; index++)
+    for (xedni=1; xedni<=XMAX; xedni++)
+      world[to][xedni][index] = determine(from, xedni, index);
 }
 
 /*
@@ -33,31 +32,27 @@ generation (int from, int to)
  */
 
 int
-determine (int which, int x, int y)
-{
-	int	count=0;
+determine (int which, int x, int y) {
+  int	count=0;
 	
-	count = world[which][x-1][y-1]
-			+ world[which][x][y-1]
-			+ world[which][x+1][y-1]
-			+ world[which][x-1][y]
-			+ world[which][x+1][y]
-			+ world[which][x-1][y+1]
-			+ world[which][x][y+1]
-			+ world[which][x+1][y+1];
+  count = world[which][x-1][y-1] +
+    world[which][x][y-1] +
+    world[which][x+1][y-1] +
+    world[which][x-1][y] +
+    world[which][x+1][y] +
+    world[which][x-1][y+1] +
+    world[which][x][y+1] +
+    world[which][x+1][y+1];
 	
-	if (world[which][x][y])
-	{
-		if ((count == 2) || (count == 3))
-			return 1;
-		else
-			return 0;
-	}
-	else
-	{
-		if (count == 3)
-			return 1;
-		else
-			return 0;
-	}
+  if (world[which][x][y])	{
+    if ((count == 2) || (count == 3))
+      return 1;
+    else
+      return 0;
+  } else {
+    if (count == 3)
+      return 1;
+    else
+      return 0;
+  }
 }

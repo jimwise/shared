@@ -98,22 +98,20 @@
 #include "life.h"
 
 Board	world[3];
-int		current = BOARD_A, turn = 1;
+int	current = BOARD_A, turn = 1;
 
 int
-main (int argc, char **argv)
-{
-	init(&argc, &argv);
-	clear_board(BOARD_A);
+main (int argc, char **argv) {
+  init(&argc, &argv);
+  clear_board(BOARD_A);
 	
-	while ( 1 )
-	{	
-		if ( !edit(current) )
-			break;
-		run();
-	}
+  while (1) {	
+    if (!edit(current))
+      break;
+    run();
+  }
 
-	exit(0);
+  exit(0);
 }
 
 /*
@@ -121,13 +119,12 @@ main (int argc, char **argv)
  */
 
 void
-clear_board (int which)
-{
-	int	index, xedni;
+clear_board (int which) {
+  int	index, xedni;
 	
-	for (index=1; index<=YMAX; index++)
-		for (xedni=1; xedni<=XMAX; xedni++)
-			world[which][xedni][index] = 0;
+  for (index=1; index<=YMAX; index++)
+    for (xedni=1; xedni<=XMAX; xedni++)
+      world[which][xedni][index] = 0;
 }
 
 /*
@@ -135,18 +132,16 @@ clear_board (int which)
  */
 
 void
-run (void)
-{
-	while ( 1 )
-	{
-		display(current);
+run (void) {
+  while (1) {
+    display(current);
 			
-		if ( !callback(turn, current) )
-			break;
+    if ( !callback(turn, current) )
+      break;
 		
-		generation(current, OTHER(current));
-		current = OTHER(current);
+    generation(current, OTHER(current));
+    current = OTHER(current);
 		
-		turn++;
-	}
+    turn++;
+  }
 }
