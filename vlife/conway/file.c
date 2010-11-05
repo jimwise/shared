@@ -105,8 +105,8 @@ load (int which, char *name) {
 
 /*
  * findbounds() -- determine the minimum and maximum x and y bounds of a life
- * board.  This allows boards saved in one version of life to open boards it can
- * manage, even if saved with a larger version.
+ * board.  This allows any run of life to open boards it can manage, even if
+ * saved with a larger version.
  * If there are no live cells, we treat the board as an empty board of size 1x1.
  */
 
