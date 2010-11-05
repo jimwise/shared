@@ -35,8 +35,7 @@ edit (int which) {
   display(which);
 			
   /* Don't use message() to avoid pause */
-  move(YMAX+1, 0);
-  printf(EDIT_INSTSTR);
+  mvprintw(YMAX+1, 0, EDIT_INSTSTR);
   clrtoeol();
 	
   while (1) {
@@ -80,8 +79,7 @@ edit (int which) {
     break;
     case 'f':
       filemenu(which);
-      move(YMAX+1, 0);
-      printf(EDIT_INSTSTR);
+      mvprintw(YMAX+1, 0, EDIT_INSTSTR);
       clrtoeol();
       break;
     case 'q':

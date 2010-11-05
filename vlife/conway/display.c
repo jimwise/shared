@@ -54,16 +54,13 @@ display (int which) {
 void
 message(char *format, ...) {
   va_list args;
-  char *newfmt;
-	
-  newfmt = malloc(strlen(format) + 19);
-  sprintf(newfmt, "%s; <<Press any Key>>", format);
-  free(newfmt);
+  char line[XMAX+1];
 	
   va_start(args, format);
-
-  move(YMAX+1, 0);
-  vprintf(newfmt, args);	/* XXX XXX XXX once we have a win, use vw_printw */
+  
+  vsnprintf(line, sizeof(line), format, args);
+  strlcat(line, "; <<Press any key>>", sizeof(line));
+  mvprintw(YMAX+1, 0, line);
   clrtoeol();
 
   getch();
