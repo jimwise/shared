@@ -135,11 +135,11 @@ run (void)
 {
   int		x, y;
 
-  move(2,0);
   clrtobot();
   refresh();
 	
-  for (x=0; x<(rows - 2); x++) {
+  for (x=2; x<(rows); x++) {
+    move(x, 0);
     putline();
     for (y=1; y<=cols; y++)
       /* here's the guts of it... */
@@ -159,8 +159,7 @@ putline (void)
   int		x;
 
   for (x=1; x<cols+2; x++)
-    insch(CHAR(world[current][x]));
-  insch('\n');
+    addch(CHAR(world[current][x]));
   refresh();
 }
 

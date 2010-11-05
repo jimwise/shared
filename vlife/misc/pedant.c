@@ -131,8 +131,7 @@ step (void)
   /* First, the current square is toggled */
   world[xcur][ycur] = TOGGLE(world[xcur][ycur]);
   move(ycur, xcur);
-  delch();
-  insch(world[xcur][ycur]);
+  addch(world[xcur][ycur]);
   refresh();
 	
   /* Second, the ant moves one square in the current direction */

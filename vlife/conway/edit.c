@@ -17,6 +17,7 @@
 #define	MOVECURSOR(delta_x, delta_y)		\
   move(ycur, xcur);				\
   insch(CHAR(world[which][xcur][ycur]));	\
+  refresh();					\
   xcur = MAX(MIN(xcur + delta_x, XMAX), 1);	\
   ycur = MAX(MIN(ycur + delta_y, YMAX), 1)	
 					
