@@ -16,7 +16,7 @@
 
 #define	MOVECURSOR(delta_x, delta_y)		\
   move(ycur, xcur);				\
-  insch(CHAR(world[which][xcur][ycur]));	\
+  addch(CHAR(world[which][xcur][ycur]));	\
   refresh();					\
   xcur = MAX(MIN(xcur + delta_x, XMAX), 1);	\
   ycur = MAX(MIN(ycur + delta_y, YMAX), 1)	
@@ -41,7 +41,6 @@ edit (int which) {
 	
   while (1) {
     move(ycur, xcur);
-    insch('%');
 		
     c = getch();
 		
@@ -87,8 +86,6 @@ edit (int which) {
       return(0);
       break;
     case 'g':
-      move(ycur, xcur);
-      insch(CHAR(world[which][xcur][ycur]));
       return(1);
       break;
     case 'c':

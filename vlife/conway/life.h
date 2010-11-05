@@ -39,28 +39,27 @@ typedef unsigned char Board[XMAX+1][YMAX+1];
 
 int	callback (int, int);
 int	checkstring (char *, ...);
+void	clear_board (int);
 int	closefile (void);
 int	determine (int, int, int);
+void	display (int);
 int	edit (int);
+void	filemenu (int which);
+void	findbounds (int);
+void	generation (int, int);
 int	getboard (int, int, int);
 int	getcell (void);
 int	getname (char *);
 int	getsize (int *, int *);
 int	load (int, char *);
+void	message(char *, ...);
 int	openfile (char *, int);
 int	putboard (int);
 int	putcell (int);
 int	putsize (int, int);
 int	putstring (char *, ...);
-int	save (int, char *);
-void	clear_board (int);
-void	display (int);
-void	filemenu (int which);
-void	findbounds (int);
-void	generation (int, int);
-void	init (void);
-void	message(char *, ...);
 void	run (void);
+int	save (int, char *);
 
 extern Board	world[3];
 
@@ -72,6 +71,6 @@ extern Board	world[3];
 #define	MENUSTR		"[L]oad; [S]ave; [R]eturn"
 #define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [F]ile; [C]lear; [G]o; [Q]uit"
 
-#define	CHAR(x)	((x) ? '¥' : ' ')
+#define	CHAR(x)	((x) ? '#' : ' ')
 
 #endif

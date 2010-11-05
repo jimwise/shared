@@ -95,6 +95,7 @@
  */
 
 #include <stdlib.h>
+#include <curses.h>
 #include "life.h"
 
 Board	world[3];
@@ -102,7 +103,13 @@ int	current = BOARD_A, turn = 1;
 
 int
 main (int argc, char **argv) {
-  init();
+  initscr();
+  cbreak();
+  noecho();
+  clear();
+  refresh();
+
+  message("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
   clear_board(BOARD_A);
 	
   while (1) {	
@@ -111,6 +118,7 @@ main (int argc, char **argv) {
     run();
   }
 
+  endwin();
   exit(0);
 }
 

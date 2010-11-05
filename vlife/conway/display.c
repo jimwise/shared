@@ -18,17 +18,6 @@
 
 #include "life.h"
 
-void
-init (void) {
-  initscr();
-  cbreak();
-  noecho();
-  clear();
-  refresh();
-
-  message("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
-}
-
 /*
  * display() -- given a board selector, show that board to the user.
  * this version, for the Think C console environment, simply ascii-arts
@@ -42,7 +31,7 @@ display (int which) {
   for (index=1; index<=YMAX; index++) {
     move (index-1, 0);
     for (xedni=1; xedni<=XMAX; xedni++)
-      insch(CHAR(world[which][xedni][index]));
+      addch(CHAR(world[which][xedni][index]));
   }
   refresh();
 }
@@ -62,6 +51,7 @@ message(char *format, ...) {
   strlcat(line, "; <<Press any key>>", sizeof(line));
   mvprintw(YMAX+1, 0, line);
   clrtoeol();
+  refresh();
 
   getch();
 
@@ -80,7 +70,8 @@ filemenu (int which) {
 
   mvprintw(YMAX+1, 0, MENUSTR);
   clrtoeol();
-	
+  refresh();
+
   while (flag) {
     c = getch();
 		
@@ -127,10 +118,11 @@ int
 getname(char *name) {
   mvprintw(YMAX+1, 0, "Enter FileName: ");
   clrtoeol();
+  refresh();
   
   echo();
   nocrmode();
-  getstr(name);			/* XXX XXX real curses doesn't have getnstr, use wgetnstr once we have a win */
+  getstr(name);		/* XXX XXX real curses doesn't have getnstr, use wgetnstr once we have a win */
   crmode();
   noecho();
 
@@ -150,6 +142,7 @@ callback (int turn, int current) {
   /* Don't use message() to avoid pause */
   mvprintw(YMAX+1, 0, "Turn : %6d ; <Press any key to interrupt>", turn);
   clrtoeol();
+  refresh();
 	
   c = getch();
   if (c == EOF)
