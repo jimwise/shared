@@ -37,7 +37,6 @@ typedef unsigned char Board[XMAX+1][YMAX+1];
 
 /* shared routines */
 
-int	callback (int, int);
 int	checkstring (char *, ...);
 void	clear_board (int);
 int	closefile (void);
@@ -71,6 +70,6 @@ extern Board	world[3];
 #define	MENUSTR		"[L]oad; [S]ave; [R]eturn"
 #define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [F]ile; [C]lear; [G]o; [Q]uit"
 
-#define	CHAR(x)	((x) ? '#' : ' ')
+#define	CHAR(x)	((x) ? '*' : ' ')
 
 #endif

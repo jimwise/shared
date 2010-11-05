@@ -52,8 +52,9 @@ message(char *format, ...) {
   mvprintw(YMAX+1, 0, line);
   clrtoeol();
   refresh();
-
-  getch();
+  
+  while (getch() == ERR)	/* XXX when we have a win, control nodelay better */
+    ;
 
   va_end(args);
 }
@@ -103,7 +104,7 @@ filemenu (int which) {
     case 'r':
       flag = 0;
       break;
-    default:
+    default:			/* e.g. ERR, i.e. no char ready */
       break;
     }
   }
@@ -127,26 +128,4 @@ getname(char *name) {
   noecho();
 
   return(!strlen(name));
-}
-
-
-/*
- * callback() -- called every turn
- * Returns 1 to keep running, 0 to stop
- */
- 
-int
-callback (int turn, int current) {
-  char c;
-	
-  /* Don't use message() to avoid pause */
-  mvprintw(YMAX+1, 0, "Turn : %6d ; <Press any key to interrupt>", turn);
-  clrtoeol();
-  refresh();
-	
-  c = getch();
-  if (c == EOF)
-    return(1);
-  else
-    return(0);
 }

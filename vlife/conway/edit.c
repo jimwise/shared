@@ -15,11 +15,8 @@
 #include "life.h"
 
 #define	MOVECURSOR(delta_x, delta_y)		\
-  move(ycur, xcur);				\
-  addch(CHAR(world[which][xcur][ycur]));	\
-  refresh();					\
-  xcur = MAX(MIN(xcur + delta_x, XMAX), 1);	\
-  ycur = MAX(MIN(ycur + delta_y, YMAX), 1)	
+  xcur = MAX(MIN(xcur + delta_x, XMAX), 0);	\
+  ycur = MAX(MIN(ycur + delta_y, YMAX), 0);	
 					
 /*
  * edit() -- allow the user to set up the board.
@@ -31,7 +28,7 @@
 int
 edit (int which) {
   char	c;
-  int	xcur = 1, ycur = 1;
+  int	xcur = 0, ycur = 0;
 	
   display(which);
 			
@@ -75,8 +72,9 @@ edit (int which) {
       break;
     case ' ':
     case '5':
-      world[which][xcur][ycur] = OTHER(world[which][xcur][ycur]);
-    break;
+      world[which][xcur+1][ycur+1] = OTHER(world[which][xcur+1][ycur+1]);
+      addch(CHAR(world[which][xcur+1][ycur+1]));
+      break;
     case 'f':
       filemenu(which);
       mvprintw(YMAX+1, 0, EDIT_INSTSTR);
@@ -91,9 +89,9 @@ edit (int which) {
     case 'c':
       clear_board(which);
       display(which);
-      continue; 
-    default:
-      continue;
+      break;
+    default:			/* e.g. ERR if no char ready */
+      break;
     }
   }
 }
