@@ -78,14 +78,12 @@ edit (int which) {
     case '5':
       world[which][xcur][ycur] = OTHER(world[which][xcur][ycur]);
     break;
-#ifndef	NO_FILE
     case 'f':
       filemenu(which);
       move(YMAX+1, 0);
       printf(EDIT_INSTSTR);
       clrtoeol();
       break;
-#endif
     case 'q':
       return(0);
       break;
