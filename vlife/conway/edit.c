@@ -15,8 +15,8 @@
 #include "life.h"
 
 #define	MOVECURSOR(delta_x, delta_y)		\
-  cgotoxy(xcur, ycur, stdout);			\
-  putc(CHAR(world[which][xcur][ycur]), stdout);	\
+  move(ycur, xcur);				\
+  insch(CHAR(world[which][xcur][ycur]));	\
   xcur = MAX(MIN(xcur + delta_x, XMAX), 1);	\
   ycur = MAX(MIN(ycur + delta_y, YMAX), 1)	
 					
@@ -35,15 +35,15 @@ edit (int which) {
   display(which);
 			
   /* Don't use message() to avoid pause */
-  cgotoxy(1, YMAX+1, stdout);
+  move(YMAX+1, 0);
   printf(EDIT_INSTSTR);
-  ccleol(stdout);
+  clrtoeol();
 	
   while (1) {
-    cgotoxy(xcur, ycur, stdout);
-    putc('%', stdout);
+    move(ycur, xcur);
+    insch('%');
 		
-    c = getc(stdin);
+    c = getch();
 		
     switch (c) {
     case 'h':
@@ -81,17 +81,17 @@ edit (int which) {
 #ifndef	NO_FILE
     case 'f':
       filemenu(which);
-      cgotoxy(1, YMAX+1, stdout);
+      move(YMAX+1, 0);
       printf(EDIT_INSTSTR);
-      ccleol(stdout);
+      clrtoeol();
       break;
 #endif
     case 'q':
       return(0);
       break;
     case 'g':
-      cgotoxy(xcur, ycur, stdout);
-      putc(CHAR(world[which][xcur][ycur]), stdout);
+      move(ycur, xcur);
+      insch(CHAR(world[which][xcur][ycur]));
       return(1);
       break;
     case 'c':

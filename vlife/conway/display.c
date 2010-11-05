@@ -14,33 +14,18 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <console.h>
+#include <curses.h>
+
 #include "life.h"
 
-extern int count, trace;
-
 void
-init (int *Argc, char ***Argv) {	
-  console_options.top = YLOC;
-  console_options.left = XLOC;
-  console_options.nrows = YMAX+1; /* extra for status bar */
-  console_options.ncols = XMAX;
-  console_options.title = "\pConway's Life";
-  console_options.txSize = FONTSIZE;
-  console_options.pause_atexit = 0;
-  console_options.procID = 5;
-	
-  freopenc(NULL, stdout);
-  freopenc(stdout, stdin);
-  csetmode(C_RAW, stdin);
-	
-  /* Published interface?  We don't need no steenkin' published interface */
-  /* WHACK!  Ok...  500 times... */
-  /*		"I will not use unpublished internal variables." */
-  /*		"I will not use unpublished internal variables." */
-  /*		... 	*/
-  _ftype = 'TEXT';
-	
+init (void) {
+  initscr();
+  cbreak();
+  noecho();
+  clear();
+  refresh();
+
   message("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
 }
 
@@ -52,13 +37,14 @@ init (int *Argc, char ***Argv) {
  
 void
 display (int which) {
-  int		index, xedni;
-	
-  cgotoxy(1, 1, stdout);
-	
-  for (index=1; index<=YMAX; index++)
+  int index, xedni;
+
+  for (index=1; index<=YMAX; index++) {
+    move (index-1, 0);
     for (xedni=1; xedni<=XMAX; xedni++)
-      putc(CHAR(world[which][xedni][index]), stdout);
+      insch(CHAR(world[which][xedni][index]));
+  }
+  refresh();
 }
 
 /*
@@ -67,23 +53,22 @@ display (int which) {
 
 void
 message(char *format, ...) {
-  va_list		args;
-  char		*newfmt;
+  va_list args;
+  char *newfmt;
 	
   newfmt = malloc(strlen(format) + 19);
   sprintf(newfmt, "%s; <<Press any Key>>", format);
   free(newfmt);
 	
   va_start(args, format);
-	
-  cgotoxy(1, YMAX+1, stdout);
-  vprintf(newfmt, args);
-  ccleol(stdout);
-	
+
+  move(YMAX+1, 0);
+  vprintf(newfmt, args);	/* XXX XXX XXX once we have a win, use vw_printw */
+  clrtoeol();
+
+  getch();
+
   va_end(args);
-	
-  while(getc(stdin) == EOF)
-    ;
 }
 
 
@@ -96,12 +81,11 @@ filemenu (int which) {
   int		flag = 1;
   char	c, fname[NAMELEN];
 
-  cgotoxy(1, YMAX+1, stdout);
-  printf(MENUSTR);
-  ccleol(stdout);
+  mvprintw(YMAX+1, 0, MENUSTR);
+  clrtoeol();
 	
   while (flag) {
-    c = getc(stdin);
+    c = getch();
 		
     switch (c) {
     case 'l':
@@ -115,9 +99,8 @@ filemenu (int which) {
 	}
       }
       display(which);
-      cgotoxy(1, YMAX+1, stdout);
-      printf(MENUSTR);
-      ccleol(stdout);
+      mvprintw(YMAX+1, 0, MENUSTR);
+      clrtoeol();
       break;
     case 's':
       if (!getname(fname)) {
@@ -126,9 +109,8 @@ filemenu (int which) {
 	else
 	  message("Board saved to file %s", fname);
       }
-      cgotoxy(1, YMAX+1, stdout);
-      printf(MENUSTR);
-      ccleol(stdout);
+      mvprintw(YMAX+1, 0, MENUSTR);
+      clrtoeol();
       break;
     case 'r':
       flag = 0;
@@ -146,43 +128,15 @@ filemenu (int which) {
 
 int
 getname(char *name) {
-  int		counter = 0;
-  char	c;
-	
-  cgotoxy(1, YMAX+1, stdout);
-  printf("Enter FileName: ");
-  ccleol(stdout);
-	
-  while (1) {
-    c = getc(stdin);
-    if (c == EOF)
-      continue;
-    if (c == '\r')
-      break;
-    if (c == '\b'){
-      putc('\b', stdout);
-      putc(' ', stdout);
-      putc('\b', stdout);
-      counter--;
-      continue;
-    }
-		
-    putc(c, stdout);
-    name[counter] = c;
-		
-    counter++;
-    if (counter == NAMELEN)	{
-      message("Name is too long");
-      counter = 0;
-      cgotoxy(1, YMAX+1, stdout);
-      printf("Enter FileName: ");
-      ccleol(stdout);
-      continue;
-    }
-  }
-	
-  name[counter] = '\0';
-  DEBUG("Got Name");
+  mvprintw(YMAX+1, 0, "Enter FileName: ");
+  clrtoeol();
+  
+  echo();
+  nocrmode();
+  getstr(name);			/* XXX XXX real curses doesn't have getnstr, use wgetnstr once we have a win */
+  crmode();
+  noecho();
+
   return(!strlen(name));
 }
 
@@ -197,11 +151,10 @@ callback (int turn, int current) {
   char c;
 	
   /* Don't use message() to avoid pause */
-  cgotoxy(1, YMAX+1, stdout);
-  printf("Turn : %6d ; <Press any key to interrupt>", turn);
-  ccleol(stdout);
+  mvprintw(YMAX+1, 0, "Turn : %6d ; <Press any key to interrupt>", turn);
+  clrtoeol();
 	
-  c = getc(stdin);
+  c = getch();
   if (c == EOF)
     return(1);
   else

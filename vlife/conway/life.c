@@ -102,7 +102,7 @@ int	current = BOARD_A, turn = 1;
 
 int
 main (int argc, char **argv) {
-  init(&argc, &argv);
+  init();
   clear_board(BOARD_A);
 	
   while (1) {	

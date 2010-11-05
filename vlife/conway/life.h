@@ -54,7 +54,7 @@ int	getboard (int, int, int);
 
 /* machine-dependent routines */
 
-void	init (int *, char ***);
+void	init (void);
 void	clear_board (int);
 int	callback (int, int);
 void	display (int);
@@ -76,17 +76,6 @@ extern Board	world[3];
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))
-
-#ifdef	DEBUG_MSGS
-#define	DEBUG(a)	message(a)
-#else
-#define	DEBUG(a)
-#endif
-
-#define	FONTSIZE	9
-
-#define	XLOC	10
-#define	YLOC	50
 
 #ifdef NO_FILE
 #define	EDIT_INSTSTR	"Move [keypad/hjkl]; Toggle [5/space]; [C]lear; [G]o; [Q]uit"
