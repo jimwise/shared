@@ -1,4 +1,4 @@
-/*
+ls/*
  * thinkedit.c -- mac-specific (console) board editing code for Conway's Life
  *
  * please see the file life.c for more information
@@ -94,4 +94,74 @@ edit (int which) {
       break;
     }
   }
+}
+
+/*
+ * filemenu() -- let the user load or save a file
+ */
+ 
+void
+filemenu (int which) {
+  int		flag = 1;
+  char	c, fname[NAMELEN];
+
+  mvprintw(YMAX+1, 0, MENUSTR);
+  clrtoeol();
+  refresh();
+
+  while (flag) {
+    c = getch();
+		
+    switch (c) {
+    case 'l':
+      clear_board(which);
+      if (!getname(fname)) {
+	if (load(which, fname))	{
+	  message("Could not load board from file %s", fname);
+	  clear_board(which);
+	} else {
+	  message("Board loaded from file %s", fname);
+	}
+      }
+      display(which);
+      mvprintw(YMAX+1, 0, MENUSTR);
+      clrtoeol();
+      break;
+    case 's':
+      if (!getname(fname)) {
+	if (save(which, fname))
+	  message("Could not save board to file %s", fname);
+	else
+	  message("Board saved to file %s", fname);
+      }
+      mvprintw(YMAX+1, 0, MENUSTR);
+      clrtoeol();
+      break;
+    case 'r':
+      flag = 0;
+      break;
+    default:			/* e.g. ERR, i.e. no char ready */
+      break;
+    }
+  }
+}
+
+/*
+ * getname() -- get file name from user and store in given char *
+ * returns 0 on success, non-zero if user entered zero-length string
+ */
+
+int
+getname(char *name) {
+  mvprintw(YMAX+1, 0, "Enter FileName: ");
+  clrtoeol();
+  refresh();
+  
+  echo();
+  nocrmode();
+  getstr(name);		/* XXX XXX real curses doesn't have getnstr, use wgetnstr once we have a win */
+  crmode();
+  noecho();
+
+  return(!strlen(name));
 }
