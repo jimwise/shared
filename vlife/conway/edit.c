@@ -16,8 +16,8 @@
 #include "life.h"
 
 #define	MOVECURSOR(delta_x, delta_y)		\
-  xcur = MAX(MIN(xcur + delta_x, XMAX), 0);	\
-  ycur = MAX(MIN(ycur + delta_y, YMAX), 0);	
+  xcur = MAX(MIN(xcur + delta_x, XMAX+1), 1);	\
+  ycur = MAX(MIN(ycur + delta_y, YMAX+1), 1);	
 					
 /*
  * edit() -- allow the user to set up the board.
@@ -29,7 +29,7 @@
 int
 edit (int which) {
   char	c;
-  int	xcur = 0, ycur = 0;
+  int	xcur = 1, ycur = 1;
 	
   display(which);
 			
@@ -38,7 +38,7 @@ edit (int which) {
   clrtoeol();
 	
   while (1) {
-    move(ycur, xcur);
+    move(ycur-1, xcur-1);
 		
     c = getch();
 		
@@ -73,8 +73,8 @@ edit (int which) {
       break;
     case ' ':
     case '5':
-      CELL(ycur+1, xcur+1) = OTHER(CELL(ycur+1, xcur+1));
-      addch(CHAR(CELL(ycur+1, xcur+1)));
+      CELL(ycur, xcur) = OTHER(CELL(ycur, xcur));
+      addch(CHAR(CELL(ycur, xcur)));
       break;
     case 'f':
       filemenu(which);

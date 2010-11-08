@@ -33,7 +33,8 @@
 #define	FILE_SEPSTRING		"----------\n"
 #define FILE_SIZEFMT		"%d x %d\n"
 
-typedef unsigned char Board[YMAX+2][XMAX+2];
+/* visible world runs from 1..?MAX+1, with fenceposts all around */
+typedef unsigned char Board[YMAX+3][XMAX+3];
 
 /* shared routines */
 

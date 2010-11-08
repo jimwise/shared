@@ -26,9 +26,9 @@ void
 display (int which) {
   int index, xedni;
 
-  for (index=1; index<=YMAX; index++) {
+  for (index=1; index<=YMAX+1; index++) {
     move (index-1, 0);
-    for (xedni=1; xedni<=XMAX; xedni++)
+    for (xedni=1; xedni<=XMAX+1; xedni++)
       addch(CHAR(CELL(index, xedni)));
   }
   refresh();
