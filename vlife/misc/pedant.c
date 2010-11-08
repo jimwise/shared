@@ -91,7 +91,7 @@ main (int argc, char **argv) {
   clear();
   refresh();
 
-  world = malloc((xmax + 1) * sizeof(char));
+  world = malloc((xmax + 1) * sizeof(char *));
   for (x = 0; x <= xmax; x++) {
     world[x] = malloc((ymax + 1) * sizeof(char));
     for (y = 0; y <= ymax; y++)
