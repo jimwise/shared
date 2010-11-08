@@ -54,6 +54,7 @@ int	getsize (int *, int *);
 int	load (int, char *);
 void	message(char *, ...);
 int	openfile (char *, int);
+void	prompt(char *, ...);
 int	putboard (int);
 int	putcell (int);
 int	putsize (int, int);

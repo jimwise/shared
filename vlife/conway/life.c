@@ -113,7 +113,7 @@ main (int argc, char **argv) {
   refresh();
   nodelay(win, 1);
 
-  message("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
+  prompt("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
   clear_board(BOARD_A);
 	
   while (1) {	
@@ -146,7 +146,7 @@ clear_board (int which) {
 void
 run (void) {
   while (1) {
-    mvprintw(YMAX+1, 0, "Turn : %6d ; <Press any key to interrupt>", turn);
+    message("Turn : %6d ; <Press any key to interrupt>", turn);
     clrtoeol();
     display(current);
 		

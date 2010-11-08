@@ -15,8 +15,9 @@
 #include <stdarg.h>
 #include <string.h>
 #include <curses.h>
-
 #include "life.h"
+
+static void vmessage(char *format, va_list args);
 
 /*
  * display() -- given a board selector, show that board to the user.
@@ -35,24 +36,53 @@ display (int which) {
 }
 
 /*
- * message() -- given a printf string, output the string
+ * prompt() -- display a printf string and wait for keypress
  */
 
 void
-message(char *format, ...) {
+prompt(char *fmt, ...)
+{
+  char line[XMAX+2];
+
   va_list args;
-  char line[XMAX+1];
-	
-  va_start(args, format);
-  
-  vsnprintf(line, sizeof(line), format, args);
+  va_start(args, fmt);
+
+  strlcpy(line, fmt, sizeof(line));
   strlcat(line, "; <<Press any key>>", sizeof(line));
-  mvprintw(YMAX+1, 0, line);
-  clrtoeol();
-  refresh();
-  
+
+  vmessage(line, args);
   while (getch() == ERR)	/* XXX when we have a win, control nodelay better */
     ;
 
   va_end(args);
+}
+
+/*
+ * message() -- display a printf string and don't ait for keypress
+ */
+
+void
+message(char *fmt, ...)
+{
+  va_list args;
+  va_start(args, fmt);
+
+  vmessage(fmt, args);
+  
+  va_end(args);
+}
+
+/*
+ * vmessage() -- driver for message() and prompt()
+ */
+
+static void
+vmessage(char *fmt, va_list args)
+{
+  char line[XMAX+2];
+
+  vsnprintf(line, sizeof(line), fmt, args);
+  mvprintw(YMAX+1, 0, line);
+  clrtoeol();
+  refresh();
 }

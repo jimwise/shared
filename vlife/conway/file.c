@@ -41,7 +41,7 @@ save(int which, char *name) {
   findbounds(which);
 	
   if (openfile(name, WRITEFILE)) {
-    message("Could not open file %s", name);
+    prompt("Could not open file %s", name);
     return(1);
   }
 
@@ -49,19 +49,19 @@ save(int which, char *name) {
        putstring(FILE_SIZESTRING) ||
        putsize(x_max - x_min + 1, y_max - y_min + 1) ||
        putstring(FILE_SEPSTRING) ) {
-    message("Could not write header to file %s", name);
+    prompt("Could not write header to file %s", name);
     closefile();
     return(1);
   }
 	
   if ( putboard(which) || putstring(FILE_SEPSTRING)) {
-    message("Could not write board to file %s", name);
+    prompt("Could not write board to file %s", name);
     closefile();
     return(1);
   }
 	
   if (closefile()) {
-    message("Failed to close file %s", name);
+    prompt("Failed to close file %s", name);
     return(1);
   }
 	
@@ -78,7 +78,7 @@ load (int which, char *name) {
   int x_size, y_size;
 	
   if (openfile(name, READFILE)) {
-    message("Could not open file %s", name);
+    prompt("Could not open file %s", name);
     return(1);
   }
 		
@@ -86,25 +86,25 @@ load (int which, char *name) {
        checkstring(FILE_SIZESTRING) ||
        getsize(&x_size, &y_size) ||
        checkstring(FILE_SEPSTRING) ) {
-    message("Bad header information in file %s", name);
+    prompt("Bad header information in file %s", name);
     closefile();
     return(1);
   }
 	
   if (getboard(which, x_size, y_size)) {
-    message("Invalid board in file %s", name);
+    prompt("Invalid board in file %s", name);
     closefile();
     return(1);
   }
 	
   if (checkstring(FILE_SEPSTRING)) {
-    message("Incomplete file %s", name);
+    prompt("Incomplete file %s", name);
     closefile();
     return(1);
   }
 	
   if (closefile()) {
-    message("Failed to close file %s", name);
+    prompt("Failed to close file %s", name);
     return(1);
   }
 		
@@ -174,7 +174,7 @@ getboard(int which, int x_size, int y_size) {
   y_max = y_min + y_size - 1;
 	
   if (x_min < 0 || y_min < 0 || x_max > XMAX || y_max > YMAX) { /* Overly thorough */
-    message("Board is too large (Board is %d x %d, I can handle %d x %d)",
+    prompt("Board is too large (Board is %d x %d, I can handle %d x %d)",
 	    x_size, y_size, XMAX, YMAX);
     return(1);
   }
@@ -253,7 +253,7 @@ checkstring (char *format, ...) {
   /* This isn't adequate, but is better than nothing */
   if (strlen(format) > CHECK_LEN)
     {
-      message("Cannot read, data chunk too large");
+      prompt("Cannot read, data chunk too large");
       return(1);
     }
 	

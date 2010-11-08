@@ -33,9 +33,7 @@ edit (int which) {
 	
   display(which);
 			
-  /* Don't use message() to avoid pause */
-  mvprintw(YMAX+1, 0, EDIT_INSTSTR);
-  clrtoeol();
+  message(EDIT_INSTSTR);
 	
   while (1) {
     move(ycur-1, xcur-1);
@@ -78,8 +76,7 @@ edit (int which) {
       break;
     case 'f':
       filemenu(which);
-      mvprintw(YMAX+1, 0, EDIT_INSTSTR);
-      clrtoeol();
+      message(EDIT_INSTSTR);
       break;
     case 'q':
       return(0);
@@ -106,9 +103,7 @@ filemenu (int which) {
   int		flag = 1;
   char	c, fname[NAMELEN];
 
-  mvprintw(YMAX+1, 0, MENUSTR);
-  clrtoeol();
-  refresh();
+  message(MENUSTR);
 
   while (flag) {
     c = getch();
@@ -118,25 +113,23 @@ filemenu (int which) {
       clear_board(which);
       if (!getname(fname)) {
 	if (load(which, fname))	{
-	  message("Could not load board from file %s", fname);
+	  prompt("Could not load board from file %s", fname);
 	  clear_board(which);
 	} else {
-	  message("Board loaded from file %s", fname);
+	  prompt("Board loaded from file %s", fname);
 	}
       }
       display(which);
-      mvprintw(YMAX+1, 0, MENUSTR);
-      clrtoeol();
+      message(MENUSTR);
       break;
     case 's':
       if (!getname(fname)) {
 	if (save(which, fname))
-	  message("Could not save board to file %s", fname);
+	  prompt("Could not save board to file %s", fname);
 	else
-	  message("Board saved to file %s", fname);
+	  prompt("Board saved to file %s", fname);
       }
-      mvprintw(YMAX+1, 0, MENUSTR);
-      clrtoeol();
+      message(MENUSTR);
       break;
     case 'r':
       flag = 0;
@@ -154,7 +147,7 @@ filemenu (int which) {
 
 int
 getname(char *name) {
-  mvprintw(YMAX+1, 0, "Enter FileName: ");
+  message("Enter FileName: ");
   clrtoeol();
   refresh();
   
