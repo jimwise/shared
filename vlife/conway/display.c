@@ -20,8 +20,6 @@
 
 /*
  * display() -- given a board selector, show that board to the user.
- * this version, for the Think C console environment, simply ascii-arts
- * it out.
  */
  
 void

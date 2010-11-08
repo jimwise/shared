@@ -19,8 +19,16 @@
  * life comes with absolutely NO WARRANTY.
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
+#include <string.h>
 #include "life.h"
 
+/* size of buffer for checkstring() */
+#define	CHECK_LEN	1024
+
+static FILE	*boardfile;
 static int x_min, x_max, y_min, y_max;
 
 /*
@@ -185,18 +193,6 @@ getboard(int which, int x_size, int y_size) {
 	
   return(0);
 }
-
-
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdarg.h>
-#include <string.h>
-#include "life.h"
-
-/* size of buffer for checkstring() */
-#define	CHECK_LEN	1024
-
-static FILE	*boardfile;
 
 /*
  * openfile() -- open a file as the current board file.
