@@ -33,7 +33,7 @@
 #define	FILE_SEPSTRING		"----------\n"
 #define FILE_SIZEFMT		"%d x %d\n"
 
-typedef unsigned char Board[XMAX+1][YMAX+1];
+typedef unsigned char Board[YMAX+2][XMAX+2];
 
 /* shared routines */
 
@@ -62,6 +62,7 @@ int	save (int, char *);
 
 extern Board	world[2];
 
+#define CELL(row, col)	world[which][row][col]
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))

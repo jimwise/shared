@@ -119,7 +119,7 @@ findbounds (int which) {
   /* this is ugly but simple... */
   for (index=1; index<=YMAX; index++)
     for (xedni=1; xedni<=XMAX; xedni++)
-      if ( world[which][xedni][index] ) {
+      if (CELL(index, xedni)) {
 	x_min = MIN(x_min, xedni);
 	x_max = MAX(x_max, xedni);
 	y_min = MIN(y_min, index);
@@ -139,10 +139,10 @@ findbounds (int which) {
 int
 putboard(int which) {
   int		index, xedni;
-	
+  /* XXX XXX cheats, depending on which parameter overriding global due to macro */
   for (index=y_min; index<=y_max; index++) {
     for (xedni=x_min; xedni<=x_max; xedni++)
-      if (putcell(world[which][xedni][index]))
+      if (putcell(CELL(index,xedni)))
 	return(1);
     if (putstring("\n"))
       return(1);
@@ -176,7 +176,8 @@ getboard(int which, int x_size, int y_size) {
       curr = getcell();
       if (curr < 0)
 	return(1);
-      world[which][xedni][index] = curr;
+      /* XXX XXX cheats, depending on which parameter overriding global due to macro */
+      CELL(index,xedni) = curr;
     }
     if (checkstring("\n"))
       return(1);

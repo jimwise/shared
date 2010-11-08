@@ -134,9 +134,9 @@ void
 clear_board (int which) {
   int	index, xedni;
 	
-  for (index=1; index<=YMAX; index++)
-    for (xedni=1; xedni<=XMAX; xedni++)
-      world[which][xedni][index] = 0;
+  for (index=0; index<=YMAX+1; index++)
+    for (xedni=0; xedni<=XMAX+1; xedni++)
+      CELL(index, xedni) = 0;
 }
 
 /*

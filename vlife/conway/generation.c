@@ -23,7 +23,7 @@ generation (int from, int to) {
 	
   for (index=1; index<=YMAX; index++)
     for (xedni=1; xedni<=XMAX; xedni++)
-      world[to][xedni][index] = determine(from, xedni, index);
+      world[to][index][xedni] = determine(from, index, xedni);
 }
 
 /*
@@ -32,19 +32,14 @@ generation (int from, int to) {
  */
 
 int
-determine (int which, int x, int y) {
+determine (int which, int row, int col) {
   int	count=0;
+  /* XXX XXX XXX pseudo-dynamic scope --depends on which naming the paramter here*/
+  count = CELL(row-1, col-1) + CELL(row-1, col) + CELL(row-1, col+1) +
+    CELL(row, col-1) + CELL(row, col+1) +
+    CELL(row+1, col-1) + CELL(row+1, col) + CELL(row+1, col+1);
 	
-  count = world[which][x-1][y-1] +
-    world[which][x][y-1] +
-    world[which][x+1][y-1] +
-    world[which][x-1][y] +
-    world[which][x+1][y] +
-    world[which][x-1][y+1] +
-    world[which][x][y+1] +
-    world[which][x+1][y+1];
-	
-  if (world[which][x][y])	{
+  if (CELL(row, col))	{
     if ((count == 2) || (count == 3))
       return 1;
     else

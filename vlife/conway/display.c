@@ -31,7 +31,7 @@ display (int which) {
   for (index=1; index<=YMAX; index++) {
     move (index-1, 0);
     for (xedni=1; xedni<=XMAX; xedni++)
-      addch(CHAR(world[which][xedni][index]));
+      addch(CHAR(CELL(index, xedni)));
   }
   refresh();
 }

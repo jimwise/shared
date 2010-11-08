@@ -72,8 +72,8 @@ edit (int which) {
       break;
     case ' ':
     case '5':
-      world[which][xcur+1][ycur+1] = OTHER(world[which][xcur+1][ycur+1]);
-      addch(CHAR(world[which][xcur+1][ycur+1]));
+      CELL(ycur+1, xcur+1) = OTHER(CELL(ycur+1, xcur+1));
+      addch(CHAR(CELL(ycur+1, xcur+1)));
       break;
     case 'f':
       filemenu(which);
