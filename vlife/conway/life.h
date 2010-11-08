@@ -60,7 +60,7 @@ int	putstring (char *, ...);
 void	run (void);
 int	save (int, char *);
 
-extern Board	world[3];
+extern Board	world[2];
 
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))

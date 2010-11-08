@@ -99,7 +99,7 @@
 #include <curses.h>
 #include "life.h"
 
-Board	world[3];
+Board	world[2];
 int	current = BOARD_A, turn = 1;
 
 int
