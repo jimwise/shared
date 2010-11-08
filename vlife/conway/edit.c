@@ -1,4 +1,4 @@
-ls/*
+/*
  * thinkedit.c -- mac-specific (console) board editing code for Conway's Life
  *
  * please see the file life.c for more information
@@ -11,6 +11,7 @@ ls/*
  */
 
 #include <stdio.h>
+#include <string.h>
 #include <curses.h>
 #include "life.h"
 
