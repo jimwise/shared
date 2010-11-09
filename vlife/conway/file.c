@@ -17,10 +17,9 @@
 static void	findbounds (void);
 static int	getboard (int rows_needed, int cols_needed);
 static int	getcell (void);
-static int	getsize (int *x_size, int *y_size);
 
 static FILE	*boardfile;
-static int x_min, x_max, y_min, y_max;
+static int	x_min, x_max, y_min, y_max;
 
 /*
  * save() -- save board in standard ASCII format
@@ -70,7 +69,7 @@ save(char *name) {
 
 int
 load (char *name) {
-  int x_size, y_size;
+  int r, c;
 
   if ((boardfile = fopen(name, "r")) == NULL) {
     prompt("Could not open file %s", name);
@@ -79,14 +78,14 @@ load (char *name) {
 		
   if ((fscanf(boardfile, FILE_HEADERSTRING) == EOF) ||
       (fscanf(boardfile, FILE_SIZESTRING) == EOF) ||
-      getsize(&x_size, &y_size) ||
+      (fscanf(boardfile, FILE_SIZEFMT, &r, &c) != 2) ||
       (fscanf(boardfile, FILE_SEPSTRING) == EOF)) {
     prompt("Bad header information in file %s", name);
     fclose(boardfile);
     return(1);
   }
 	
-  if (getboard(x_size, y_size)) {
+  if (getboard(r, c)) {
     prompt("Invalid board in file %s", name);
     fclose(boardfile);
     return(1);
@@ -167,19 +166,6 @@ getboard(int rows_needed, int cols_needed) {
   display();
 
   return(0);
-}
-
-/*
- * getsize() -- read size from current file, given pointers to two ints to put it in
- * returns 0 on success, non-zero on failure.
- */
- 
-static int
-getsize (int *x_size, int *y_size) {
-  if (fscanf(boardfile, FILE_SIZEFMT, x_size, y_size) != 2)
-    return(1);
-  else
-    return(0);
 }
 
 /*
