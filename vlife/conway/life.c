@@ -12,12 +12,18 @@
 #include <unistd.h>
 #include "life.h"
 
-int turn = 1;
+#define	XMAX	80
+#define	YMAX	23
+
+int	turn = 1;
+int	msg_row;
 
 int
 main (int argc, char **argv) {
   begin_display();
-  make_board();
+  /* reserve one line for message row */
+  make_board(YMAX, XMAX+1);
+  msg_row = YMAX;
 
   prompt("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
   clear_board();

@@ -11,27 +11,27 @@
 #include <stdlib.h>
 #include "life.h"
 
-#define	XMAX	80
-#define	YMAX	23
-
-/* visible world runs from 1..?MAX+1, with fenceposts all around */
-/* typedef unsigned char Board[YMAX+3][XMAX+3]; */
 typedef unsigned char **Board;
 Board	world[2];
 
 #define CELL(row, col)	world[current][row][col]
 
-int	current = 0, rows = YMAX+1, cols = XMAX+1;
-int	max_row = YMAX, max_col = XMAX;
-int	msg_row = YMAX+1;
+int	current = 0;		/* which of the two boards in world is active */
+int	rows, cols, max_row, max_col;
 
 /*
- * make_board() -- allocate board
+ * make_board() -- allocate board, given size
  */
 
 void
-make_board (void) {
+make_board (int nr, int nc) {
   int i;
+
+  rows = nr;
+  cols = nc;
+  max_row = nr - 1;
+  max_col = nc - 1;
+
   world[0] = malloc(rows * sizeof(char *));
   world[1] = malloc(rows * sizeof(char *));
 
@@ -86,8 +86,8 @@ void
 generation (void) {
   int index, xedni, to = OTHER(current);
 	
-  for (index=1; index<rows; index++)
-    for (xedni=1; xedni<cols; xedni++)
+  for (index=0; index<rows; index++)
+    for (xedni=0; xedni<cols; xedni++)
       world[to][index][xedni] = determine(index, xedni);
 
   current = to;

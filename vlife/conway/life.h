@@ -36,7 +36,7 @@ void	generation (void);
 int	getname (char *buf);
 int	key_pressed (void);
 int	load (char *fname);
-void	make_board(void);
+void	make_board(int nr, int nc);
 void	message(char *fmt, ...);
 void	prompt(char *fmt, ...);
 void	run (void);

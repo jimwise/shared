@@ -54,9 +54,9 @@ void
 display (void) {
   int index, xedni;
 
-  for (index=1; index<rows; index++) {
-    move (index-1, 0);
-    for (xedni=1; xedni<cols; xedni++)
+  for (index=0; index<rows; index++) {
+    move (index, 0);
+    for (xedni=0; xedni<cols; xedni++)
       addch(CHAR(get_cell(index, xedni)));
   }
   refresh();

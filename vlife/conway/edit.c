@@ -16,8 +16,8 @@
 static void	filemenu (void);
 
 #define	MOVECURSOR(delta_x, delta_y)		\
-  xcur = MAX(MIN(xcur + delta_x, max_col), 1);	\
-  ycur = MAX(MIN(ycur + delta_y, max_row), 1);	
+  xcur = MAX(MIN(xcur + delta_x, max_col), 0);	\
+  ycur = MAX(MIN(ycur + delta_y, max_row), 0);	
 					
 /*
  * edit() -- allow the user to set up the board.
@@ -29,14 +29,14 @@ static void	filemenu (void);
 int
 edit (void) {
   char	c;
-  int	xcur = 1, ycur = 1;
+  int	xcur = 0, ycur = 0;
 	
   display();
 			
   message(EDIT_INSTSTR);
 	
   while (1) {
-    move(ycur-1, xcur-1);
+    move(ycur, xcur);
 		
     c = getch();
 		
