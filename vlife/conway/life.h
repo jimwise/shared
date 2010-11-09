@@ -50,7 +50,7 @@ int	set_cell (int row, int col, char val);
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))
 
-extern int rows, cols;
+extern int rows, cols, max_row, max_col;
 
 #define	NAMELEN		512
 #define	MENUSTR		"[L]oad; [S]ave; [R]eturn"

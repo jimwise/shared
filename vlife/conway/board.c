@@ -33,7 +33,7 @@ int get_cell (int row, int col) {
 
 int set_cell (int row, int col, char val) {
   if ((row < 0) || (row > max_row) ||
-      (col < 0) || (col > max_row))
+      (col < 0) || (col > max_col))
     return val;
 
   return world[current][row][col] = val;
