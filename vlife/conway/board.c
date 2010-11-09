@@ -14,8 +14,6 @@
 typedef unsigned char **Board;
 Board	world[2];
 
-#define CELL(row, col)	world[current][row][col]
-
 int	current = 0;		/* which of the two boards in world is active */
 int	rows, cols, max_row, max_col;
 
@@ -71,7 +69,7 @@ clear_board (void) {
 	
   for (index=0; index<rows; index++)
     for (xedni=0; xedni<cols; xedni++)
-      CELL(index, xedni) = 0;
+      set_cell(index, xedni, 0);
 }
 
 /*
@@ -106,7 +104,7 @@ determine (int row, int col) {
     get_cell(row, col-1) + get_cell(row, col+1) +
     get_cell(row+1, col-1) + get_cell(row+1, col) + get_cell(row+1, col+1);
 	
-  if (CELL(row, col))	{
+  if (get_cell(row, col))	{
     if ((count == 2) || (count == 3))
       return 1;
     else
