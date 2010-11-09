@@ -17,10 +17,6 @@
 #define	XMAX	80
 #define	YMAX	23
 
-/* board selectors */
-#define	BOARD_A	0
-#define	BOARD_B	1
-
 /* (abstract) file open modes */
 #define WRITEFILE	0
 #define	READFILE	1
@@ -36,33 +32,22 @@ typedef unsigned char Board[YMAX+3][XMAX+3];
 
 /* shared routines */
 
-int	checkstring (char *, ...);
-void	clear_board (int);
-int	closefile (void);
-int	determine (int, int, int);
-void	display (int);
-int	edit (int);
-void	filemenu (int which);
-void	findbounds (int);
-void	generation (int, int);
-int	getboard (int, int, int);
-int	getcell (void);
+void	clear_board (void);
+int	determine (int, int);
+void	display (void);
+int	edit (void);
+void	generation (void);
 int	getname (char *);
-int	getsize (int *, int *);
-int	load (int, char *);
+int	load (char *);
 void	message(char *, ...);
-int	openfile (char *, int);
 void	prompt(char *, ...);
-int	putboard (int);
-int	putcell (int);
-int	putsize (int, int);
-int	putstring (char *, ...);
 void	run (void);
-int	save (int, char *);
+int	save (char *);
 
 extern Board	world[2];
+extern int	current, turn;
 
-#define CELL(row, col)	world[which][row][col]
+#define CELL(row, col)	world[current][row][col]
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))

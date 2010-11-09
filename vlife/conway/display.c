@@ -22,7 +22,7 @@ static void vmessage(char *format, va_list args);
  */
  
 void
-display (int which) {
+display () {
   int index, xedni;
 
   for (index=1; index<=YMAX+1; index++) {

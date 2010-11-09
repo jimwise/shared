@@ -13,8 +13,7 @@
 #include <curses.h>
 #include "life.h"
 
-Board	world[2];
-int	current = BOARD_A, turn = 1;
+int turn = 1;
 
 int
 main (int argc, char **argv) {
@@ -28,29 +27,16 @@ main (int argc, char **argv) {
   nodelay(win, 1);
 
   prompt("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
-  clear_board(BOARD_A);
+  clear_board();
 	
   while (1) {	
-    if (!edit(current))
+    if (!edit())
       break;
     run();
   }
 
   endwin();
   exit(0);
-}
-
-/*
- * clear_board() -- clear a board
- */
-
-void
-clear_board (int which) {
-  int	index, xedni;
-	
-  for (index=0; index<=YMAX+1; index++)
-    for (xedni=0; xedni<=XMAX+1; xedni++)
-      CELL(index, xedni) = 0;
 }
 
 /*
@@ -62,13 +48,12 @@ run (void) {
   while (1) {
     message("Turn : %6d ; <Press any key to interrupt>", turn);
     clrtoeol();
-    display(current);
+    display();
 		
     if(getch() != ERR)
       break;
 		
-    generation(current, OTHER(current));
-    current = OTHER(current);
+    generation();
 		
     turn++;
     sleep(1);
@@ -76,42 +61,3 @@ run (void) {
 }
 
 
-/*
- * generation() -- given two board selectors, generate the next generation
- * from the first board into the second board.
- */
-
-void
-generation (int from, int to) {
-  int index, xedni;
-	
-  for (index=1; index<=YMAX; index++)
-    for (xedni=1; xedni<=XMAX; xedni++)
-      world[to][index][xedni] = determine(from, index, xedni);
-}
-
-/*
- * determine() -- given a board selector, and the coordinates of a square,
- * return the state of the square in the next generation.
- */
-
-int
-determine (int which, int row, int col) {
-  int	count=0;
-  /* XXX XXX XXX pseudo-dynamic scope --depends on which naming the paramter here*/
-  count = CELL(row-1, col-1) + CELL(row-1, col) + CELL(row-1, col+1) +
-    CELL(row, col-1) + CELL(row, col+1) +
-    CELL(row+1, col-1) + CELL(row+1, col) + CELL(row+1, col+1);
-	
-  if (CELL(row, col))	{
-    if ((count == 2) || (count == 3))
-      return 1;
-    else
-      return 0;
-  } else {
-    if (count == 3)
-      return 1;
-    else
-      return 0;
-  }
-}

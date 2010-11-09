@@ -18,6 +18,18 @@
 #include <string.h>
 #include "life.h"
 
+static int	checkstring (char *, ...);
+static int	closefile (void);
+static void	findbounds (void);
+static int	getboard (int, int);
+static int	getcell (void);
+static int	getsize (int *, int *);
+static int	openfile (char *, int);
+static int	putboard (void);
+static int	putcell (int);
+static int	putsize (int, int);
+static int	putstring (char *, ...);
+
 /* size of buffer for checkstring() */
 #define	CHECK_LEN	1024
 
@@ -30,8 +42,8 @@ static int x_min, x_max, y_min, y_max;
  */
 
 int
-save(int which, char *name) {
-  findbounds(which);
+save(char *name) {
+  findbounds();
 	
   if (openfile(name, WRITEFILE)) {
     prompt("Could not open file %s", name);
@@ -47,7 +59,7 @@ save(int which, char *name) {
     return(1);
   }
 	
-  if ( putboard(which) || putstring(FILE_SEPSTRING)) {
+  if ( putboard() || putstring(FILE_SEPSTRING)) {
     prompt("Could not write board to file %s", name);
     closefile();
     return(1);
@@ -67,7 +79,7 @@ save(int which, char *name) {
  */
 
 int
-load (int which, char *name) {
+load (char *name) {
   int x_size, y_size;
 	
   if (openfile(name, READFILE)) {
@@ -84,7 +96,7 @@ load (int which, char *name) {
     return(1);
   }
 	
-  if (getboard(which, x_size, y_size)) {
+  if (getboard(x_size, y_size)) {
     prompt("Invalid board in file %s", name);
     closefile();
     return(1);
@@ -111,8 +123,8 @@ load (int which, char *name) {
  * If there are no live cells, we treat the board as an empty board of size 1x1.
  */
 
-void
-findbounds (int which) {
+static void
+findbounds (void) {
   int		index, xedni;
 
   x_min = XMAX, x_max = 0, y_min = YMAX, y_max = 0;
@@ -133,14 +145,13 @@ findbounds (int which) {
 }
 
 /*
- * putboard() -- save a board, given a selector of which board to save
+ * putboard() -- save a board
  * Return 0 on success, non-zero on failure.
  */
 
-int
-putboard(int which) {
+static int
+putboard (void) {
   int		index, xedni;
-  /* XXX XXX cheats, depending on which parameter overriding global due to macro */
   for (index=y_min; index<=y_max; index++) {
     for (xedni=x_min; xedni<=x_max; xedni++)
       if (putcell(CELL(index,xedni)))
@@ -153,12 +164,12 @@ putboard(int which) {
 }
 
 /*
- * getboard() -- get a board, given its size and a selector of which board to load it
- * into.  Return 0 on success, non-zero on failure.
+ * getboard() -- get a board, given its max size
+ * Return 0 on success, non-zero on failure.
  */
 
-int
-getboard(int which, int x_size, int y_size) {
+static int
+getboard(int x_size, int y_size) {
   int index, xedni, curr;
 	
   x_min = XMAX/2 - x_size/2;
@@ -177,7 +188,6 @@ getboard(int which, int x_size, int y_size) {
       curr = getcell();
       if (curr < 0)
 	return(1);
-      /* XXX XXX cheats, depending on which parameter overriding global due to macro */
       CELL(index,xedni) = curr;
     }
     if (checkstring("\n"))
@@ -193,7 +203,7 @@ getboard(int which, int x_size, int y_size) {
  * returns 0 on success, non-zero on failure.
  */
  
-int
+static int
 openfile (char *name, int mode) {
   if (mode)
     boardfile = fopen(name, "rb");
@@ -208,7 +218,7 @@ openfile (char *name, int mode) {
  * returns 0 on success, non-zero on failure.
  */
 
-int
+static int
 closefile (void) {
   return(fclose(boardfile));
 }	
@@ -218,7 +228,7 @@ closefile (void) {
  * returns 0 on success, non-zero on failure.
  */
  
-int
+static int
 putstring (char *format, ...) {
   va_list args;
   int		retval;
@@ -238,7 +248,7 @@ putstring (char *format, ...) {
  * returns 0 on success, non-zero on failure.
  */
  
-int
+static int
 checkstring (char *format, ...) {
   va_list args;
   char	checkstring[CHECK_LEN + 1];
@@ -266,7 +276,7 @@ checkstring (char *format, ...) {
  * returns 0 on success, non-zero on failure.
  */
 
-int
+static int
 putsize (int x_size, int y_size) {
   return(putstring(FILE_SIZEFMT, x_size, y_size));
 }
@@ -276,7 +286,7 @@ putsize (int x_size, int y_size) {
  * returns 0 on success, non-zero on failure.
  */
  
-int
+static int
 getsize (int *x_size, int *y_size) {
   if (fscanf(boardfile, FILE_SIZEFMT, x_size, y_size) != 2)
     return(1);
@@ -289,7 +299,7 @@ getsize (int *x_size, int *y_size) {
  * returns 0 on success, non-zero on failure.
  */
 
-int
+static int
 putcell (int value) {
   int 	outc = value ? 'X' : ' ';
 	
@@ -301,7 +311,7 @@ putcell (int value) {
  * returns value of cell on success, <0 on failure.
  */
 
-int
+static int
 getcell (void) {
   char	c;
 	

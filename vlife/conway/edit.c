@@ -13,6 +13,8 @@
 #include <curses.h>
 #include "life.h"
 
+static void	filemenu (void);
+
 #define	MOVECURSOR(delta_x, delta_y)		\
   xcur = MAX(MIN(xcur + delta_x, XMAX+1), 1);	\
   ycur = MAX(MIN(ycur + delta_y, YMAX+1), 1);	
@@ -25,11 +27,11 @@
  */
 
 int
-edit (int which) {
+edit (void) {
   char	c;
   int	xcur = 1, ycur = 1;
 	
-  display(which);
+  display();
 			
   message(EDIT_INSTSTR);
 	
@@ -73,7 +75,7 @@ edit (int which) {
       addch(CHAR(CELL(ycur, xcur)));
       break;
     case 'f':
-      filemenu(which);
+      filemenu();
       message(EDIT_INSTSTR);
       break;
     case 'q':
@@ -83,8 +85,8 @@ edit (int which) {
       return(1);
       break;
     case 'c':
-      clear_board(which);
-      display(which);
+      clear_board();
+      display();
       break;
     default:			/* e.g. ERR if no char ready */
       break;
@@ -96,10 +98,10 @@ edit (int which) {
  * filemenu() -- let the user load or save a file
  */
  
-void
-filemenu (int which) {
-  int		flag = 1;
-  char	c, fname[NAMELEN];
+static void
+filemenu (void) {
+  int	flag = 1, c;
+  char	fname[NAMELEN];
 
   message(MENUSTR);
 
@@ -108,21 +110,21 @@ filemenu (int which) {
 		
     switch (c) {
     case 'l':
-      clear_board(which);
+      clear_board();
       if (!getname(fname)) {
-	if (load(which, fname))	{
+	if (load(fname)) {
 	  prompt("Could not load board from file %s", fname);
-	  clear_board(which);
+	  clear_board();
 	} else {
 	  prompt("Board loaded from file %s", fname);
 	}
       }
-      display(which);
+      display();
       message(MENUSTR);
       break;
     case 's':
       if (!getname(fname)) {
-	if (save(which, fname))
+	if (save(fname))
 	  prompt("Could not save board to file %s", fname);
 	else
 	  prompt("Board saved to file %s", fname);
