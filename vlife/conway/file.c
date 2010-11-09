@@ -122,11 +122,11 @@ static void
 findbounds (void) {
   int		index, xedni;
 
-  x_min = max_row+1; x_max = 0; y_min = max_col+1; y_max = 0;
+  x_min = max_row+1; x_max = -1; y_min = max_col+1; y_max = -1;
 
   /* this is ugly but simple... */
-  for (index=1; index<rows; index++)
-    for (xedni=1; xedni<cols; xedni++)
+  for (index=0; index<rows; index++)
+    for (xedni=0; xedni<cols; xedni++)
       if (get_cell(index, xedni)) {
 	x_min = MIN(x_min, xedni);
 	x_max = MAX(x_max, xedni);
@@ -185,7 +185,7 @@ getboard(int rows_needed, int cols_needed) {
     for (xedni=start_col; xedni<stop_col; xedni++) {	
       if ((curr = getcell()) == -1)
 	return(1);
-      prompt("set_cell(%d, %d, %d)", index, xedni, curr);
+      /* prompt("set_cell(%d, %d, %d)", index, xedni, curr); */
       set_cell(index, xedni, curr);
     }
     if (checkstring("\n"))
