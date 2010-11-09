@@ -8,13 +8,15 @@
  * that the code has been modified.  life comes with absolutely NO WARRANTY.
  */
 
+#include <stdlib.h>
 #include "life.h"
 
 #define	XMAX	80
 #define	YMAX	23
 
 /* visible world runs from 1..?MAX+1, with fenceposts all around */
-typedef unsigned char Board[YMAX+3][XMAX+3];
+/* typedef unsigned char Board[YMAX+3][XMAX+3]; */
+typedef unsigned char **Board;
 Board	world[2];
 
 #define CELL(row, col)	world[current][row][col]
@@ -22,6 +24,22 @@ Board	world[2];
 int	current = 0, rows = YMAX+1, cols = XMAX+1;
 int	max_row = YMAX, max_col = XMAX;
 int	msg_row = YMAX+1;
+
+/*
+ * make_board() -- allocate board
+ */
+
+void
+make_board (void) {
+  int i;
+  world[0] = malloc(rows * sizeof(char *));
+  world[1] = malloc(rows * sizeof(char *));
+
+  for (i=0; i<rows; i++) {
+    world[0][i] = malloc(cols * sizeof(char));
+    world[1][i] = malloc(cols * sizeof(char));
+  }
+}
 
 /*
  * get_cell(), set_cell() -- generic board interface; hides that there are two boards
@@ -83,9 +101,10 @@ generation (void) {
 int
 determine (int row, int col) {
   int	count=0;
-  count = CELL(row-1, col-1) + CELL(row-1, col) + CELL(row-1, col+1) +
-    CELL(row, col-1) + CELL(row, col+1) +
-    CELL(row+1, col-1) + CELL(row+1, col) + CELL(row+1, col+1);
+
+  count = get_cell(row-1, col-1) + get_cell(row-1, col) + get_cell(row-1, col+1) +
+    get_cell(row, col-1) + get_cell(row, col+1) +
+    get_cell(row+1, col-1) + get_cell(row+1, col) + get_cell(row+1, col+1);
 	
   if (CELL(row, col))	{
     if ((count == 2) || (count == 3))

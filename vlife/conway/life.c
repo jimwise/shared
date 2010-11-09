@@ -17,6 +17,7 @@ int turn = 1;
 int
 main (int argc, char **argv) {
   begin_display();
+  make_board();
 
   prompt("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
   clear_board();
