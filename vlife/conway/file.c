@@ -1,10 +1,6 @@
 /*
  * file.c -- stdio-based load and save routines for life
  *
- * XXX this file has more indirection than it needs, as it contains the
- * XXX remnants of an attempt at a common api between macos 7 and stdio file
- * XXX routines
- *
  * life is copyright (c) 1995-2010, Jim Wise
  * 
  * You may redistribute this code freely.  You may modify and redistribute
@@ -18,18 +14,10 @@
 #include <string.h>
 #include "life.h"
 
-static int	checkstring (char *, ...);
 static void	findbounds (void);
-static int	getboard (int, int);
+static int	getboard (int rows_needed, int cols_needed);
 static int	getcell (void);
-static int	getsize (int *, int *);
-static int	putboard (void);
-static int	putcell (int);
-static int	putsize (int, int);
-static int	putstring (char *, ...);
-
-/* size of buffer for checkstring() */
-#define	CHECK_LEN	1024
+static int	getsize (int *x_size, int *y_size);
 
 static FILE	*boardfile;
 static int x_min, x_max, y_min, y_max;
@@ -41,29 +29,33 @@ static int x_min, x_max, y_min, y_max;
 
 int
 save(char *name) {
+  int	index, xedni;
+
   findbounds();
 	
   if ((boardfile = fopen(name, "w")) == NULL) {
     prompt("Could not open file %s", name);
     return(1);
   }
+  clearerr(boardfile);
 
-  if ( putstring(FILE_HEADERSTRING) ||
-       putstring(FILE_SIZESTRING) ||
-       putsize(x_max - x_min + 1, y_max - y_min + 1) ||
-       putstring(FILE_SEPSTRING) ) {
-    prompt("Could not write header to file %s", name);
-    fclose(boardfile);
-    return(1);
+  fputs(FILE_HEADERSTRING, boardfile);
+  fputs(FILE_SIZESTRING, boardfile);
+
+  fprintf(boardfile, FILE_SIZEFMT, x_max - x_min + 1, y_max - y_min + 1);
+
+  fputs(FILE_SEPSTRING, boardfile);
+
+  for (index=y_min; index<=y_max; index++) {
+    for (xedni=x_min; xedni<=x_max; xedni++)
+      fputc(CHAR(get_cell(index, xedni)), boardfile);
+    putc('\n', boardfile);
   }
-	
-  if ( putboard() || putstring(FILE_SEPSTRING)) {
-    prompt("Could not write board to file %s", name);
-    fclose(boardfile);
-    return(1);
-  }
-	
-  if (fclose(boardfile)) {
+
+  fputs(FILE_SEPSTRING, boardfile);
+  fclose(boardfile);
+
+  if (ferror(boardfile)) {
     prompt("Failed to write file %s", name);
     return(1);
   }
@@ -85,10 +77,10 @@ load (char *name) {
     return(1);
   }
 		
-  if ( checkstring(FILE_HEADERSTRING) ||
-       checkstring(FILE_SIZESTRING) ||
-       getsize(&x_size, &y_size) ||
-       checkstring(FILE_SEPSTRING) ) {
+  if ((fscanf(boardfile, FILE_HEADERSTRING) == EOF) ||
+      (fscanf(boardfile, FILE_SIZESTRING) == EOF) ||
+      getsize(&x_size, &y_size) ||
+      (fscanf(boardfile, FILE_SEPSTRING) == EOF)) {
     prompt("Bad header information in file %s", name);
     fclose(boardfile);
     return(1);
@@ -100,7 +92,7 @@ load (char *name) {
     return(1);
   }
 	
-  if (checkstring(FILE_SEPSTRING)) {
+  if (fscanf(boardfile, FILE_SEPSTRING) == EOF) {
     prompt("Incomplete file %s", name);
     fclose(boardfile);
     return(1);
@@ -140,25 +132,6 @@ findbounds (void) {
 }
 
 /*
- * putboard() -- save a board
- * Return 0 on success, non-zero on failure.
- */
-
-static int
-putboard (void) {
-  int		index, xedni;
-  for (index=y_min; index<=y_max; index++) {
-    for (xedni=x_min; xedni<=x_max; xedni++)
-      if (putcell(get_cell(index,xedni)))
-	return(1);
-    if (putstring("\n"))
-      return(1);
-  }
-	
-  return(0);
-}
-
-/*
  * getboard() -- get a board, given its max size
  * Return 0 on success, non-zero on failure.
  */
@@ -180,78 +153,20 @@ getboard(int rows_needed, int cols_needed) {
   stop_row = start_row + rows_needed;
 
   prompt("starting: loading %d x %d at (%d,%d) (out of %d x %d)",
-	 rows_needed, cols_needed, start_row, start_col, rows, cols);
+  	 rows_needed, cols_needed, start_row, start_col, rows, cols);
   for (index=start_row; index<stop_row; index++) {
     for (xedni=start_col; xedni<stop_col; xedni++) {	
       if ((curr = getcell()) == -1)
 	return(1);
-      /* prompt("set_cell(%d, %d, %d)", index, xedni, curr); */
+      prompt("set_cell(%d, %d, %d)", index, xedni, curr);
       set_cell(index, xedni, curr);
     }
-    if (checkstring("\n"))
+    if (getc(boardfile) != '\n')
       return(1);
   }
   display();
 
   return(0);
-}
-
-/*
- * putstring() -- output a printf string to the current board file
- * returns 0 on success, non-zero on failure.
- */
- 
-static int
-putstring (char *format, ...) {
-  va_list args;
-  int		retval;
-	
-  va_start(args, format);
-	
-  retval = !(vfprintf(boardfile, format, args));
-	
-  va_end(args);
-	
-  return(retval);
-}
-
-/*
- * checkstring() -- check to see if a given printf string occurs at the current
- * point in the current file.
- * returns 0 on success, non-zero on failure.
- */
- 
-static int
-checkstring (char *format, ...) {
-  va_list args;
-  char	checkstring[CHECK_LEN + 1];
-	
-  /* This isn't adequate, but is better than nothing */
-  if (strlen(format) > CHECK_LEN)
-    {
-      prompt("Cannot read, data chunk too large");
-      return(1);
-    }
-	
-  va_start(args, format);
-  vsprintf(checkstring, format, args);
-  va_end(args);	
-	
-  if (fscanf(boardfile, checkstring) == EOF)
-    return(1);
-  else
-    return(0);
-}
- 
-/*
- * putsize() -- save size to current file, given size in two ints
- * this could be killed, but a good compiler will anyways...
- * returns 0 on success, non-zero on failure.
- */
-
-static int
-putsize (int x_size, int y_size) {
-  return(putstring(FILE_SIZEFMT, x_size, y_size));
 }
 
 /*
@@ -265,18 +180,6 @@ getsize (int *x_size, int *y_size) {
     return(1);
   else
     return(0);
-}
-
-/*
- * putcell() -- output a given cell value to the current file
- * returns 0 on success, non-zero on failure.
- */
-
-static int
-putcell (int value) {
-  int 	outc = value ? '*' : ' ';
-	
-  return (fputc(outc, boardfile) == EOF);
 }
 
 /*
