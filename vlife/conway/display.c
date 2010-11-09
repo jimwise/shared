@@ -22,11 +22,11 @@ static void vmessage(char *format, va_list args);
  */
 
 void
-begin_display (int *mr, int *mc) {
+begin_display (int *r, int *c) {
   WINDOW *win;
 
   win = initscr();
-  getmaxyx(win, *mr, *mc);
+  getmaxyx(win, *r, *c);
   cbreak();
   noecho();
   clear();

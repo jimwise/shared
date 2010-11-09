@@ -20,11 +20,11 @@ int	msg_row;
 
 int
 main (int argc, char **argv) {
-  int mr, mc;
-  begin_display(&mr, &mc);
+  int r, c;
+  begin_display(&r, &c);
   /* reserve one line for message row */
-  make_board(mr-1, mc+1);
-  msg_row = mr-1;
+  make_board(r-1, c);
+  msg_row = r-1;
 
   prompt("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
   clear_board();

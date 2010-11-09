@@ -73,6 +73,7 @@ edit (void) {
     case '5':
       set_cell(ycur, xcur, OTHER(get_cell(ycur, xcur)));
       addch(CHAR(get_cell(ycur, xcur)));
+      move(ycur,xcur);
       break;
     case 'f':
       filemenu();
