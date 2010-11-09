@@ -110,7 +110,9 @@ vmessage(char *fmt, va_list args)
   char line[1024];
 
   vsnprintf(line, sizeof(line), fmt, args);
+  attron(A_REVERSE);
   mvprintw(msg_row, 0, line);
   clrtoeol();
+  attroff(A_REVERSE);
   refresh();
 }
