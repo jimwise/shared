@@ -29,13 +29,16 @@
 
 /* shared routines */
 
+void	begin_display (void);
 void	clear_board (void);
 int	determine (int row, int col);
 void	display (void);
 int	edit (void);
+void	end_display (void);
 int	get_cell (int row, int col);
 void	generation (void);
 int	getname (char *buf);
+int	key_pressed (void);
 int	load (char *fname);
 void	message(char *fmt, ...);
 void	prompt(char *fmt, ...);

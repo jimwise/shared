@@ -18,11 +18,40 @@
 static void vmessage(char *format, va_list args);
 
 /*
+ * begin_display(), end_display() -- curses setup and teardown
+ */
+
+void
+begin_display (void) {
+  WINDOW *win;
+
+  win = initscr();
+  cbreak();
+  noecho();
+  clear();
+  refresh();
+  nodelay(win, 1);
+}
+
+void end_display (void) {
+  endwin();
+}
+
+
+/*
+ * key_pressed() -- return whether user has pressed a key (and discard that key) 
+ * depends on nodelay being in effect.
+ */
+int key_pressed (void) {
+  return (getch() != ERR);
+}
+
+/*
  * display() -- given a board selector, show that board to the user.
  */
  
 void
-display () {
+display (void) {
   int index, xedni;
 
   for (index=1; index<=YMAX+1; index++) {

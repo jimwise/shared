@@ -10,21 +10,13 @@
 
 #include <stdlib.h>
 #include <unistd.h>
-#include <curses.h>
 #include "life.h"
 
 int turn = 1;
 
 int
 main (int argc, char **argv) {
-  WINDOW *win;
-
-  win = initscr();
-  cbreak();
-  noecho();
-  clear();
-  refresh();
-  nodelay(win, 1);
+  begin_display();
 
   prompt("Welcome to Life, Version %s, Copyright 1995, Jim Wise", VERSION_STR);
   clear_board();
@@ -35,7 +27,7 @@ main (int argc, char **argv) {
     run();
   }
 
-  endwin();
+  end_display();
   exit(0);
 }
 
@@ -47,10 +39,9 @@ void
 run (void) {
   while (1) {
     message("Turn : %6d ; <Press any key to interrupt>", turn);
-    clrtoeol();
     display();
 		
-    if(getch() != ERR)
+    if(key_pressed())
       break;
 		
     generation();
