@@ -17,14 +17,14 @@
 
 static void vmessage(char *format, va_list args);
 
+static WINDOW *win;
+
 /*
  * begin_display(), end_display() -- curses setup and teardown
  */
 
 void
 begin_display (int *r, int *c) {
-  WINDOW *win;
-
   win = initscr();
   getmaxyx(win, *r, *c);
   cbreak();
@@ -43,7 +43,8 @@ void end_display (void) {
  * key_pressed() -- return whether user has pressed a key (and discard that key) 
  * depends on nodelay being in effect.
  */
-int key_pressed (void) {
+int
+key_pressed (void) {
   return (getch() != ERR);
 }
 
@@ -115,4 +116,30 @@ vmessage(char *fmt, va_list args)
   clrtoeol();
   attroff(A_REVERSE);
   refresh();
+}
+
+
+/*
+ * get_string() -- get string from user.  returns NULL if blank.
+ */
+
+static char gsbuf[NAMELEN];
+
+char *
+prompt_string(char *prompt) {
+  gsbuf[0] = '\0';
+  
+  message(prompt);
+  echo();
+  nocrmode();
+  nodelay(win, 0);
+  wgetnstr(win, gsbuf, sizeof(gsbuf));
+  nodelay(win, 1);
+  crmode();
+  noecho();
+
+  if (strlen(gsbuf))
+    return(gsbuf);
+  else
+    return(NULL);
 }

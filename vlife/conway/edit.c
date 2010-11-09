@@ -28,8 +28,7 @@ static void	filemenu (void);
 
 int
 edit (void) {
-  char	c;
-  int	xcur = 0, ycur = 0;
+  int	c, xcur = 0, ycur = 0;
 	
   display();
 			
@@ -102,7 +101,7 @@ edit (void) {
 static void
 filemenu (void) {
   int	flag = 1, c;
-  char	fname[NAMELEN];
+  char	*fname;
 
   message(MENUSTR);
 
@@ -112,7 +111,7 @@ filemenu (void) {
     switch (c) {
     case 'l':
       clear_board();
-      if (!getname(fname)) {
+      if ((fname = prompt_string("Enter FileName: ")) != NULL) {
 	if (load(fname)) {
 	  prompt("Could not load board from file %s", fname);
 	  clear_board();
@@ -124,7 +123,7 @@ filemenu (void) {
       message(MENUSTR);
       break;
     case 's':
-      if (!getname(fname)) {
+      if ((fname = prompt_string("Enter FileName: ")) != NULL) {
 	if (save(fname))
 	  prompt("Could not save board to file %s", fname);
 	else
@@ -139,24 +138,4 @@ filemenu (void) {
       break;
     }
   }
-}
-
-/*
- * getname() -- get file name from user and store in given char *
- * returns 0 on success, non-zero if user entered zero-length string
- */
-
-int
-getname(char *name) {
-  message("Enter FileName: ");
-  clrtoeol();
-  refresh();
-  
-  echo();
-  nocrmode();
-  getstr(name);		/* XXX XXX real curses doesn't have getnstr, use wgetnstr once we have a win */
-  crmode();
-  noecho();
-
-  return(!strlen(name));
 }

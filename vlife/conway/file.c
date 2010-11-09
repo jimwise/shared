@@ -182,7 +182,7 @@ getboard(int x_size, int y_size) {
 	    x_size, y_size, rows, cols);
     return(1);
   }
-	
+
   for (index=y_min; index<=y_max; index++) {
     for (xedni=x_min; xedni<=x_max; xedni++) {	
       curr = getcell();
