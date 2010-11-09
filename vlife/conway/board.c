@@ -10,6 +10,9 @@
 
 #include "life.h"
 
+#define	XMAX	80
+#define	YMAX	23
+
 /* visible world runs from 1..?MAX+1, with fenceposts all around */
 typedef unsigned char Board[YMAX+3][XMAX+3];
 Board	world[2];
@@ -18,6 +21,7 @@ Board	world[2];
 
 int	current = 0, rows = YMAX+1, cols = XMAX+1;
 int	max_row = YMAX, max_col = XMAX;
+int	msg_row = YMAX+1;
 
 /*
  * get_cell(), set_cell() -- generic board interface; hides that there are two boards
@@ -47,8 +51,8 @@ void
 clear_board (void) {
   int	index, xedni;
 	
-  for (index=0; index<=YMAX+1; index++)
-    for (xedni=0; xedni<=XMAX+1; xedni++)
+  for (index=0; index<rows; index++)
+    for (xedni=0; xedni<cols; xedni++)
       CELL(index, xedni) = 0;
 }
 
@@ -64,8 +68,8 @@ void
 generation (void) {
   int index, xedni, to = OTHER(current);
 	
-  for (index=1; index<=YMAX; index++)
-    for (xedni=1; xedni<=XMAX; xedni++)
+  for (index=1; index<rows; index++)
+    for (xedni=1; xedni<cols; xedni++)
       world[to][index][xedni] = determine(index, xedni);
 
   current = to;

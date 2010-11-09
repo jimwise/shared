@@ -13,10 +13,6 @@
 
 #define	VERSION_STR	"1.3"
 
-/* default settings for these two... should be overridden by specific builds */
-#define	XMAX	80
-#define	YMAX	23
-
 /* (abstract) file open modes */
 #define WRITEFILE	0
 #define	READFILE	1
@@ -50,7 +46,7 @@ int	set_cell (int row, int col, char val);
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))
 
-extern int rows, cols, max_row, max_col;
+extern int rows, cols, max_row, max_col, msg_row;
 
 #define	NAMELEN		512
 #define	MENUSTR		"[L]oad; [S]ave; [R]eturn"

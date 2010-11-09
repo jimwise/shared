@@ -127,11 +127,11 @@ static void
 findbounds (void) {
   int		index, xedni;
 
-  x_min = XMAX, x_max = 0, y_min = YMAX, y_max = 0;
+  x_min = max_row+1; x_max = 0; y_min = max_col+1; y_max = 0;
 
   /* this is ugly but simple... */
-  for (index=1; index<=YMAX; index++)
-    for (xedni=1; xedni<=XMAX; xedni++)
+  for (index=1; index<rows; index++)
+    for (xedni=1; xedni<cols; xedni++)
       if (get_cell(index, xedni)) {
 	x_min = MIN(x_min, xedni);
 	x_max = MAX(x_max, xedni);
@@ -172,14 +172,14 @@ static int
 getboard(int x_size, int y_size) {
   int index, xedni, curr;
 	
-  x_min = XMAX/2 - x_size/2;
-  y_min = YMAX/2 - y_size/2;
+  x_min = max_row/2 - x_size/2;
+  y_min = max_col/2 - y_size/2;
   x_max = x_min + x_size - 1;
   y_max = y_min + y_size - 1;
 	
-  if (x_min < 0 || y_min < 0 || x_max > XMAX || y_max > YMAX) { /* Overly thorough */
+  if (x_min < 0 || y_min < 0 || x_max > max_row || y_max > max_col) { /* Overly thorough */
     prompt("Board is too large (Board is %d x %d, I can handle %d x %d)",
-	    x_size, y_size, XMAX, YMAX);
+	    x_size, y_size, rows, cols);
     return(1);
   }
 	

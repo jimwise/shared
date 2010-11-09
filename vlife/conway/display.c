@@ -54,9 +54,9 @@ void
 display (void) {
   int index, xedni;
 
-  for (index=1; index<=YMAX+1; index++) {
+  for (index=1; index<rows; index++) {
     move (index-1, 0);
-    for (xedni=1; xedni<=XMAX+1; xedni++)
+    for (xedni=1; xedni<cols; xedni++)
       addch(CHAR(get_cell(index, xedni)));
   }
   refresh();
@@ -69,7 +69,7 @@ display (void) {
 void
 prompt(char *fmt, ...)
 {
-  char line[XMAX+2];
+  char line[1024];
 
   va_list args;
   va_start(args, fmt);
@@ -106,10 +106,10 @@ message(char *fmt, ...)
 static void
 vmessage(char *fmt, va_list args)
 {
-  char line[XMAX+2];
+  char line[1024];
 
   vsnprintf(line, sizeof(line), fmt, args);
-  mvprintw(YMAX+1, 0, line);
+  mvprintw(msg_row, 0, line);
   clrtoeol();
   refresh();
 }
