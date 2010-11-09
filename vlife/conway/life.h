@@ -46,10 +46,11 @@ void	run (void);
 int	save (char *fname);
 int	set_cell (int row, int col, char val);
 
-
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))
+
+extern int rows, cols;
 
 #define	NAMELEN		512
 #define	MENUSTR		"[L]oad; [S]ave; [R]eturn"

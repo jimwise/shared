@@ -12,21 +12,30 @@
 
 /* visible world runs from 1..?MAX+1, with fenceposts all around */
 typedef unsigned char Board[YMAX+3][XMAX+3];
-
 Board	world[2];
-int	current = 0;
 
 #define CELL(row, col)	world[current][row][col]
+
+int	current = 0, rows = YMAX+1, cols = XMAX+1;
+int	max_row = YMAX, max_col = XMAX;
 
 /*
  * get_cell(), set_cell() -- generic board interface; hides that there are two boards
  */
 
 int get_cell (int row, int col) {
+  if ((row < 0) || (row > max_row) ||
+      (col < 0) || (col > max_row))
+    return 0;
+
   return world[current][row][col];
 }
 
 int set_cell (int row, int col, char val) {
+  if ((row < 0) || (row > max_row) ||
+      (col < 0) || (col > max_row))
+    return val;
+
   return world[current][row][col] = val;
 }
 
