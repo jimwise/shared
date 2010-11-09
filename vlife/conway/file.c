@@ -301,7 +301,7 @@ getsize (int *x_size, int *y_size) {
 
 static int
 putcell (int value) {
-  int 	outc = value ? 'X' : ' ';
+  int 	outc = value ? '*' : ' ';
 	
   return (fputc(outc, boardfile) == EOF);
 }
@@ -318,14 +318,11 @@ getcell (void) {
   c = getc(boardfile);
 	
   switch(c) {
-  case 'X':
-    return(1);
-    break;
   case ' ':
     return(0);
     break;
   default:
-    return(-1);
+    return(1);
     break;
   }
 }

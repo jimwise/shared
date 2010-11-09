@@ -131,11 +131,9 @@ prompt_string(char *prompt) {
   
   message(prompt);
   echo();
-  nocrmode();
   nodelay(win, 0);
   wgetnstr(win, gsbuf, sizeof(gsbuf));
   nodelay(win, 1);
-  crmode();
   noecho();
 
   if (strlen(gsbuf))
