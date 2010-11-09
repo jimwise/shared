@@ -100,12 +100,12 @@ edit (void) {
  
 static void
 filemenu (void) {
-  int	flag = 1, c;
+  int	c;
   char	*fname;
 
   message(MENUSTR);
 
-  while (flag) {
+  while (1) {
     c = getch();
 		
     switch (c) {
@@ -120,7 +120,7 @@ filemenu (void) {
 	}
       }
       display();
-      message(MENUSTR);
+      return;
       break;
     case 's':
       if ((fname = prompt_string("Enter FileName: ")) != NULL) {
@@ -129,10 +129,10 @@ filemenu (void) {
 	else
 	  prompt("Board saved to file %s", fname);
       }
-      message(MENUSTR);
+      return;
       break;
     case 'r':
-      flag = 0;
+      return;
       break;
     default:			/* e.g. ERR, i.e. no char ready */
       break;

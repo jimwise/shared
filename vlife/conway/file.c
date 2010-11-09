@@ -19,12 +19,10 @@
 #include "life.h"
 
 static int	checkstring (char *, ...);
-static int	closefile (void);
 static void	findbounds (void);
 static int	getboard (int, int);
 static int	getcell (void);
 static int	getsize (int *, int *);
-static int	openfile (char *, int);
 static int	putboard (void);
 static int	putcell (int);
 static int	putsize (int, int);
@@ -45,7 +43,7 @@ int
 save(char *name) {
   findbounds();
 	
-  if (openfile(name, WRITEFILE)) {
+  if ((boardfile = fopen(name, "w")) == NULL) {
     prompt("Could not open file %s", name);
     return(1);
   }
@@ -55,18 +53,18 @@ save(char *name) {
        putsize(x_max - x_min + 1, y_max - y_min + 1) ||
        putstring(FILE_SEPSTRING) ) {
     prompt("Could not write header to file %s", name);
-    closefile();
+    fclose(boardfile);
     return(1);
   }
 	
   if ( putboard() || putstring(FILE_SEPSTRING)) {
     prompt("Could not write board to file %s", name);
-    closefile();
+    fclose(boardfile);
     return(1);
   }
 	
-  if (closefile()) {
-    prompt("Failed to close file %s", name);
+  if (fclose(boardfile)) {
+    prompt("Failed to write file %s", name);
     return(1);
   }
 	
@@ -81,8 +79,8 @@ save(char *name) {
 int
 load (char *name) {
   int x_size, y_size;
-	
-  if (openfile(name, READFILE)) {
+
+  if ((boardfile = fopen(name, "r")) == NULL) {
     prompt("Could not open file %s", name);
     return(1);
   }
@@ -92,26 +90,23 @@ load (char *name) {
        getsize(&x_size, &y_size) ||
        checkstring(FILE_SEPSTRING) ) {
     prompt("Bad header information in file %s", name);
-    closefile();
+    fclose(boardfile);
     return(1);
   }
 	
   if (getboard(x_size, y_size)) {
     prompt("Invalid board in file %s", name);
-    closefile();
+    fclose(boardfile);
     return(1);
   }
 	
   if (checkstring(FILE_SEPSTRING)) {
     prompt("Incomplete file %s", name);
-    closefile();
+    fclose(boardfile);
     return(1);
   }
 	
-  if (closefile()) {
-    prompt("Failed to close file %s", name);
-    return(1);
-  }
+  fclose(boardfile);
 		
   return(0);
 }
@@ -169,59 +164,37 @@ putboard (void) {
  */
 
 static int
-getboard(int x_size, int y_size) {
+getboard(int rows_needed, int cols_needed) {
+  int start_row, start_col, stop_row, stop_col;
   int index, xedni, curr;
-	
-  x_min = max_row/2 - x_size/2;
-  y_min = max_col/2 - y_size/2;
-  x_max = x_min + x_size - 1;
-  y_max = y_min + y_size - 1;
-	
-  if (x_min < 0 || y_min < 0 || x_max > max_row || y_max > max_col) { /* Overly thorough */
+
+  if (rows_needed > rows || cols_needed > cols) {
     prompt("Board is too large (Board is %d x %d, I can handle %d x %d)",
-	    x_size, y_size, rows, cols);
+	    rows_needed, cols_needed, rows, cols);
     return(1);
   }
+	
+  start_col = (cols - cols_needed)/2;
+  start_row = (rows - rows_needed)/2;
+  stop_col = start_col + cols_needed;
+  stop_row = start_row + rows_needed;
 
-  for (index=y_min; index<=y_max; index++) {
-    for (xedni=x_min; xedni<=x_max; xedni++) {	
-      curr = getcell();
-      if (curr < 0)
+  prompt("starting: loading %d x %d at (%d,%d) (out of %d x %d)",
+	 rows_needed, cols_needed, start_row, start_col, rows, cols);
+  for (index=start_row; index<stop_row; index++) {
+    for (xedni=start_col; xedni<stop_col; xedni++) {	
+      if ((curr = getcell()) == -1)
 	return(1);
+      prompt("set_cell(%d, %d, %d)", index, xedni, curr);
       set_cell(index, xedni, curr);
     }
     if (checkstring("\n"))
       return(1);
   }
-	
+  display();
+
   return(0);
 }
-
-/*
- * openfile() -- open a file as the current board file.
- * Takes a file name and a selector of whether the file is to be read or written.
- * returns 0 on success, non-zero on failure.
- */
- 
-static int
-openfile (char *name, int mode) {
-  if (mode)
-    boardfile = fopen(name, "rb");
-  else
-    boardfile = fopen(name, "wb");
-		
-  return(boardfile == NULL);
-}
-
-/*
- * closefile() -- close the current	board file
- * returns 0 on success, non-zero on failure.
- */
-
-static int
-closefile (void) {
-  return(fclose(boardfile));
-}	
 
 /*
  * putstring() -- output a printf string to the current board file
@@ -313,16 +286,21 @@ putcell (int value) {
 
 static int
 getcell (void) {
-  char	c;
+  int	c;
 	
   c = getc(boardfile);
+  /* prompt("|%c|", c); */
 	
   switch(c) {
   case ' ':
     return(0);
     break;
-  default:
+  case '*':
+  case 'X':
     return(1);
+    break;
+  default:
+    return(-1);
     break;
   }
 }
