@@ -1,13 +1,11 @@
 /*
- * thinkdisplay.c -- mac-specific (console) display code for Conway's Life
+ * display.c -- curses-based display code for Conway's Life
  *
- * please see the file life.c for more information
+ * life is copyright (c) 1995-2010, Jim Wise
  *
- * life is copyright © 1995, Jim Wise
- * You may redistribute this code freely.
- * You may modify and redistribute this code freely as long as you retain
- * this paragraph and an indication that the code has been modified.
- * life comes with absolutely NO WARRANTY.
+ * You may redistribute this code freely.  You may modify and redistribute
+ * this code freely as long as you retain this paragraph and an indication
+ * that the code has been modified.  life comes with absolutely NO WARRANTY.
  */
 
 #include <stdlib.h>

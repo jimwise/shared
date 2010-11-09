@@ -1,22 +1,15 @@
 /*
- * file.c -- generic Load and Save routines for Conways Life
+ * file.c -- stdio-based load and save routines for life
  *
- * Note that this file is pretty grossly inefficient in that a lot of things should
- * really be calls to the standard library.  It _is_ however, 100% generic in terms
- * of all sorts of file systems, since all actual calls to the file system go through
- * a seperate platform-specific set of routines.
+ * XXX this file has more indirection than it needs, as it contains the
+ * XXX remnants of an attempt at a common api between macos 7 and stdio file
+ * XXX routines
  *
- * Worth noting, I suppose, that this code does more error checking than the rest of
- * the system combined, mostly to take care of the number of recoverable things that
- * can go wrong here.
- *
- * please see the file life.c for more information
- *
- * life is copyright © 1995, Jim Wise
- * You may redistribute this code freely.
- * You may modify and redistribute this code freely as long as you retain
- * this paragraph and an indication that the code has been modified.
- * life comes with absolutely NO WARRANTY.
+ * life is copyright (c) 1995-2010, Jim Wise
+ * 
+ * You may redistribute this code freely.  You may modify and redistribute
+ * this code freely as long as you retain this paragraph and an indication
+ * that the code has been modified.  life comes with absolutely NO WARRANTY.
  */
 
 #include <stdlib.h>

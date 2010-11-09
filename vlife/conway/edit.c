@@ -1,13 +1,11 @@
 /*
- * thinkedit.c -- mac-specific (console) board editing code for Conway's Life
+ * edit.c -- curses based editing ui for life
  *
- * please see the file life.c for more information
+ * life is copyright (c) 1995-2010, Jim Wise
  *
- * life is copyright © 1995, Jim Wise
- * You may redistribute this code freely.
- * You may modify and redistribute this code freely as long as you retain
- * this paragraph and an indication that the code has been modified.
- * life comes with absolutely NO WARRANTY.
+ * You may redistribute this code freely.  You may modify and redistribute
+ * this code freely as long as you retain this paragraph and an indication
+ * that the code has been modified.  life comes with absolutely NO WARRANTY.
  */
 
 #include <stdio.h>
