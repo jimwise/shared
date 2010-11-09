@@ -25,7 +25,7 @@
 
 /* shared routines */
 
-void	begin_display (void);
+void	begin_display (int *mr, int *mc);
 void	clear_board (void);
 int	determine (int row, int col);
 void	display (void);
