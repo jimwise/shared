@@ -25,7 +25,7 @@ int	max_row = YMAX, max_col = XMAX;
 
 int get_cell (int row, int col) {
   if ((row < 0) || (row > max_row) ||
-      (col < 0) || (col > max_row))
+      (col < 0) || (col > max_col))
     return 0;
 
   return world[current][row][col];
