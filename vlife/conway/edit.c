@@ -71,8 +71,8 @@ edit (void) {
       break;
     case ' ':
     case '5':
-      CELL(ycur, xcur) = OTHER(CELL(ycur, xcur));
-      addch(CHAR(CELL(ycur, xcur)));
+      set_cell(ycur, xcur, OTHER(get_cell(ycur, xcur)));
+      addch(CHAR(get_cell(ycur, xcur)));
       break;
     case 'f':
       filemenu();

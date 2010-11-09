@@ -27,27 +27,23 @@
 #define	FILE_SEPSTRING		"----------\n"
 #define FILE_SIZEFMT		"%d x %d\n"
 
-/* visible world runs from 1..?MAX+1, with fenceposts all around */
-typedef unsigned char Board[YMAX+3][XMAX+3];
-
 /* shared routines */
 
 void	clear_board (void);
-int	determine (int, int);
+int	determine (int row, int col);
 void	display (void);
 int	edit (void);
+int	get_cell (int row, int col);
 void	generation (void);
-int	getname (char *);
-int	load (char *);
-void	message(char *, ...);
-void	prompt(char *, ...);
+int	getname (char *buf);
+int	load (char *fname);
+void	message(char *fmt, ...);
+void	prompt(char *fmt, ...);
 void	run (void);
-int	save (char *);
+int	save (char *fname);
+int	set_cell (int row, int col, char val);
 
-extern Board	world[2];
-extern int	current, turn;
 
-#define CELL(row, col)	world[current][row][col]
 #define	OTHER(a)	((a) ? 0 : 1)
 #define MIN(x,y)	(((x)<=(y)) ? (x) : (y))
 #define MAX(x,y)	(((x)>=(y)) ? (x) : (y))

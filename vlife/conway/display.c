@@ -28,7 +28,7 @@ display () {
   for (index=1; index<=YMAX+1; index++) {
     move (index-1, 0);
     for (xedni=1; xedni<=XMAX+1; xedni++)
-      addch(CHAR(CELL(index, xedni)));
+      addch(CHAR(get_cell(index, xedni)));
   }
   refresh();
 }

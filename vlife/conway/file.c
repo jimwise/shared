@@ -132,7 +132,7 @@ findbounds (void) {
   /* this is ugly but simple... */
   for (index=1; index<=YMAX; index++)
     for (xedni=1; xedni<=XMAX; xedni++)
-      if (CELL(index, xedni)) {
+      if (get_cell(index, xedni)) {
 	x_min = MIN(x_min, xedni);
 	x_max = MAX(x_max, xedni);
 	y_min = MIN(y_min, index);
@@ -154,7 +154,7 @@ putboard (void) {
   int		index, xedni;
   for (index=y_min; index<=y_max; index++) {
     for (xedni=x_min; xedni<=x_max; xedni++)
-      if (putcell(CELL(index,xedni)))
+      if (putcell(get_cell(index,xedni)))
 	return(1);
     if (putstring("\n"))
       return(1);
@@ -188,7 +188,7 @@ getboard(int x_size, int y_size) {
       curr = getcell();
       if (curr < 0)
 	return(1);
-      CELL(index,xedni) = curr;
+      set_cell(index, xedni, curr);
     }
     if (checkstring("\n"))
       return(1);
