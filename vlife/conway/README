@@ -29,9 +29,9 @@ Life starts in edit mode.  Use the following keys to move the '%' cursor:
                          
                          k,8
                           ^
-                          l
-                 h, 4 <-- ¥ --> l,6
-                          l
+                          |
+                 h, 4 <-- + --> l,6
+                          |
                           v
                          j,2
 
