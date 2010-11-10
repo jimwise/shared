@@ -17,12 +17,6 @@
 #define WRITEFILE	0
 #define	READFILE	1
 
-/* board file magic words */
-#define FILE_HEADERSTRING	"Life, copyright 1995, Jim Wise\nFile Format Version 1.0\n\n"
-#define FILE_SIZESTRING		"Board Size "
-#define	FILE_SEPSTRING		"----------\n"
-#define FILE_SIZEFMT		"%d x %d\n"
-
 /* shared routines */
 
 void	begin_display (int *r, int *c);
