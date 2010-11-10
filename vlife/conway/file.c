@@ -31,13 +31,13 @@ save(char *name) {
   int	i, j;
   FILE *f;
 
-  findbounds();
-	
   if ((f = fopen(name, "w")) == NULL) {
     prompt("Could not open file %s", name);
     return(1);
   }
   clearerr(f);
+
+  findbounds();
 
   fputs(MAGIC, f);
   fprintf(f, SIZE, col_max - col_min + 1, row_max - row_min + 1);
@@ -117,7 +117,6 @@ findbounds (void) {
   row_min = rows;
   row_max = -1;
 
-  /* this is ugly but simple... */
   for (i=0; i<rows; i++)
     for (j=0; j<cols; j++)
       if (get_cell(i, j)) {
