@@ -15,3 +15,5 @@ $(BIN): $(OBJS)
 
 clean:
 	rm -f $(BIN) $(OBJS)
+
+$(OBJS): life.h
