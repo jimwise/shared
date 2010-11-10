@@ -15,10 +15,9 @@
 #include "life.h"
 
 static void	findbounds (void);
-static int	getboard (int rows_needed, int cols_needed);
-static int	getcell (void);
+static int	getboard (FILE *f, int rows_needed, int cols_needed);
+static int	getcell (FILE *f);
 
-static FILE	*boardfile;
 static int	x_min, x_max, y_min, y_max;
 
 /*
@@ -29,32 +28,33 @@ static int	x_min, x_max, y_min, y_max;
 int
 save(char *name) {
   int	index, xedni;
+  FILE *f;
 
   findbounds();
 	
-  if ((boardfile = fopen(name, "w")) == NULL) {
+  if ((f = fopen(name, "w")) == NULL) {
     prompt("Could not open file %s", name);
     return(1);
   }
-  clearerr(boardfile);
+  clearerr(f);
 
-  fputs(FILE_HEADERSTRING, boardfile);
-  fputs(FILE_SIZESTRING, boardfile);
+  fputs(FILE_HEADERSTRING, f);
+  fputs(FILE_SIZESTRING, f);
 
-  fprintf(boardfile, FILE_SIZEFMT, x_max - x_min + 1, y_max - y_min + 1);
+  fprintf(f, FILE_SIZEFMT, x_max - x_min + 1, y_max - y_min + 1);
 
-  fputs(FILE_SEPSTRING, boardfile);
+  fputs(FILE_SEPSTRING, f);
 
   for (index=y_min; index<=y_max; index++) {
     for (xedni=x_min; xedni<=x_max; xedni++)
-      fputc(CHAR(get_cell(index, xedni)), boardfile);
-    putc('\n', boardfile);
+      fputc(CHAR(get_cell(index, xedni)), f);
+    putc('\n', f);
   }
 
-  fputs(FILE_SEPSTRING, boardfile);
-  fclose(boardfile);
+  fputs(FILE_SEPSTRING, f);
+  fclose(f);
 
-  if (ferror(boardfile)) {
+  if (ferror(f)) {
     prompt("Failed to write file %s", name);
     return(1);
   }
@@ -70,34 +70,35 @@ save(char *name) {
 int
 load (char *name) {
   int r, c;
+  FILE *f;
 
-  if ((boardfile = fopen(name, "r")) == NULL) {
+  if ((f = fopen(name, "r")) == NULL) {
     prompt("Could not open file %s", name);
     return(1);
   }
 		
-  if ((fscanf(boardfile, FILE_HEADERSTRING) == EOF) ||
-      (fscanf(boardfile, FILE_SIZESTRING) == EOF) ||
-      (fscanf(boardfile, FILE_SIZEFMT, &r, &c) != 2) ||
-      (fscanf(boardfile, FILE_SEPSTRING) == EOF)) {
+  if ((fscanf(f, FILE_HEADERSTRING) == EOF) ||
+      (fscanf(f, FILE_SIZESTRING) == EOF) ||
+      (fscanf(f, FILE_SIZEFMT, &r, &c) != 2) ||
+      (fscanf(f, FILE_SEPSTRING) == EOF)) {
     prompt("Bad header information in file %s", name);
-    fclose(boardfile);
+    fclose(f);
     return(1);
   }
 	
-  if (getboard(r, c)) {
+  if (getboard(f, r, c)) {
     prompt("Invalid board in file %s", name);
-    fclose(boardfile);
+    fclose(f);
     return(1);
   }
 	
-  if (fscanf(boardfile, FILE_SEPSTRING) == EOF) {
+  if (fscanf(f, FILE_SEPSTRING) == EOF) {
     prompt("Incomplete file %s", name);
-    fclose(boardfile);
+    fclose(f);
     return(1);
   }
 	
-  fclose(boardfile);
+  fclose(f);
 		
   return(0);
 }
@@ -136,7 +137,7 @@ findbounds (void) {
  */
 
 static int
-getboard(int rows_needed, int cols_needed) {
+getboard(FILE *f, int rows_needed, int cols_needed) {
   int start_row, start_col, stop_row, stop_col;
   int index, xedni, curr;
 
@@ -155,12 +156,12 @@ getboard(int rows_needed, int cols_needed) {
   	 rows_needed, cols_needed, start_row, start_col, rows, cols);
   for (index=start_row; index<stop_row; index++) {
     for (xedni=start_col; xedni<stop_col; xedni++) {	
-      if ((curr = getcell()) == -1)
+      if ((curr = getcell(f)) == -1)
 	return(1);
       prompt("set_cell(%d, %d, %d)", index, xedni, curr);
       set_cell(index, xedni, curr);
     }
-    if (getc(boardfile) != '\n')
+    if (getc(f) != '\n')
       return(1);
   }
   display();
@@ -174,10 +175,10 @@ getboard(int rows_needed, int cols_needed) {
  */
 
 static int
-getcell (void) {
+getcell (FILE *f) {
   int	c;
 	
-  c = getc(boardfile);
+  c = getc(f);
   /* prompt("|%c|", c); */
 	
   switch(c) {
