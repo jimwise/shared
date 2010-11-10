@@ -47,8 +47,8 @@ This code was originally written in 1995, using Think C for MacOS 7, with
 the display code written using the Think C console interface.  I've started
 playing with this again in late 2010.
 
-life is copyright © 1995, Jim Wise
-You may redistribute this code freely.
-You may modify and redistribute this code freely as long as you retain
-this paragraph and an indication that the code has been modified.
-life comes with absolutely NO WARRANTY.
+life is copyright (c) 1995-2010, Jim Wise
+
+You may redistribute this code freely.  You may modify and redistribute this
+code freely as long as you retain this paragraph and an indication that the
+code has been modified.  life comes with absolutely NO WARRANTY.
