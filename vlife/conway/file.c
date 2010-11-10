@@ -17,7 +17,7 @@
 static void	findbounds (void);
 static int	getboard (FILE *f, int rows_needed, int cols_needed);
 
-static int	x_min, x_max, y_min, y_max;
+static int	col_min, col_max, row_min, row_max;
 
 #define MAGIC	"LIFE FILE FORMAT 1.1\n"
 #define SIZE	"rows %d cols %d\n"
@@ -28,7 +28,7 @@ static int	x_min, x_max, y_min, y_max;
 
 int
 save(char *name) {
-  int	index, xedni;
+  int	i, j;
   FILE *f;
 
   findbounds();
@@ -40,11 +40,11 @@ save(char *name) {
   clearerr(f);
 
   fputs(MAGIC, f);
-  fprintf(f, SIZE, x_max - x_min + 1, y_max - y_min + 1);
+  fprintf(f, SIZE, col_max - col_min + 1, row_max - row_min + 1);
 
-  for (index=y_min; index<=y_max; index++) {
-    for (xedni=x_min; xedni<=x_max; xedni++)
-      fputc(CHAR(get_cell(index, xedni)), f);
+  for (i=row_min; i<=row_max; i++) {
+    for (j=col_min; j<=col_max; j++)
+      fputc(CHAR(get_cell(i, j)), f);
     putc('\n', f);
   }
 
@@ -110,23 +110,26 @@ load (char *name) {
 
 static void
 findbounds (void) {
-  int		index, xedni;
+  int	i, j;
 
-  x_min = max_row+1; x_max = -1; y_min = max_col+1; y_max = -1;
+  col_min = cols;
+  col_max = -1;
+  row_min = rows;
+  row_max = -1;
 
   /* this is ugly but simple... */
-  for (index=0; index<rows; index++)
-    for (xedni=0; xedni<cols; xedni++)
-      if (get_cell(index, xedni)) {
-	x_min = MIN(x_min, xedni);
-	x_max = MAX(x_max, xedni);
-	y_min = MIN(y_min, index);
-	y_max = MAX(y_max, index);
+  for (i=0; i<rows; i++)
+    for (j=0; j<cols; j++)
+      if (get_cell(i, j)) {
+	row_min = MIN(row_min, i);
+	row_max = MAX(row_max, i);
+	col_min = MIN(col_min, j);
+	col_max = MAX(col_max, j);
       }
 
-  /* if x_max is still zero, we never found a live cell */
-  if (!x_max)
-    x_min = x_max = y_min = y_max = 1;
+  /* if col_max is still -1, we never found a live cell */
+  if (col_max == -1)
+    col_min = col_max = row_min = row_max = 1;
 }
 
 /*
