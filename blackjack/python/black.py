@@ -77,7 +77,7 @@ def playerplays():
             print("You draw the", end=' ')
             return player_hand.hit()
         elif action == "u":
-            print("You surrender.")
+            print("You surrender")
             player_purse += 0.5 * player_hand.bet
             return 0
 
