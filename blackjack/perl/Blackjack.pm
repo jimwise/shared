@@ -22,10 +22,10 @@ BEGIN {
 	     );
 }
 
-use Cards;
+use feature qw(say);
 use List::Util qw(max);
 
-use feature qw(say);
+use Cards;
 
 # yes, ace needs special treatment
 my @vals = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10);
@@ -68,6 +68,7 @@ sub hit {
 
 sub show {
   my ($hand, $reveal) = @_;
+  # XXX copies, but this is cheap
   my @cards = @{$hand->{cards}};
 
   if (scalar(@cards) == 0) {
@@ -80,7 +81,8 @@ sub show {
       say " one face down card"
     }
   }
-  foreach my $card (@cards[1,]) {
+  shift @cards;
+  foreach my $card (@cards) {
     say " ", name($card);
   }
   showvalue($hand, $reveal);

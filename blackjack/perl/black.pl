@@ -234,5 +234,5 @@ while (1) {
   exit 0 if ("n" eq getresp(
 	      "Continue ([Y]es or [N]o) ([Y]N)? ",
 	      "Please anser [Y]es or [N]o (default Y): ",
-	      ("y", "n"), "y"));
+	      ["y", "n"], "y"));
 }

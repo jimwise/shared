@@ -46,7 +46,7 @@ sub draw {
     }
     # XXX XXX this is probably an ideal shuffle, which even a good shoe
     # doesn't provide...
-    shuffle(@shoe);
+    @shoe = shuffle(@shoe);
   }
   return shift(@shoe);
 }
