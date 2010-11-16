@@ -12,7 +12,6 @@ BEGIN {
   @EXPORT = qw(
 		draw
 		name
-		shuffle
 	     );
   @EXPORT_OK = qw(
 		   @cards
@@ -21,7 +20,7 @@ BEGIN {
 }
 
 use feature qw(say);
-use List::Util qw();
+use List::Util qw(shuffle);
 
 my $decksinshoe = 6;
 
@@ -39,19 +38,15 @@ sub name {
 
 my @shoe = ();
 
-sub shuffle {
-  for (1..$decksinshoe) {
-    push @shoe, @onedeck;
-  }
-  # XXX XXX this is probably an ideal shuffle, which even a good shoe
-  # doesn't provide...
-  Lists::Util::shuffle(@shoe);
-}
-
 sub draw {
   unless (scalar @shoe) {
     say "Refilling shoe with $decksinshoe decks.";
-    shuffle();
+    for (1..$decksinshoe) {
+      push @shoe, @onedeck;
+    }
+    # XXX XXX this is probably an ideal shuffle, which even a good shoe
+    # doesn't provide...
+    shuffle(@shoe);
   }
   return shift(@shoe);
 }

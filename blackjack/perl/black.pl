@@ -4,6 +4,7 @@ use strict;
 use warnings;
 
 use feature qw(say switch);
+use List::Util qw(min);
 
 use Cards;
 use Blackjack;
@@ -18,7 +19,7 @@ my $player_last_bet = $table_min;
 my $player_hand = makehand();
 my $dealer_hand = makehand();
 
-sub show_hands {
+sub showhands {
   my ($reveal) = @_;
   say "";
   say "Dealer has:";
@@ -26,7 +27,6 @@ sub show_hands {
   say "";
   say "Player has:";
   show($player_hand, 1);
-  say "";
 }
 
 sub deal {
@@ -84,7 +84,7 @@ sub playerplays {
 		$player_hand->{bet} += $newbet;
 		$player_purse -= $newbet;
 		print "You draw the ";
-		return(hit($player_hand));
+		return hit($player_hand);
 	       }
       when ("u") {
 		say "You surrender";
@@ -95,130 +95,144 @@ sub playerplays {
   }
 }
 
-# def dealerplays():
-#     if dealer_hand.blackjack():
-#         print("[BLACKJACK]")
-#         return 21
+sub dealerplays {
+  if (blackjack($dealer_hand)) {
+    say "[BLACKJACK]";
+    return 21;
+  }
 
-#     print("The dealer reveals the", dealer_hand.cards[0].name())
-#     dealer_hand.showvalue(reveal=True)
+  say "The dealer reveals the ", name($dealer_hand->{cards}->[0]);
+  showvalue($dealer_hand, 1);
 
-#     while True:
-#         # XXX XXX should dealer hit a soft 17?  should this be configurable?
-#         if dealer_hand.value() < 17:
-#             print("Dealer draws the", end=' ')
-#             if dealer_hand.hit() == 0:
-#                 return 0
-#         else:
-#             print("Dealer stands")
-#             return dealer_hand.value()
+  while (handvalue($dealer_hand) < 17) {
+    # XXX XXX should dealer hit a soft 17?  should this be configurable?
+    print "Dealer draws the ";
+    if (hit($dealer_hand) == 0) {
+      return 0;
+    }
+  }
+  say "Dealer stands";
+  return handvalue($dealer_hand);
+}
 
-# def play_one_hand():
-#     global player_purse
-#     player_hand.bet = getbet(table_min, table_limit)
-#     player_purse -= player_hand.bet
+sub play_one_hand {
+  $player_hand->{bet} = getbet($table_min, $table_limit);
+  $player_purse -= $player_hand->{bet};
 
-#     deal()
-#     playersbest = playerplays()
-#     if playersbest == 0:
-#         print("Dealer wins")
-#         return
-#     if player_hand.blackjack() and not dealer_hand.blackjack():
-#         print("Player wins")
-#         # XXX XXX 3:2 (configurable) on blackjack
-#         player_purse += 2.5 * player_hand.bet
-#         return
+  deal();
+  my $playersbest = playerplays();
 
-#     print()
+  unless ($playersbest) {
+    say "Dealer wins";
+    return;
+  }
 
-#     dealersbest = dealerplays()
-#     if dealersbest == 0:
-#         print("Player wins")
-#         player_purse += 2 * player_hand.bet
-#         return
-    
-#     print()
-#     print("Dealer has:")
-#     dealer_hand.show(reveal)
-#     print()
-#     print("Player has:")
-#     player_hand.show()
-#     print()
+  if (blackjack($player_hand) and not blackjack($dealer_hand)) {
+    say "Player wins";
+    # XXX XXX 3:2 (should this be configurable?) on blackjack
+    $player_purse += 2.5 * $player_hand->{bet};
+    return;
+  }
 
-#     if dealersbest > playersbest:
-#         print("Dealer wins")
-#         return
-#     elif playersbest > dealersbest:
-#         print("Player wins")
-#         player_purse += 2 * player_hand.bet
-#         return
-#     else:
-#         print("Push")
-#         player_purse += player_hand.bet
-#         return
+  say "";
 
+  my $dealersbest = dealerplays();
+  unless ($dealersbest) {
+    say "Player wins";
+    $player_purse += 2 * $player_hand->{bet};
+    return;
+  }
 
-# def getbet(table_min, table_limit):
-#     global player_last_bet, player_purse
-#     # XXX check actual min/table_limit rules
-#     print(("Please enter a bet (min = $%.2f, limit = $%.2f) [%.2f]: " % (table_min, min(player_purse, table_limit), player_last_bet)), end=' ')
-#     while True:
-#         resp = sys.stdin.readline()[:-1]
-#         if resp == '':
-#             bet = player_last_bet
-#         else:
-#             if resp[0] == '$':
-#                 resp = resp[1:]
-#             try:
-#                 bet = float(resp)
-#             except ValueError:
-#                 print("Bet must be a number of dollars, try again: ", end=' ')
-#                 continue
+  say "";
+  showhands(1);
 
-#         if bet < table_min:
-#             print("Bet must be at least $%.2f, try again: ", end=' ')
-#             continue
-#         if bet % table_min != 0:
-#             print("Bet must be in an increment of $%d.00, try again: " % min, end=' ')
-#             continue
-#         if bet > table_limit:
-#             print("Bet must be less than or equal to $%d.00, try again: " % table_limit, end=' ')
-#             continue
+  if ($dealersbest > $playersbest) {
+    say "Dealer wins";
+    return;
+  } elsif ($playersbest > $dealersbest) {
+    say "Player wins";
+    $player_purse += 2 * $player_hand->{bet};
+    return;
+  } else {
+    say "Push";
+    $player_purse += $player_hand->{bet};
+    return;
+  }
+}
 
-#         # if we get here, bet is good
-#         player_last_bet = bet
-#         return bet
+sub getbet {
+  my ($table_min, $table_limit) = @_;
+  # XXX check actual min/table_limit rules
+  my $maxbet = min ($player_purse, $table_limit);
+  my $bet = 0;
 
-# def getresp(prompt1, prompt2, allowed, default):
-#     print(prompt1, end=' ')
-#     while True:
-#         resp = sys.stdin.readline()
-#         if resp[-1] == "\n":
-#             resp = resp[:-1]
-#         resp = resp.lower()
-#         if resp in allowed:
-#             return resp
-#         if resp == '' and default != '':
-#             return default
-#         print(prompt2, end=' ')
+  print "Please enter a bet (min = $table_min, limit = $maxbet) [$player_last_bet]: ";
 
-# if __name__ == "__main__":
-#     print("You have: $%.2f" % player_purse)
-#     while True:
-#         player_hand.muck()
-#         dealer_hand.muck()
+  while (<STDIN>) {
+    chomp;
+    if (/^$/) {
+      return $player_last_bet;
+    } else {
+      s/^\$//;
+      $bet = eval {return $_ + 0};
+      if ($bet == 0) {
+	print "Bet must be a number of dollars, try again: ";
+	next;
+      }
 
-#         play_one_hand()
+      if ($bet < $table_min) {
+	print "Bet must be at least $table_min, try again: ";
+	next;
+      }
+      if ($bet % $table_min != 0) {
+	print "Bet must be in an increment of $table_min, try again: ";
+	next;
+      }
+      if ($bet > $table_limit) {
+	print "Bet must be less than or equal to $table_limit, try again: ";
+	next;
+      }
 
-#         if player_purse < table_min:
-#             print("You're out of money!")
-#             sys.exit(0)
+      # if we get here, bet is good
+      $player_last_bet = $bet;
+      return $bet;
+    }
+  }
 
-#         print("You have: $%.2f" % player_purse)
+}
 
-#         cont = getresp(
-#             "Continue ([Y]es or [N]o) ([Y]N)? ",
-#             "Please anser [Y]es or [N]o (default Y): ",
-#             ["y", "n"], "y")
-#         if cont == "n":
-#             sys.exit(0)
+sub getresp {
+  my ($prompt1, $prompt2, $allowed, $default) = @_;
+  print $prompt1;
+  while (<STDIN>) {
+    chomp;
+    my $resp = lc;
+    if ($resp eq "" and $default ne "") {
+      return $default;
+    }
+    if (grep {/^$resp$/} @{$allowed}) {
+      return $resp;
+    }
+    print $prompt2;
+  }
+}
+
+say "You have: \$$player_purse";
+while (1) {
+  muck($player_hand);
+  muck($dealer_hand);
+
+  play_one_hand();
+
+  if ($player_purse < $table_min) {
+    say "You're out of money!";
+    exit 0;
+  }
+
+  say "You have: \$$player_purse";
+
+  exit 0 if ("n" eq getresp(
+	      "Continue ([Y]es or [N]o) ([Y]N)? ",
+	      "Please anser [Y]es or [N]o (default Y): ",
+	      ("y", "n"), "y"));
+}

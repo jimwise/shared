@@ -18,6 +18,7 @@ BEGIN {
 		makehand
 		muck
 		show
+		showvalue
 	     );
 }
 
@@ -56,7 +57,7 @@ sub hit {
   my $card = draw();
   say name($card);
   add($hand, $card);
-  showvalue($hand);
+  showvalue($hand, 1);
   if (busted($hand)) {
     say "[BUST]";
     return 0;
