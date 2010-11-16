@@ -3,9 +3,7 @@
 use strict;
 use warnings;
 
-use feature qw(say);
-
-use Switch 'Perl6';		# in newer versions, 'use feature qw(switch)
+use feature qw(say switch);
 
 use Cards;
 use Blackjack;
@@ -65,7 +63,7 @@ sub playerplays {
     }
 
     given ($action) {
-      when "h" {
+      when ("h") {
 		print "You draw the ";
 		unless (hit($player_hand)) {
 		  return 0
@@ -73,11 +71,11 @@ sub playerplays {
 		# XXX some casinos allow DD after split.  some don't (confirm)
 		$first = 0;
 	       }
-      when "s" {
+      when ("s") {
 		say "You stand";
 		return handvalue($player_hand);
 	       }
-      when "d" {
+      when ("d") {
 		if ($player_purse < $table_min) {
 		  say "You cannot afford to double down!";
 		  next;
@@ -88,7 +86,7 @@ sub playerplays {
 		print "You draw the ";
 		return(hit($player_hand));
 	       }
-      when "u" {
+      when ("u") {
 		say "You surrender";
 		$player_purse += 0.5 * $player_hand->{bet};
 		return 0;
