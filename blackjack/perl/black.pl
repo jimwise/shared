@@ -47,7 +47,7 @@ sub playerplays {
     return 21;
   }
 
-  while(1) {			#  actually, until we bust or stand
+  while(1) {			#  actually, until we bust, surrender, or stand
     # XXX - split
     # XXX - this is `late surrender', early surrender has to be
     # handled at insurance time, if it is to be offered

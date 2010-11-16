@@ -43,7 +43,7 @@ def playerplays():
         print("[BLACKJACK]")
         return 21
     
-    while True:                    # actually, until we bust or stand
+    while True:                    # actually, until we bust, surrender or stand
         # XXX - split
         # XXX - this is `late surrender', early surrender has to be
         # handled at insurance time, if it is to be offered
