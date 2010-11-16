@@ -166,7 +166,7 @@ sub getbet {
   my $maxbet = min ($player_purse, $table_limit);
   my $bet = 0;
 
-  print "Please enter a bet (min = $table_min, limit = $maxbet) [$player_last_bet]: ";
+  printf "Please enter a bet (min = \$%0.2f, limit = \$%0.2f) [\$%0.2f]: ", $table_min, $maxbet, $player_last_bet;
 
   while (<STDIN>) {
     chomp;
@@ -217,7 +217,7 @@ sub getresp {
   }
 }
 
-say "You have: \$$player_purse";
+printf "You have: \$%0.2f\n", $player_purse;
 while (1) {
   muck($player_hand);
   muck($dealer_hand);
@@ -229,7 +229,7 @@ while (1) {
     exit 0;
   }
 
-  say "You have: \$$player_purse";
+  printf "You have: \$%0.2f\n", $player_purse;
 
   exit 0 if ("n" eq getresp(
 	      "Continue ([Y]es or [N]o) ([Y]N)? ",
