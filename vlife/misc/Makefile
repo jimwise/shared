@@ -8,10 +8,10 @@ LIBS= -lcurses
 all: onedee pedant
 
 onedee: onedee.o
-	$(CC) -o onedee onedee.o $(LIBS)
+	$(CC) -o $@ $^ $(LIBS)
 
 pedant: pedant.o
-	$(CC) -o pedant pedant.o $(LIBS)
+	$(CC) -o $@ $^ $(LIBS)
 
 clean:
 	rm onedee.o onedee pedant.o pedant
