@@ -19,12 +19,21 @@ player_last_bet = table_min
 player_hand = Blackjack.Hand()
 dealer_hand = Blackjack.Hand(dealer=True)
 
+def show_hands(reveal):
+    print()
+    print("Dealer has:")
+    dealer_hand.show(reveal)
+    print()
+    print("Player has:")
+    player_hand.show()
+    print()
+
 def deal():
     player_hand.add(Cards.draw())
     player_hand.add(Cards.draw())
     dealer_hand.add(Cards.draw())
     dealer_hand.add(Cards.draw())
-    show_hands()
+    show_hands(0);
 
 def playerplays():
     global player_purse
@@ -90,12 +99,14 @@ def dealerplays():
             print("Dealer stands")
             return dealer_hand.value()
 
+
 def play_one_hand():
     global player_purse
     player_hand.bet = getbet(table_min, table_limit)
     player_purse -= player_hand.bet
 
     deal()
+
     playersbest = playerplays()
     if playersbest == 0:
         print("Dealer wins")
@@ -114,13 +125,7 @@ def play_one_hand():
         player_purse += 2 * player_hand.bet
         return
     
-    print()
-    print("Dealer has:")
-    dealer_hand.show(reveal)
-    print()
-    print("Player has:")
-    player_hand.show()
-    print()
+    show_hands(1);
 
     if dealersbest > playersbest:
         print("Dealer wins")
