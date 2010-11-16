@@ -11,7 +11,7 @@ OBJS= board.o display.o edit.o file.o life.o
 all: $(BIN)
 
 $(BIN): $(OBJS)
-	$(CC) -o $@ $(OBJS) $(LIBS)
+	$(CC) -o $@ $^ $(LIBS)
 
 clean:
 	rm -f $(BIN) $(OBJS)
