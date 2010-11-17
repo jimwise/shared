@@ -4,6 +4,7 @@ from __future__ import print_function
 from functools import reduce
 
 import Cards
+import IO
 
 # yes, ace needs special treatment
 vals = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]
@@ -14,12 +15,10 @@ cardvals = dict(list(zip(Cards.cards, vals)))
 class Hand:
     cards = []
     dealer = False
-    bet = 0
     
-    def __init__(self, dealer = False):
-        """create a new empty hand
-        set 'dealer' to keep one card in the hole"""
-        self.dealer = dealer
+    def deal  (self):
+        self.add(Cards.draw());
+        self.add(Cards.draw());
 
     def add(self, card):
         """add a card to hand"""
@@ -45,6 +44,7 @@ class Hand:
         """pretty print a hand
         if a hand has a card in the hole, set 'reveal' to tru to show that card, otherwise
         card will be kept hidden"""
+            
         # XXX use __repr__?  str?
         if self.cards == []:
             print("[no cards]")
@@ -60,8 +60,6 @@ class Hand:
 
         self.showvalue(reveal)
 
-        if self.bet > 0:
-            print("Bet: $%.2f" % self.bet)
 
     def showvalue(self, reveal=False):
         """print value of a hand
@@ -111,3 +109,107 @@ class Hand:
             return 0
 
         return reduce(max, good)
+
+class DealerHand(Hand):
+    Dealer = True;
+
+    def show(self, reveal=0):
+        print("Dealer has:")
+        Hand.show(self, reveal);
+
+    def play(self):
+        if self.blackjack():
+            print("[BLACKJACK]")
+            return 21
+
+        print("The dealer reveals the", self.cards[0].name())
+        self.showvalue(reveal=True)
+
+        while True:
+            # XXX XXX should dealer hit a soft 17?  should this be configurable?
+            if self.value() < 17:
+                print("Dealer draws the", end=' ')
+                if self.hit() == 0:
+                    return 0
+            else:
+                print("Dealer stands")
+                return self.value()
+
+
+class PlayerHand(Hand):
+    Dealer = False;
+
+    def show(self, reveal=1):
+        print("Player has:")
+        Hand.show(self, reveal);
+
+    def play(self, purse):
+        first_draw = True
+        # XXX - insurance
+        if self.blackjack():
+            print("[BLACKJACK]")
+            return 21
+    
+        while True:                    # actually, until we bust, surrender or stand
+            # XXX - split
+            # XXX - this is `late surrender', early surrender has to be
+            # handled at insurance time, if it is to be offered
+            if first_draw:
+                action = IO.getresp(
+                    "[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)? ",
+                    "Please enter [H], [D], [S], or [U]: ",
+                    ["h", "d", "s", "u"], "" )
+            else:
+                action = IO.getresp(
+                    "[H]it or [S]tand (HS)? ",
+                    "Please enter [H] or [S]: ",
+                    ["h", "s"], "")
+
+            if action == "h":
+                print("You draw the", end=' ')
+                if self.hit() == 0:
+                    return 0
+                # XXX some casinos allow DD after split.  some don't (confirm)
+                first_draw = False
+            elif action == "s":
+                print("You stand")
+                return self.value()
+            elif action == "d":
+                if purse.purse < table_min:
+                    print("You cannot afford to double down!")
+                    continue
+                newbet = IO.getbet(table_min, min(purse.currbet, table_limit))
+                purse.doubledown(newbet)
+                print("You draw the", end=' ')
+                return self.hit()
+            elif action == "u":
+                print("You surrender")
+                purse.surrender()
+                return 0
+
+class Purse:
+    purse = 0.0
+    currbet = 0.0
+
+    def __init__ (self, stake):
+        self.purse = stake
+
+    def bet (self, b):
+        self.currbet = b
+        self.purse -= self.currbet
+
+    def doubledown (self, b):
+        self.currbet += b
+
+    # XXX XXX 3:2 (configurable) on blackjack
+    def blackjack (self):
+        self.purse += 2.5 * self.currbet
+
+    def surrender (self):
+        self.purse += 0.5 * self.currbet
+
+    def win (self):
+        self.purse += 2 * self.currbet
+
+    def push (self):
+        self.purse += self.currbet
