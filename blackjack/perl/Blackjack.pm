@@ -94,7 +94,7 @@ sub show {
 sub showvalue {
   my ($hand, $reveal) = @_;
   if ($reveal) {
-    say "Total value:", join("/", handvalues($hand));
+    say "Total value: ", join("/", handvalues($hand));
   } else {
     say "Total value: ???";
   }

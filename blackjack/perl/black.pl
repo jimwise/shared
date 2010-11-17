@@ -80,7 +80,7 @@ sub playerplays {
 		  say "You cannot afford to double down!";
 		  next;
 		}
-		my $newbet = getbet($table_min, $player_hand->{bet});
+		my $newbet = getbet();
 		$player_hand->{bet} += $newbet;
 		$player_purse -= $newbet;
 		print "You draw the ";
@@ -161,7 +161,6 @@ sub play_one_hand {
 }
 
 sub getbet {
-  my ($table_min, $table_limit) = @_;
   # XXX check actual min/table_limit rules
   my $maxbet = min ($player_purse, $table_limit);
   my $bet = 0;
