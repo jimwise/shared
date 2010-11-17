@@ -87,7 +87,7 @@ sub show {
   }
   showvalue($hand, $reveal);
   if ($hand->{bet}) {
-    say "Bet: $hand->{bet}\n";
+    printf "Bet: %0.2f\n", $hand->{bet};
   }
 }
 
