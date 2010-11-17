@@ -8,13 +8,13 @@ use List::Util qw(min);
 
 use Cards;
 use Blackjack;
+use BlackIO;
 
 my $table_min = 5;
 my $table_limit = 1000;
 
 # XXX make configurable
 my $player_purse = 1000.00;
-my $player_last_bet = $table_min;
 
 my $player_hand = makehand();
 my $dealer_hand = makehand();
@@ -80,7 +80,7 @@ sub playerplays {
 		  say "You cannot afford to double down!";
 		  next;
 		}
-		my $newbet = getbet();
+		my $newbet = getbet($table_min, min($player_purse, $player_hand->{bet}));
 		$player_hand->{bet} += $newbet;
 		$player_purse -= $newbet;
 		print "You draw the ";
@@ -157,62 +157,6 @@ sub play_one_hand {
     say "Push";
     $player_purse += $player_hand->{bet};
     return;
-  }
-}
-
-sub getbet {
-  # XXX check actual min/table_limit rules
-  my $maxbet = min ($player_purse, $table_limit);
-  my $bet = 0;
-
-  printf "Please enter a bet (min = \$%0.2f, limit = \$%0.2f) [\$%0.2f]: ", $table_min, $maxbet, $player_last_bet;
-
-  while (<STDIN>) {
-    chomp;
-    if (/^$/) {
-      return $player_last_bet;
-    } else {
-      s/^\$//;
-      $bet = eval {return $_ + 0};
-      if ($bet == 0) {
-	print "Bet must be a number of dollars, try again: ";
-	next;
-      }
-
-      if ($bet < $table_min) {
-	print "Bet must be at least $table_min, try again: ";
-	next;
-      }
-      if ($bet % $table_min != 0) {
-	print "Bet must be in an increment of $table_min, try again: ";
-	next;
-      }
-      if ($bet > $table_limit) {
-	print "Bet must be less than or equal to $table_limit, try again: ";
-	next;
-      }
-
-      # if we get here, bet is good
-      $player_last_bet = $bet;
-      return $bet;
-    }
-  }
-
-}
-
-sub getresp {
-  my ($prompt1, $prompt2, $allowed, $default) = @_;
-  print $prompt1;
-  while (<STDIN>) {
-    chomp;
-    my $resp = lc;
-    if ($resp eq "" and $default ne "") {
-      return $default;
-    }
-    if (grep {/^$resp$/} @{$allowed}) {
-      return $resp;
-    }
-    print $prompt2;
   }
 }
 
