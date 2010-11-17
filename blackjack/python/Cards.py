@@ -1,4 +1,4 @@
-#!/usr/pkg/bin/python2.4
+#!/opt/csw/bin/python
 
 from __future__ import print_function
 import random
