@@ -37,7 +37,7 @@ deal (void) {
 int
 playerplays (void) {
   int first = 1;
-  doule newbet;
+  double newbet;
   char action;
 
   /* XXX - insurance */
