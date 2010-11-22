@@ -36,7 +36,7 @@ object Cards {
   val suits = Array(Hearts, Diamonds, Clubs, Spades)
   val values = Array(Ace, Two, Three, Four, Five, Six, Seven,
                              Eight, Nine, Ten, Jack, Queen, King)
-  val oneDeck: Array[Card] = for (s <- suits; v <- values) yield new Card(s,v)
+  val oneDeck: Array[Card] = for (s <- suits; v <- values) yield Card(s,v)
 }
 
 object Shoe {
