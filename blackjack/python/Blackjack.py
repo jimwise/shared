@@ -14,7 +14,6 @@ cardvals = dict(list(zip(Cards.cards, vals)))
 
 class Hand:
     cards = []
-    dealer = False
     
     def deal  (self):
         self.add(Cards.draw());
@@ -50,7 +49,7 @@ class Hand:
             print("[no cards]")
             return
         else:
-            if reveal or not self.dealer:
+            if reveal:
                 print(" ", self.cards[0].name())
             else:
                 print("  one face down card")
@@ -199,6 +198,7 @@ class Purse:
         self.purse -= self.currbet
 
     def doubledown (self, b):
+        self.purse -= b
         self.currbet += b
 
     # XXX XXX 3:2 (configurable) on blackjack
