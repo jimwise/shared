@@ -37,10 +37,13 @@ class Hand (d : Boolean) {
   // this is here to support eventual splitting of hands
   var bet : Double = 0
 
-  // add a card to a hand
+  def deal_! {
+    add(Shoe.draw)
+    add(Shoe.draw)
+  }
+
   def add(card : Card) { cards = card :: cards }
   
-  // discard all cards from a hand
   def muck { cards = List() }
 
   // hit a hand, and return new value

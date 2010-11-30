@@ -20,14 +20,6 @@ object Main {
   var player_hand = new Hand(false)
   var dealer_hand = new Hand(true)
 
-  def deal() {
-    player_hand.add(Shoe.draw)
-    player_hand.add(Shoe.draw)
-    dealer_hand.add(Shoe.draw)
-    dealer_hand.add(Shoe.draw)
-    show_hands(false)
-  }
-
   def show_hands(reveal : Boolean) {
     println("Dealer has:")
     dealer_hand.show(reveal)
@@ -35,81 +27,6 @@ object Main {
     println("Player has:")
     player_hand.show(true)
     printf("Bet: $%.2f\n", player_hand.bet)
-
-  }
-
-  def getchar : Char = {
-    var resp = ' '
-    var respln = Console.readLine
-    if (respln != "")
-      resp = respln(0)
-    resp.toLower
-  }
-  def getresp(prompt1 : String, prompt2 : String, allowed : List[Char], 
-	      default : Char) : Char = {
-    print(prompt1 + " ")
-    var resp = getchar
-
-    var done = false
-    while (!done) {
-      if (resp == ' ') {
-	if (default != ' ') {
-	  resp = default
-	  done = true
-	} else {
-	  print(prompt2 + " ")
-	  resp = getchar
-	}
-      } else if (allowed.find(resp ==) != None) {
-	done = true
-      } else {
-	print(prompt2 + " ")
-	resp = getchar
-      }
-    }
-    resp
-  }
-
-  def getbet(min: Double, table_limit: Double) : Double = {
-    // XXX check actual min/table_limit rules
-    // XXX XXX XXX number formatting
-    val limit = math.min(table_limit, player_purse)
-    var resp = Console.readLine(
-      "Please enter a bet (min = $%.2f, limit = $%.2f) [$%.2f] ",
-      min, limit, player_last_bet)
-    var bet : Double = 0.0
-
-    var done = false
-    while (!done) {
-      if (resp == "") {
-	bet = player_last_bet
-	done = true
-      } else {
-	if (resp(0) == '$') {
-	  resp = resp.substring(1)
-	}
-	bet = try {
-	  resp.toDouble
-	} catch {
-	  case _ => 0.0
-	} 
-	if (bet == 0.0) {
-          resp = Console.readLine("Bet must be a number of dollars, try again: ")
-	} else  if (bet < min) {
-          resp = Console.readLine("Bet must be at least $" + min + ", try again: ")
-	} else if (bet % min != 0) {
-          resp = Console.readLine("Bet must be in an increment of $" + min + ", try again: ")
-	} else if (bet > limit) {
-	  // XXX might be nice to have different message for over limit vs. over purse
-          resp = Console.readLine("Bet must be less than or equal to $" + limit + ", try again:")
-	} else {
-	  done = true
-	}
-      }
-    }
-
-    player_last_bet = bet
-    bet
   }
 
   def playerplays : Int = {
@@ -129,12 +46,12 @@ object Main {
 	// XXX - this is `late surrender', early surrender has to be
 	//       handled at insurance time, if it is to be offered
         if (first_draw) {
-          action = getresp(
+          action = IO.getresp(
 	    "[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)?",
             "Please enter [H], [D], [S], or [U]:",
             List('h', 'd', 's', 'u'), ' ')
 	} else {
-          action = getresp(
+          action = IO.getresp(
             "[H]it or [S]tand (HS)?",
             "Please enter [H] or [S]:",
             List('h', 's'), ' ')
@@ -152,12 +69,13 @@ object Main {
 	  }
 	  case 'd' => {
             // XXX some casinos allow DD after split.  some don't (confirm)
-	    if (player_purse < player_hand.bet) {
+	    if (player_purse < table_min) {
 	      println("You cannot afford to double down!")
 	    } else {
 	      // XXX for some reason python code allowed player to choose new bet
-	      player_purse -= player_hand.bet
-	      player_hand.bet *= 2
+	      val newbet = IO.getbet(table_min, math.min(player_hand.bet, player_purse));
+	      player_purse -= newbet
+	      player_hand.bet += newbet
               print("You draw the")
 	      player_hand.hit
 	      done = true
@@ -201,10 +119,14 @@ object Main {
  }
 
   def play_one_hand {
-    player_hand.bet = getbet(table_min, table_limit)
+    player_hand.bet = IO.getbet(table_min, math.min(player_purse, table_limit))
     player_purse -= player_hand.bet
 
-    deal
+    player_hand.deal_!
+    dealer_hand.deal_!
+
+    show_hands(false)
+
     val playersbest = playerplays
     if (playersbest == 0) {
       // (busted)
@@ -256,7 +178,7 @@ object Main {
       printf("You have: $%.2f\n", player_purse)
       
       if (!done) {
-	var cont = getresp(
+	var cont = IO.getresp(
           "Continue ([Y]es or [N]o) ([Y]N)?",
           "Please anser [Y]es or [N]o (default Y):",
           List('y', 'n'), 'y')
