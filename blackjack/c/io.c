@@ -16,8 +16,8 @@ getbet(double min, double limit) {
 
   printf("Please enter a bet (min = $%0.2f, limit = $%0.2f) [$%0.2f]: ", min, limit, last_bet);
 
-  buf[0] = '\0';
   while (1) {
+    s = buf;
     fgets(buf, sizeof(buf), stdin);
     if (buf[0] == '\n')
       return last_bet;
