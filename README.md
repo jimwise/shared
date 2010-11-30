@@ -1,13 +1,9 @@
 What's here:
 
-blackjack -- a simple blackjack program, implemented seven times in seven
-	     languages 
+* blackjack -- a simple blackjack program, implemented seven times in seven languages 
 
-gallery -- an image gallery learning project in Scala and Liftweb, based on
-           dpp's image upload example
+* gallery -- an image gallery learning project in Scala and Liftweb, based on dpp's image upload example
 
-nondeterminism -- An implementation of Paul Graham's nondeterminism examples
-	          from _On Lisp_ Chapter 22... in C
+* nondeterminism -- An implementation of Paul Graham's nondeterminism examples from _On Lisp_ Chapter 22... in C
 
-vlife -- some toy virtual life programs I wrote in 1995, updated to work
-         with modern Unix/C/Curses
+* vlife -- some toy virtual life programs I wrote in 1995, updated to work with modern Unix/C/Curses
