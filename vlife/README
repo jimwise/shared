@@ -6,4 +6,4 @@ These are:
   conway -- John Conway's `game of life'
 
   misc -- two smaller programs (Langton's `virtual ant', and Wolfram's
-       	  one-dimensional cellular automaton).  Fully converted.
+       	  one-dimensional cellular automaton)
