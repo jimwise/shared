@@ -3,6 +3,7 @@ package Blackjack;
 
 use strict;
 use warnings;
+use 5.010;
 
 BEGIN {
   use Exporter ();

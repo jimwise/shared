@@ -2,8 +2,8 @@
 
 use strict;
 use warnings;
+use 5.010;
 
-use feature qw(say switch);
 use List::Util qw(min);
 
 use Cards;
