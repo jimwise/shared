@@ -1,6 +1,6 @@
 What's here:
 
-* blackjack -- a simple blackjack program, implemented seven times in seven languages 
+* blackjack -- a simple blackjack program, implemented eight times in eight languages 
 
 * gallery -- an image gallery learning project in Scala and Liftweb, based on dpp's image upload example
 
