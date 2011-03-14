@@ -64,6 +64,7 @@
                   (display "You cannot afford to double down!\n")
                   (next (getnext)))
                 (begin
+                  ; XXX XXX new bet should be at most old bet
                   (hand-bet-set! player-hand (+ (hand-bet player-hand) (getbet)))
                   (set! player-purse (- player-purse (hand-bet player-hand)))
                   (display "You draw the ")
