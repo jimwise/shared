@@ -72,7 +72,6 @@ object Main {
 	    if (player_purse < table_min) {
 	      println("You cannot afford to double down!")
 	    } else {
-	      // XXX for some reason python code allowed player to choose new bet
 	      val newbet = IO.getbet(table_min, math.min(player_hand.bet, player_purse));
 	      player_purse -= newbet
 	      player_hand.bet += newbet
