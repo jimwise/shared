@@ -81,7 +81,7 @@ playerplays (void) {
 	printf("You cannot afford to double down!\n");
 	continue;
       }
-      newbet = getbet(table_min, MIN(player_purse, table_limit));
+      newbet = getbet(table_min, MIN(player_purse, player_hand.bet));
       player_hand.bet += newbet;
       player_purse -= newbet;
       printf("You draw the ");
