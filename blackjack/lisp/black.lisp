@@ -58,6 +58,7 @@
 	      (if (< *player-purse* +table-min+)
 		  (format t "You cannot afford to double down!~%")
 		  (progn
+		    ; XXX XXX new bet should be at most current bet
 		    (hand-bet-set player-hand (+ (hand-bet player-hand) (get-bet)))
 		    (decf *player-purse* (hand-bet player-hand))
 		    (format t "You draw the ")
