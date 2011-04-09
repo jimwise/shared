@@ -152,12 +152,13 @@ module Blackjack
         # handled at insurance time, if it is to be offered
         case if first_draw
                action = Blackjack::get_resp("[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)? ",
-                                        "Please enter [H], [D], [S], or [U]: ",
-                                        {"h" => :hit, "d" => :doubledown, "s" => :stand,
-                                          "u" => :surrender})
+                                            "Please enter [H], [D], [S], or [U]: ",
+                                            {"h" => :hit, "d" => :doubledown, "s" => :stand,
+                                              "u" => :surrender})
              else
-               action = Blackjack::get_resp("[H]it or [S]tand (HS)? ", "Please enter [H] or [S]: ",
-                                        {"h" => :hit,  "s" => :stand})
+               action = Blackjack::get_resp("[H]it or [S]tand (HS)? ",
+                                            "Please enter [H] or [S]: ",
+                                            {"h" => :hit,  "s" => :stand})
              end
         when :hit
           return 0 if hit! == 0 
