@@ -222,7 +222,7 @@ module Blackjack
 
         if (bet % @table_min) != 0
           print  "Bet must be a multiple of #{@table_min}, try again: "
-          next;
+          next
         end
 
         if bet > @table_limit
