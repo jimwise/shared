@@ -5,11 +5,15 @@ require 'cards'
 module Blackjack
 
   # XXX XXX yeah, re-opening the class is grotty.  but playing around
+  Vals = {}
+
+  Cards::Cards.zip([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]).each do |(k, v)|
+    Vals[k] = v
+  end
+
   class Cards::Card
-    Vals = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]
     def val
-      # messy -- should build a hash
-      Vals[Cards.find_index(@card)]
+      Vals[@card]
     end
   end
 
