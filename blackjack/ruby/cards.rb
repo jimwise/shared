@@ -7,9 +7,8 @@ module Cards
 
     attr_reader :suit, :card
     def initialize (card, suit)
-      throw :bad_card unless Suits.find {|s| s == suit} and Cards.find {|c| c == card}
-      @card = card
-      @suit = suit
+      raise "Bad Card (#{card} of #{suit})" unless Suits.find {|s| s == suit} and Cards.find {|c| c == card}
+      @card, @suit = card, suit
     end
 
     def to_s
@@ -37,10 +36,8 @@ module Cards
       # not needed in this version, but a real shoe is emptied and refilled at a defined point before empty
       @shoe = []
 
-      DecksInShoe.times do
-        @shoe = @shoe + OneDeck
-        @shoe.shuffle!
-      end
+      DecksInShoe.times {@shoe += OneDeck}
+      @shoe.shuffle!
     end
 
     def draw!
