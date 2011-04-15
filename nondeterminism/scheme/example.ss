@@ -3,6 +3,7 @@
 
 ;; Choose 2 example  (see _On Lisp_, sec, 22.1 (pp. 286-289)
 (define (choose-2)
+  (reset-nd!)
   (let ([x (choose '(1 2))])
     (if (odd? x) (fail) x)))
 
@@ -12,6 +13,7 @@
         (choose '(0 1 2 3 4 5))))
 
 (define (parlor-trick sum)
+  (reset-nd!)
   (let ((nums (two-numbers)))
     (if (= (apply + nums) sum)
         `(the sum of ,@nums)
