@@ -1,1 +1,7 @@
-example
+choose2
+choose2.o
+findboxes
+findboxes.o
+nondeterminism.o
+parlortrick
+parlortrick.o
