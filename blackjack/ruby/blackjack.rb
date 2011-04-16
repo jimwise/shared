@@ -4,16 +4,14 @@ require 'cards'
 
 module Blackjack
 
-  # XXX XXX yeah, re-opening the class is grotty.  but playing around
-  Vals = {}
-
+  Cards::Vals = {}
   Cards::Cards.zip([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]).each do |(k, v)|
-    Vals[k] = v
+    Cards::Vals[k] = v
   end
 
   class Cards::Card
     def val
-      Vals[@card]
+      Cards::Vals[@card]
     end
   end
 
@@ -78,7 +76,7 @@ module Blackjack
       vals = [@cards.reject {|c| c.card == :ace}.map {|c| c.val}.push(0).reduce(:+)]
 
       @cards.count {|c| c.card == :ace}.times do
-        vals = vals.collect {|v| [v+1, v+11]}.flatten.uniq.sort
+        vals = vals.map {|v| [v+1, v+11]}.flatten.uniq.sort
       end
 
       vals
