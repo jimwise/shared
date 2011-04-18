@@ -16,7 +16,6 @@ int busted (hand *);
 int handvalue (hand *);
 int *handvalues (hand *);
 int hit (hand *);
-void showvalue (hand *, int);
 void muck (hand *);
 void show (hand *, int);
 void showvalue (hand *, int);
