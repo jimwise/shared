@@ -15,7 +15,6 @@ $dealer_hand = Blackjack::DealerHand.new($shoe)
 
 def play_one_hand
   $player_purse.bet!
-
   $player_hand.deal!
   $dealer_hand.deal!
 
