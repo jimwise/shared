@@ -1,6 +1,9 @@
 This directory contains a ruby implementation of choose/fail nondeterministic
 programming with branch cut, as described in Chapter 22 of Paul Graham's _On
-Lisp_, along with the scheme examples of its use given therein.
+Lisp_[1], along with the scheme examples of its use given therein, in examples.rb.
+
+queens.rb contains an implementation of the N-queens problem, inspired by
+the prolog version in _The Art of Prolog_[2]
 
 This code will not work in JRuby or MacRuby (no callcc).  It should work in 1.9.2 with
 minor changes (callcc has moved to the 'continuation' stdlib).
@@ -8,3 +11,9 @@ minor changes (callcc has moved to the 'continuation' stdlib).
 Due to Ruby containing a true call/cc, this is a much straighter port of
 Paul Graham's scheme version of this code than his Common Lisp or my C
 versions are.  :-)
+
+  [1] Graham, Paul, _On Lisp_, Prentice Hall, 1993, ISBN 0130305529.
+      Available online at http://www.paulgraham.com/onlisp.html
+
+  [2]  Sterling, Leon and Ehud Shapiro, The Art of Prolog, MIT Press, 1994
+      http://www.amazon.com/Art-Prolog-Second-Programming-Techniques/dp/0262193388
