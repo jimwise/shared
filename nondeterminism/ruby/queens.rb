@@ -34,28 +34,26 @@ end
 # show_board (1..8).to_a
 # puts ""
 # show_board [1, 3, 5, 7, 2, 4, 6, 8]
-raise unless board_to_s([1,2]) == "Q.\n.Q\n";
+raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q\n";
 
 # board the first M columns of an NxN board, and is valid so far.
 # piece is a proposed piece for the M+1th row of the board.
 # returns true if piece is a valid placement, false otherwise
 def safe board, piece
-  board.each_index do |x|
-    q = board[x]
-    return false if q == piece  # same column
+  board.each_with_index do |c, r|
+    return false if c == piece  # same column
     # they're on the same diagonal if the distance in columns == the distance in rows
-    # or the distance in columns == 0 - the distance in rows
-    xdist = board.size - x;
-    ydist = (piece - q).abs
-    return false if xdist == ydist
+    rdist = board.size - r;
+    cdist = (piece - c).abs
+    return false if rdist == cdist
   end
   true
 end
 
 # tests:
-raise if safe([1, 3, 5], 3);
-raise unless safe([1, 3, 5], 2);
-raise if safe([1, 3, 5], 4);
+raise "safe failed" if safe([1, 3, 5], 3);
+raise "safe failed" unless safe([1, 3, 5], 2);
+raise "safe failed" if safe([1, 3, 5], 4);
 
 $nd = Nondeterminism::Generator.new
 def queens n, board = []
@@ -69,5 +67,18 @@ def queens n, board = []
   end
 end
 
-show_board queens 8
+# to run one board
+#show_board queens 8
+
+# to show all valid 8x8 boards:
+begin
+  n = 8
+  count = 0
+  show_board queens n
+  count += 1
+  puts ""
+  $nd.fail!
+rescue Nondeterminism::ChoicesExhausted
+  puts "#{count} #{n}x#{n} boards found, not accounting for symmetry"
+end
 
