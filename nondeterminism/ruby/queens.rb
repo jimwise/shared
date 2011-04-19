@@ -71,14 +71,16 @@ end
 #show_board queens 8
 
 # to show all valid 8x8 boards:
-begin
-  n = 8
-  count = 0
-  show_board queens n
-  count += 1
-  puts ""
-  $nd.fail!
-rescue Nondeterminism::ChoicesExhausted
-  puts "#{count} #{n}x#{n} boards found, not accounting for symmetry"
+ARGV = ["8"] if ARGV.empty?
+ARGV.each do |a|
+  begin
+    n = a.to_i
+    count = 0
+    show_board queens n
+    count += 1
+    puts ""
+    $nd.fail!
+  rescue Nondeterminism::ChoicesExhausted
+    puts "#{count} #{n}x#{n} boards found, not accounting for symmetry"
+  end
 end
-
