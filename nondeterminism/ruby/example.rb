@@ -58,18 +58,3 @@ rescue Nondeterminism::ChoicesExhausted
 end
 
 find_boxes
-
-# (define (find-boxes)
-#   (reset-nd!)
-#   (let ([city (choose '(la ny bos))])
-#     (mark)
-#     (newline)
-#     (let* ([store (choose '(1 2))]
-#            [box (choose '(1 2))])
-#       (let ([triple (list city store box)])
-#         (display triple)
-#         (when (coin? triple)
-#           (cut)
-#           (display 'c))
-#         (fail)))))
-
