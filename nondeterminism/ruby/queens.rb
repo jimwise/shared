@@ -7,7 +7,7 @@ require 'nondeterminism'
 # Sterling, Leon and Ehud Shapiro, The Art of Prolog, MIT Press, 1994
 #   http://www.amazon.com/Art-Prolog-Second-Programming-Techniques/dp/0262193388
 #
-# but is less elegant, as this is not prolog
+# but is less elegant, as this is not prolog (and I am not Sterling or Shapiro)
 #
 # we want to place N queens on an NxN chess board.  Since we know no two queens
 # can be in the same row, an array of N integers between 0 and N-1 will do to
