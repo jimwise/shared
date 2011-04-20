@@ -57,7 +57,6 @@ raise "safe failed" if safe([1, 3, 5], 4);
 
 $nd = Nondeterminism::Generator.new
 def queens n, board = []
-  cols = (1..n).to_a
   if board.size == n
     board
   else
