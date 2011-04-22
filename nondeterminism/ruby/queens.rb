@@ -17,11 +17,11 @@ require 'nondeterminism'
 
 def board_to_s board
   s = ""
-  board.each do |x|
-    s << "." * (x-1)
-    s << "Q"
-    s <<  "." * (board.size - x)
-    s << "\n"
+  board.each_with_index do |x, i|
+    r = ( i.odd? ? '. ' : ' .') * ((board.size+1).div 2)
+    r[-1, 1] = "" if board.size.odd?
+    r[x-1] = "Q";
+    s << r << "\n";
   end
   s
 end
