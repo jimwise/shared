@@ -29,6 +29,8 @@ module Nondeterminism
       self.fail!                  # if we get here, we've exhausted the choices
     end
 
+    alias amb choose
+
     def fail!
       raise ChoicesExhausted.new if @paths.empty?
       cc = @paths.shift
