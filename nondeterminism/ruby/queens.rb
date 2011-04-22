@@ -43,7 +43,7 @@ def safe board, piece
 end
 
 # OddRow and EvenRow are infinite enumerables corresponding to, respectively,
-# [" ", ".", " ", ...] and [".", " ", ".", " "].
+# [" ", ".", " ", ...] and [".", " ", ".", ...].
 # With these at our disposal, we can break off as many squares as we need to draw
 # an even or odd board row of any size
 class OddRow
@@ -68,6 +68,7 @@ end
 E = EvenRow.new
 O = OddRow.new
     
+
 def board_to_s board
   s = ""
   board.each_with_index do |x, i|
