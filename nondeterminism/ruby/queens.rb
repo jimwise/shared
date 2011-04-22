@@ -28,7 +28,7 @@ def queens n, board = []
   end
 end
 
-# board the first M columns of an NxN board, and is valid so far.
+# board is the first M columns of an NxN board, and is valid so far.
 # piece is a proposed piece for the M+1th row of the board.
 # returns true if piece is a valid placement, false otherwise
 def safe board, piece
