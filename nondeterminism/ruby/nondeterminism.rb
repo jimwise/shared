@@ -34,7 +34,7 @@ module Nondeterminism
     def fail!
       raise ChoicesExhausted.new if @paths.empty?
       cc = @paths.shift
-      # if it quacks (or can be called) like a duck, call it -- it's either a Proc from #mark or a Continuation from 
+      # if it quacks (or can be called) like a duck, call it -- it's either a Proc from #mark or a Continuation from #choose
       cc.call
     end
 
@@ -49,14 +49,5 @@ module Nondeterminism
       # drop up to one mark
       @paths = @paths.drop(1) unless @paths.empty?
     end
-      
-  # (define (mark) (set! *paths* (cons _fail *paths*)))
-  # (define (cut)
-  #   (cond ((null? *paths*))
-  #         ((equal? (car *paths*) _fail)
-  #          (set! *paths* (cdr *paths*)))
-  #         (else
-  #          (set! *paths* (cdr *paths*))
-  #          (cut))))
   end
 end
