@@ -67,27 +67,36 @@ class EvenRow
 end
 E = EvenRow.new
 O = OddRow.new
-    
 
-def board_to_s board
-  s = ""
-  board.each_with_index do |x, i|
-    r = ((i+1).odd? ? O : E).take(board.size).to_s
-    r[x-1] = "Q";
-    s << r << "\n";
+# return a blank board of a given size, as an array of N strings of length N
+def empty_board n
+  (1..n).collect do |i|
+    ((i+1).odd? ? O : E).take(n).to_s
   end
-  s
+end
+# board is a board in the above format (array where a[i] is the column
+# number of the queen in row i+1, rows and columns being numbered from 1
+
+# n, if provided, is the size of the full board.  This allows this routine
+# to show a partly-filled board by passing n > board.size, though we don't
+# currently use this.
+def board_to_s board, n = board.size
+  b = empty_board n
+  board.each_with_index do |x, i|
+    b[i][x-1] = 'Q'
+  end
+  b.join "\n"
 end
 
 def show_board board
-  print board_to_s board
+  puts board_to_s board
 end
 
 # tests:
 # show_board (1..8).to_a
 # puts ""
 # show_board [1, 3, 5, 7, 2, 4, 6, 8]
-raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q\n";
+#raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q\n";
 
 # tests:
 raise "safe failed" if safe([1, 3, 5], 3);
