@@ -15,11 +15,63 @@ require 'nondeterminism'
 # each number from 1 .. N will appear once in this array;  this means the solution
 # is a permutation of 1 .. N
 
+# Here is the actual board generator.  Next is the test if a position is safe.  All else
+# in this file is for display or testing.
+$nd = Nondeterminism::Generator.new
+def queens n, board = []
+  if board.size == n
+    board
+  else
+    c = $nd.choose(1..n)
+    $nd.fail! unless safe board, c
+    queens n, board + [c]
+  end
+end
+
+# board the first M columns of an NxN board, and is valid so far.
+# piece is a proposed piece for the M+1th row of the board.
+# returns true if piece is a valid placement, false otherwise
+def safe board, piece
+  board.each_with_index do |c, r|
+    return false if c == piece  # same column
+    # they're on the same diagonal if the distance in columns == the distance in rows
+    rdist = board.size - r;
+    cdist = (piece - c).abs
+    return false if rdist == cdist
+  end
+  true
+end
+
+# OddRow and EvenRow are infinite enumerables corresponding to, respectively,
+# [" ", ".", " ", ...] and [".", " ", ".", " "].
+# With these at our disposal, we can break off as many squares as we need to draw
+# an even or odd board row of any size
+class OddRow
+  include Enumerable
+  def each
+    loop do
+      yield " "
+      yield "."
+    end
+  end
+end
+
+class EvenRow
+  include Enumerable
+  def each
+    loop do
+      yield "."
+      yield " "
+    end
+  end
+end
+E = EvenRow.new
+O = OddRow.new
+    
 def board_to_s board
   s = ""
   board.each_with_index do |x, i|
-    r = ( i.odd? ? '. ' : ' .') * ((board.size+1).div 2)
-    r[-1, 1] = "" if board.size.odd?
+    r = ((i+1).odd? ? O : E).take(board.size).to_s
     r[x-1] = "Q";
     s << r << "\n";
   end
@@ -36,35 +88,10 @@ end
 # show_board [1, 3, 5, 7, 2, 4, 6, 8]
 raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q\n";
 
-# board the first M columns of an NxN board, and is valid so far.
-# piece is a proposed piece for the M+1th row of the board.
-# returns true if piece is a valid placement, false otherwise
-def safe board, piece
-  board.each_with_index do |c, r|
-    return false if c == piece  # same column
-    # they're on the same diagonal if the distance in columns == the distance in rows
-    rdist = board.size - r;
-    cdist = (piece - c).abs
-    return false if rdist == cdist
-  end
-  true
-end
-
 # tests:
 raise "safe failed" if safe([1, 3, 5], 3);
 raise "safe failed" unless safe([1, 3, 5], 2);
 raise "safe failed" if safe([1, 3, 5], 4);
-
-$nd = Nondeterminism::Generator.new
-def queens n, board = []
-  if board.size == n
-    board
-  else
-    c = $nd.choose(1..n)
-    $nd.fail! unless safe board, c
-    queens n, board + [c]
-  end
-end
 
 # to run one board
 #show_board queens 8
