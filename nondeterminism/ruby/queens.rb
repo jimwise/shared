@@ -111,12 +111,20 @@ ARGV = ["8"] if ARGV.empty?
 ARGV.each do |a|
   begin
     n = a.to_i
+
+    # state is not reset when we fail!, so count can be used to track how many times
+    # we returned from `show_board queens n' below
     count = 0
     show_board queens n
     count += 1
     puts ""
+
+    # force next solution; will throw ChoicesExhausted if none found
     $nd.fail!
+
   rescue Nondeterminism::ChoicesExhausted
+    # thrown when we finally run out of possible boards, whether we found any valid
+    # boards or not (since we unconditionally fail! above)
     puts "#{count} #{n}x#{n} boards found, not accounting for symmetry"
   end
 end
