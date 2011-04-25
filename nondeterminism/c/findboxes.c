@@ -19,6 +19,8 @@ main (int argc, char **argv) {
   int box, store;
   int oneortwo[] = {2, 1};
 
+  /* nd_debug = 1; */
+
   choose(city, 3, cities);
   mark();
   choose(store, 2, oneortwo);
