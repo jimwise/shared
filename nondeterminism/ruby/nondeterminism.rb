@@ -17,7 +17,7 @@
 #
 # Author::    Jim Wise  (mailto:jwise@draga.com)
 # Copyright:: Copyright (c) 2011 Jim Wise
-# License::   2-clause BSD-Style (see link:LICENSE)
+# License::   2-clause BSD-Style (see LICENSE[link:files/LICENSE.html])
 
 module Nondeterminism
 
