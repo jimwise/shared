@@ -1,5 +1,6 @@
 #include <setjmp.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include "nondeterminism.h"
 
 #define MAX_DEPTH 100		/* could move to linked list later */
