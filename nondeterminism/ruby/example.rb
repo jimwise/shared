@@ -2,28 +2,27 @@
 
 require 'nondeterminism'
 
-$nd = Nondeterminism::Generator.new
 
 # Choose 2 example  (see _On Lisp_, sec, 22.1 (pp. 286-289)
 def choose2
-  x = $nd.choose([1, 2])
-  $nd.require x.even?
+  x = ND::choose([1, 2])
+  ND::require x.even?
   x
 end
 
 puts "chose #{choose2}"
 
-$nd.clear!
+ND::clear!
 
 # Parlor Trick example (see _On Lisp_, sec, 22.2 (pp. 290-292)
 # note that this tests that we have real call/cc, not just downward-facing
 def two_numbers
-  return $nd.choose(0..5), $nd.choose(0..5)
+  return ND::choose(0..5), ND::choose(0..5)
 end
 
 def parlor_trick sum
   a, b = two_numbers
-  $nd.fail! unless a + b == sum
+  ND::fail! unless a + b == sum
   return a, b
 end
 
@@ -31,7 +30,7 @@ n = 7
 x, y = parlor_trick n
 puts "#{n} is the sum of #{x} and #{y}"
 
-$nd.clear!
+ND::clear!
 
 # Chocoblob Coin Search example (with cuts) (see _On Lisp_, sec, 22.5 (pp. 298-302)
 def coin? x
@@ -41,6 +40,8 @@ end
 # (define (coin? x)
 #   (member x '((la 1 2) (ny 1 1) (bos 2 2))))
 
+# We don't need to create a private generator here, but here's how we would
+$nd = Nondeterminism::Generator.new
 def find_boxes
   city = $nd.choose(["LA", "NY", "Boston"])
   $nd.mark
