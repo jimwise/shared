@@ -7,7 +7,7 @@ $nd = Nondeterminism::Generator.new
 # Choose 2 example  (see _On Lisp_, sec, 22.1 (pp. 286-289)
 def choose2
   x = $nd.choose([1, 2])
-  $nd.fail! if x.odd?
+  $nd.require x.even?
   x
 end
 

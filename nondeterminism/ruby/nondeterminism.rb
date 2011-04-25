@@ -38,6 +38,12 @@ module Nondeterminism
       cc.call
     end
 
+    def require cond
+      fail! unless cond
+    end
+
+    alias assert require
+
     def mark 
       @paths.unshift Proc.new {self.fail!}
     end
