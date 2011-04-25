@@ -63,4 +63,14 @@ module Nondeterminism
       @paths = @paths.drop(1) unless @paths.empty?
     end
   end
+
+  Default_Generator = Generator.new
+
+  def Nondeterminism::method_missing(sym, *args, &block)
+    Nondeterminism::Default_Generator.send(sym, *args, &block);
+  end
+
 end
+
+# For convenience, ND is an alias for the NonDeterminism module
+ND = Nondeterminism
