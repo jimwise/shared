@@ -42,31 +42,27 @@ def safe board, piece
   true
 end
 
-# OddRow and EvenRow are infinite enumerables corresponding to, respectively,
-# [" ", ".", " ", ...] and [".", " ", ".", ...].
+# Alternator is an infinite enumerables which flipflops between two values
+# We use these to define an odd row and an even row as
+# [" ", ".", " ", ...] and [".", " ", ".", ...], respectively.
 # With these at our disposal, we can break off as many squares as we need to draw
 # an even or odd board row of any size
-class OddRow
+class Alternator
   include Enumerable
+  def initialize first, second
+    @first, @second = first, second
+  end
+
   def each
     loop do
-      yield " "
-      yield "."
+      yield @first
+      yield @second
     end
   end
 end
 
-class EvenRow
-  include Enumerable
-  def each
-    loop do
-      yield "."
-      yield " "
-    end
-  end
-end
-E = EvenRow.new
-O = OddRow.new
+E = Alternator.new ".", " "
+O = Alternator.new " ", "."
 
 # return a blank board of a given size, as an array of N strings of length N
 def empty_board n
@@ -107,8 +103,8 @@ raise "safe failed" if safe([1, 3, 5], 4);
 #show_board queens 8
 
 # to show all valid 8x8 boards:
-ARGV = ["8"] if ARGV.empty?
-ARGV.each do |a|
+args = ARGV.empty? ? ["8"] : ARGV
+args.each do |a|
   begin
     n = a.to_i
 
