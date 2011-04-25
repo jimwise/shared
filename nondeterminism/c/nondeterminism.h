@@ -27,10 +27,10 @@ extern "C" {
     nd_paths[nd_currpath].t = 0;					\
     setjmp(nd_paths[nd_currpath].j);					\
     if (nd_debug)							\
-      printf("CHOOSE (%x): _chc = %d\n", &nd_chc, nd_chc);		\
+      printf("CHOOSE (%p): _chc = %d\n", &nd_chc, nd_chc);		\
     if (nd_chc == -1) {							\
       if (nd_debug)							\
-	printf ("CHOOSE (%x): empty choices -- failing\n", &nd_chc);	\
+	printf ("CHOOSE (%p): empty choices -- failing\n", &nd_chc);	\
       nd_currpath--;							\
       fail();								\
     }									\
