@@ -61,8 +61,8 @@ class Alternator
   end
 end
 
-E = Alternator.new ".", " "
-O = Alternator.new " ", "."
+E = Alternator.new " ", "."
+O = Alternator.new ".", " "
 
 # return a blank board of a given size, as an array of N strings of length N
 def empty_board n
@@ -92,7 +92,7 @@ end
 # show_board (1..8).to_a
 # puts ""
 # show_board [1, 3, 5, 7, 2, 4, 6, 8]
-#raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q\n";
+raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q";
 
 # tests:
 raise "safe failed" if safe([1, 3, 5], 3);
