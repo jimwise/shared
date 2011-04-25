@@ -70,9 +70,6 @@ but we can program as if it has chosen the right one on the first try!
 
 = References
 
-[1] Graham, Paul, _On Lisp_, Prentice Hall, 1993
-    Available online at http://www.paulgraham.com/onlisp.html
+[1] Graham, Paul, _On Lisp_, Prentice Hall, 1993. Available online at http://www.paulgraham.com/onlisp.html
 
-[2] Abelson, Harold and Gerald Jay Sussman, _Structure and Interpretation
-    of Computer Programs, 2nd Edition_, MIT Press, 1996
-    Available online at http://mitpress.mit.edu/sicp/
+[2] Abelson, Harold and Gerald Jay Sussman, _Structure and Interpretation of Computer Programs, 2nd Edition_, MIT Press, 1996.  Available online at http://mitpress.mit.edu/sicp/
