@@ -1,3 +1,24 @@
+# This module allows choose/fail (amb) style non-deterministic programming in Ruby
+#
+# Specifically, this is an all-ruby implementation of choose/fail
+# nondeterministic programming with branch cut, as described in Chapter 22
+# of Paul Graham's _On Lisp_[1].
+#
+# This code will not work in JRuby or MacRuby (no callcc).  It should work
+# in 1.9.2 with minor changes (callcc has moved to the 'continuation'
+# stdlib).
+#
+# Due to Ruby containing a true call/cc, this is a much straighter port of
+# Paul Graham's scheme version of this code than his Common Lisp or my C
+# versions are.  :-)
+#
+#   [1] Graham, Paul, _On Lisp_, Prentice Hall, 1993, ISBN 0130305529.
+#       Available online at http://www.paulgraham.com/onlisp.html
+#
+# Author::    Jim Wise  (mailto:jwise@draga.com)
+# Copyright:: Copyright (c) 2011 Jim Wise
+# License::   2-clause BSD-Style (see link:LICENSE)
+
 module Nondeterminism
 
   class ChoicesExhausted < StandardError
