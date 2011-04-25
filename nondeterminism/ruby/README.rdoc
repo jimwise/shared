@@ -69,10 +69,10 @@ This gem provides the NonDeterminism module.  For ease of use, ND is also
 provided as an alternate name for this module.  This module provides several
 methods which implement nondeterministic programming.
 
-Another option is to allocate a NonDeterminism::Generator to allow easier
-cleanup after a computation is complete.  This can be done with
+Another option is to allocate a NonDeterminism::Generator object explicitly,
+instead of using the module-wide default.  This can be done with
 
-	NonDeterminism::Generator::new
+	nd = NonDeterminism::Generator::new
 
 each object allocated in this fashion has its own set of choices, and
 failing one will not directly affect others.  Nesting choices from different
