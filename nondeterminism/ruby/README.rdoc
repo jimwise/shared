@@ -76,9 +76,9 @@ cleanup after a computation is complete.  This can be done with
 
 each object allocated in this fashion has its own set of choices, and
 failing one will not directly affect others.  Nesting choices from different
-Generators is a good way to make code confusion, however, and should be
+Generators is a good way to make code confusing, however, and should be
 avoided -- this capability is mainly provided to allow multi-threaded
-programs to use nondeterminism from more than one thread (see below).
+programs to safely use nondeterminism from more than one thread (see below).
 
 == Choosing and Failing
 
