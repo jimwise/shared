@@ -9,7 +9,7 @@ License::   2-clause BSD-Style (see LICENSE[link:files/LICENSE.html])
 
 This is an all-ruby implementation of choose/fail nondeterministic
 programming with branch cut, as described in Chapter 22 of Paul Graham's
-_On Lisp_[1], Chapter, or Section 4.3 of SICP[2].
+<em>On Lisp</em>[1], Chapter, or Section 4.3 of <em>SICP</em>[2].
 
 This code will not work in JRuby or MacRuby (no callcc).  It should work
 in 1.9.2 with minor changes (callcc has moved to the 'continuation'
@@ -38,8 +38,8 @@ with this gem) helps us keep up this pretense by saving the state of
 computation (with some limits) whenever we make an important choice.  If
 we later determine that we did _not_, in fact make the correct choice
 (lacking true language support for knowing the future), we can _fail_ the
-current computation, which _causes computation to rewind to the last
-choice made, and continue as if a different choice had been made_).
+current computation, which <em>causes computation to rewind to the last
+choice made, and continue as if a different choice had been made</em>).
 
 When all possible choices have been tried, the next time computation
 _fails_, computation will be rewound to the previous choice point, and
@@ -70,6 +70,6 @@ but we can program as if it has chosen the right one on the first try!
 
 = References
 
-[1] Graham, Paul, _On Lisp_, Prentice Hall, 1993. Available online at http://www.paulgraham.com/onlisp.html
+[1] Graham, Paul, <em>On Lisp</em>, Prentice Hall, 1993. Available online at http://www.paulgraham.com/onlisp.html
 
-[2] Abelson, Harold and Gerald Jay Sussman, _Structure and Interpretation of Computer Programs, 2nd Edition_, MIT Press, 1996.  Available online at http://mitpress.mit.edu/sicp/
+[2] Abelson, Harold and Gerald Jay Sussman, <em>Structure and Interpretation of Computer Programs, 2nd Edition</em>, MIT Press, 1996.  Available online at http://mitpress.mit.edu/sicp/
