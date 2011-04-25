@@ -11,9 +11,9 @@ This is an all-ruby implementation of choose/fail nondeterministic
 programming with branch cut, as described in Chapter 22 of Paul Graham's
 <em>On Lisp</em>[1], Chapter, or Section 4.3 of <em>SICP</em>[2].
 
-This code will not work in JRuby or MacRuby (no callcc).  It should work
-in 1.9.2 with minor changes (callcc has moved to the 'continuation'
-stdlib).
+<b>This code will not work in JRuby or MacRuby (no callcc).  It should work
+in Ruby 1.9 with minor changes (callcc has moved to the 'continuation'
+stdlib).</b>
 
 Due to Ruby containing a true call/cc, this is a much straighter port of
 Paul Graham's scheme version of this code than his Common Lisp or my C
@@ -64,9 +64,49 @@ will still try as many combinations as are needed to find the right one --
 but we can program as if it has chosen the right one on the first try!
 
 = How to use this gem
+
+This gem provides the NonDeterminism module.  For ease of use, ND is also
+provided as an alternate name for this module.  This module provides several
+methods which implement nondeterministic programming.
+
+Another option is to allocate a NonDeterminism::Generator to allow easier
+cleanup after a computation is complete.  This can be done with
+
+	NonDeterminism::Generator::new
+
+each object allocated in this fashion has its own set of choices, and
+failing one will not directly affect others.  Nesting choices from different
+Generators is a good way to make code confusion, however, and should be
+avoided -- this capability is mainly provided to allow multi-threaded
+programs to use nondeterminism from more than one thread (see below).
+
 == Choosing and Failing
+
 == Marking and Cutting
+
 == Interaction with Threading
+
+Given the strong modifications to flow of control which occur when a path of
+computation is _failed_, care must be taken when using nondeterministic
+programming in a multi-threaded program.  The two main ways to do this are:
+
+* perform all nondeterministic programming from a single thread of execution
+
+* give each thread which will be using nondeterministic programming its own
+NonDeterminism::Generator object.  This can be done easily using thread
+local variables:
+
+    def nd_begin
+      Thread.current[:ND] = Nondeterminism::Generator.new
+    end
+
+    def nd_choose choices
+      Thread.current[:ND].choose choices
+    end
+
+    def nd_fail! 
+      Thread.current[:ND].fail!
+    end
 
 = References
 
