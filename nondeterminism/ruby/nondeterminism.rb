@@ -18,7 +18,7 @@ module Nondeterminism
     #   try the next value in the enumerator.
     #   Multiple calls to choose will nest, so that backtracking forms
     #   a tree-like execution path
-    def choose choices
+    def choose choices = []
       ch = choices.clone          # clone it in case it's modified by the caller
       ch.each do |choice|
         callcc do |cc|
