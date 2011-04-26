@@ -5,6 +5,11 @@ Author::    Jim Wise  (mailto:jwise@draga.com)
 Copyright:: Copyright (c) 2011 Jim Wise
 License::   2-clause BSD-Style (see LICENSE[link:files/LICENSE.html])
 
+= MOVING
+
+<b>This code is in the process of becoming its own Gem.  See
+https://github.com/jimwise/ruby/tree/master/nondeterminism for details.</b>
+
 = Introduction
 
 This is an all-ruby implementation of choose/fail nondeterministic
