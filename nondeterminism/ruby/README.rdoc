@@ -1,115 +1,15 @@
-This gem allows choose/fail (amb) style non-deterministic programming in
-Ruby
+The code in this directory uses my gem 'ambit', whose home page is at
 
-Author::    Jim Wise  (mailto:jwise@draga.com)
-Copyright:: Copyright (c) 2011 Jim Wise
-License::   2-clause BSD-Style (see LICENSE[link:files/LICENSE.html])
+https://github.com/jimwise/ruby/tree/master/ambit
 
-= Introduction
+This directory contains some examples of use of that gem, now also included
+with the gem.  These include conversions of the scheme examples of its use
+given in _On Lisp_, in examples.rb.
 
-This is an all-ruby implementation of choose/fail nondeterministic
-programming with branch cut, as described in Chapter 22 of Paul Graham's
-<em>On Lisp</em>[1], Chapter, or Section 4.3 of <em>SICP</em>[2].
+queens.rb contains an implementation of the N-queens problem, inspired by
+the prolog version in _The Art of Prolog_[1], but less elegant, as this is
+not prolog (and I am not Sterling or Shapiro).  See the documentation for
+ambit, at the above link, for details.
 
-<b>This code will not work in JRuby or MacRuby (no callcc).  It should work
-in Ruby 1.9 with minor changes (callcc has moved to the 'continuation'
-stdlib).</b>
-
-Due to Ruby containing a true call/cc, this is a much straighter port of
-Paul Graham's scheme version of this code than his Common Lisp or my C
-versions are.  :-)
-
-= What is Nondeterministic Programming?
-
-Nondeterministic programming is a novel approach to problems where a
-program must find a working solution out of many possible choices.  It
-greatly simplifies problems such graph searching, testing combinations of
-values, and so on, where there are many possible values to consider, often
-in some sort of hierarchical order, but the right combination is not known
-in advance.
-
-In such a situation, it can be useful to develop a program by pretending
-our programming language includes knowledge of the future -- and is thus
-able to _choose_ the right answer off the bat, and simply programming as
-if this is the case.
-
-A language with support for nondeterministic programming (such as Ruby
-with this gem) helps us keep up this pretense by saving the state of
-computation (with some limits) whenever we make an important choice.  If
-we later determine that we did _not_, in fact make the correct choice
-(lacking true language support for knowing the future), we can _fail_ the
-current computation, which <em>causes computation to rewind to the last
-choice made, and continue as if a different choice had been made</em>).
-
-When all possible choices have been tried, the next time computation
-_fails_, computation will be rewound to the previous choice point, and
-will continue with the next possible choice from there.
-
-Imagine, for instance, that we wish to test a combination lock with a
-three-number combination, with each number between 1 and 10, inclusive:
-Instead of writing code ourself to try every possible combination, we
-simply proceed as if each choice was the correct one, failing if the lock
-fails to open.  In short:
-
-   first = choose(1..10)
-   second = choose(1..10)
-   third = choose(1..10)
-
-   fail! unless open_lock(first, second, third)
-
-   # when we get here, lock is open!
-
-As our language does not actually implement knowledge of the future, this
-will still try as many combinations as are needed to find the right one --
-but we can program as if it has chosen the right one on the first try!
-
-= How to use this gem
-
-This gem provides the NonDeterminism module.  For ease of use, ND is also
-provided as an alternate name for this module.  This module provides several
-methods which implement nondeterministic programming.
-
-Another option is to allocate a NonDeterminism::Generator object explicitly,
-instead of using the module-wide default.  This can be done with
-
-	nd = NonDeterminism::Generator::new
-
-each object allocated in this fashion has its own set of choices, and
-failing one will not directly affect others.  Nesting choices from different
-Generators is a good way to make code confusing, however, and should be
-avoided -- this capability is mainly provided to allow multi-threaded
-programs to safely use nondeterminism from more than one thread (see below).
-
-== Choosing and Failing
-
-== Marking and Cutting
-
-== Interaction with Threading
-
-Given the strong modifications to flow of control which occur when a path of
-computation is _failed_, care must be taken when using nondeterministic
-programming in a multi-threaded program.  The two main ways to do this are:
-
-* perform all nondeterministic programming from a single thread of execution
-
-* give each thread which will be using nondeterministic programming its own
-NonDeterminism::Generator object.  This can be done easily using thread
-local variables:
-
-    def nd_begin
-      Thread.current[:ND] = Nondeterminism::Generator.new
-    end
-
-    def nd_choose choices
-      Thread.current[:ND].choose choices
-    end
-
-    def nd_fail! 
-      Thread.current[:ND].fail!
-    end
-
-= References
-
-[1] Graham, Paul, <em>On Lisp</em>, Prentice Hall, 1993. Available online at http://www.paulgraham.com/onlisp.html
-
-[2] Abelson, Harold and Gerald Jay Sussman, <em>Structure and Interpretation of Computer Programs, 2nd Edition</em>, MIT Press, 1996.  Available online at http://mitpress.mit.edu/sicp/
+  [1]  Sterling, Leon and Ehud Shapiro, The Art of Prolog, MIT Press, 1994
+      http://www.amazon.com/Art-Prolog-Second-Programming-Techniques/dp/0262193388

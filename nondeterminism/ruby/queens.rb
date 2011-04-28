@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
-require 'nondeterminism'
+require 'rubygems'
+require 'ambit'
 
 # This solution to the N queens problem is inspired by that given
 #
@@ -17,7 +18,7 @@ require 'nondeterminism'
 
 # Here is the actual board generator.  Next is the test if a position is safe.  All else
 # in this file is for display or testing.
-$nd = Nondeterminism::Generator.new
+$nd = Ambit::Generator.new
 def queens n, board = []
   if board.size == n
     board
@@ -35,7 +36,7 @@ def safe board, piece
   board.each_with_index do |c, r|
     return false if c == piece  # same column
     # they're on the same diagonal if the distance in columns == the distance in rows
-    rdist = board.size - r;
+    rdist = board.size - r
     cdist = (piece - c).abs
     return false if rdist == cdist
   end
@@ -92,12 +93,12 @@ end
 # show_board (1..8).to_a
 # puts ""
 # show_board [1, 3, 5, 7, 2, 4, 6, 8]
-raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q";
+raise "board_to_s failed" unless board_to_s([1,2]) == "Q.\n.Q"
 
 # tests:
-raise "safe failed" if safe([1, 3, 5], 3);
-raise "safe failed" unless safe([1, 3, 5], 2);
-raise "safe failed" if safe([1, 3, 5], 4);
+raise "safe failed" if safe([1, 3, 5], 3)
+raise "safe failed" unless safe([1, 3, 5], 2)
+raise "safe failed" if safe([1, 3, 5], 4)
 
 # to run one board
 #show_board queens 8
@@ -118,7 +119,7 @@ args.each do |a|
     # force next solution; will throw ChoicesExhausted if none found
     $nd.fail!
 
-  rescue Nondeterminism::ChoicesExhausted
+  rescue Ambit::ChoicesExhausted
     # thrown when we finally run out of possible boards, whether we found any valid
     # boards or not (since we unconditionally fail! above)
     puts "#{count} #{n}x#{n} boards found, not accounting for symmetry"
