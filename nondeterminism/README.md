@@ -1,4 +1,4 @@
-This directory contains two implementations of choose/fail nondeterministic
+This directory contains three implementations of choose/fail nondeterministic
 programming with branch cut, as described in Chapter 22 of Paul Graham's _On
 Lisp_[1].
 
