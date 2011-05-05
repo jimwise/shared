@@ -6,15 +6,17 @@ require 'ambit'
 # yes, I know, no monaco, luxembourg, or andorra
 WesternEurope = {
   :portugal => [:spain],
-  :spain => [:france, :portugal],
-  :france => [:spain, :belgium, :germany, :switzerland, :italy],
-  :belgium => [:france, :netherlands, :germany],
+  :spain => [:france, :portugal, :andorra],
+  :france => [:spain, :belgium, :germany, :switzerland, :italy, :luxembourg, :andorra],
+  :belgium => [:france, :netherlands, :germany, :luxembourg],
   :netherlands => [:belgium, :germany],
-  :germany => [:france, :belgium, :netherlands, :switzerland, :denmark, :austria],
+  :germany => [:france, :belgium, :netherlands, :switzerland, :denmark, :austria, :luxembourg],
   :denmark => [:germany],
   :switzerland => [:france, :germany, :austria, :italy],
   :italy => [:france, :switzerland, :austria],
-  :austria => [:germany, :switzerland, :italy]
+  :austria => [:germany, :switzerland, :italy],
+  :luxembourg => [:france, :belgium, :germany],
+  :andorra => [:spain, :france],
 }
 
 Colors = [:red, :yellow, :blue, :green]
@@ -23,9 +25,12 @@ def colorize map
   # map from country to its color
   colorized = {}
   map.each do |country, neighbors|
+    local_colorized = colorized.clone # fake a functional view of colorized
     color = Ambit.choose Colors
+    puts "considering #{color} for #{country}"
     neighbors.each {|n| Ambit.assert colorized[n] != color}
-    colorized[country] = color
+    local_colorized[country] = color
+    colorized = local_colorized
   end
   colorized
 end
@@ -36,7 +41,7 @@ def check map, colorized
     color = colorized[country]
     neighbors.each do |neighbor|
       if colorized[neighbor] == color
-        raise StandardError "country #{country} and neighbor #{neighbor} have the same color!"
+        raise "country #{country} and neighbor #{neighbor} have the same color!"
       end
     end
   end
