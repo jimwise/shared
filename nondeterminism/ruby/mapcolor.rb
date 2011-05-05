@@ -19,8 +19,46 @@ WesternEurope = {
   :andorra => [:spain, :france],
 }
 
+ThreeByThree = {
+  :a => [:b, :d],
+  :b => [:a, :c, :e],
+  :c => [:b, :f],
+  :d => [:a, :e, :g],
+  :e => [:b, :d, :f, :h],
+  :f => [:c, :e, :i],
+  :g => [:d, :h],
+  :h => [:e, :g, :i],
+  :i => [:f, :h],
+}
+
+# from http://spicerack.sr.unh.edu/~student/tutorial/fourColor/FourColor.html
+Example = {
+  :inner => [:ne, :se, :sw, :nw],
+  :ne => [:inner, :se, :nw, :outer],
+  :se => [:inner, :ne, :sw, :outer],
+  :sw => [:inner, :se, :nw, :outer],
+  :nw => [:inner, :ne, :sw, :outer],
+  :outer => [:ne, :se, :sw, :nw],
+}
+
+# | | | |
+# +-----+
+# |     |
+# +-----+
+# |  |  |
+
+BackTrack = {
+  :a => [:b, :e],
+  :b => [:a, :c, :e],
+  :c => [:b, :d, :e],
+  :d => [:d, :e],
+  :e => [:a, :b, :c, :d, :f, :g],
+  :f => [:e, :g],
+  :g => [:e, :f],
+}
 Colors = [:red, :yellow, :blue, :green]
 
+# not right yet -- doesn't deal with backtracking far enough
 def colorize map
   # map from country to its color
   colorized = {}
@@ -47,9 +85,16 @@ def check map, colorized
   end
 end
 
-colorized = colorize WesternEurope
-check WesternEurope, colorized
+def colorize_map map
+  colorized = colorize map
+  check map, colorized
 
-colorized.each do |country, color|
-  puts "#{country} => #{color}"
+  colorized.each do |country, color|
+    puts "#{country} => #{color}"
+  end
 end
+
+# colorize_map Example
+colorize_map BackTrack
+# colorize_map ThreeByThree
+# colorize_map WesternEurope
