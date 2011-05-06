@@ -41,24 +41,26 @@ Example = {
   :outer => [:ne, :se, :sw, :nw],
 }
 
-# | | | |
-# +-----+
-# |     |
-# +-----+
-# |  |  |
+# Example which forces more than one level of backtrack:
+# |         |
+# +-------+ |
+# |a|b|c|d| |
+# +-------+ |
+# |  e    | |
+# +-------+ |
+# | f |  g  |
 
 BackTrack = {
-  :a => [:b, :e],
-  :b => [:a, :c, :e],
-  :c => [:b, :d, :e],
-  :d => [:d, :e],
+  :a => [:b, :e, :g],
+  :b => [:a, :c, :e, :g],
+  :c => [:b, :d, :e, :g],
+  :d => [:c, :e, :g],
   :e => [:a, :b, :c, :d, :f, :g],
   :f => [:e, :g],
-  :g => [:e, :f],
+  :g => [:a, :b, :c, :d, :e, :f],
 }
 Colors = [:red, :yellow, :blue, :green]
 
-# not right yet -- doesn't deal with backtracking far enough
 def colorize map
   # map from country to its color
   colorized = {}
