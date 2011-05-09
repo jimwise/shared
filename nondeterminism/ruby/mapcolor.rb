@@ -67,7 +67,7 @@ def colorize map
   map.each do |country, neighbors|
     local_colorized = colorized.clone # fake a functional view of colorized
     color = Ambit.choose Colors
-    puts "considering #{color} for #{country}"
+    #puts "considering #{color} for #{country}"
     neighbors.each {|n| Ambit.assert colorized[n] != color}
     local_colorized[country] = color
     colorized = local_colorized
@@ -96,7 +96,14 @@ def colorize_map map
   end
 end
 
-# colorize_map Example
+puts "Simple example:"
+colorize_map Example
+puts ""
+puts "Complex example:"
 colorize_map BackTrack
-# colorize_map ThreeByThree
-# colorize_map WesternEurope
+puts ""
+puts "Three-by-three grid:"
+colorize_map ThreeByThree
+puts ""
+puts "Western Europe:"
+colorize_map WesternEurope
