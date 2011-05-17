@@ -32,11 +32,11 @@ module Cards
     end
 
     def shuffle!
-      # note that a real shoe is emptied and refilled at a defined point before empty
       @shoe = (OneDeck * DecksInShoe).shuffle!
     end
 
     def draw!
+      # note that a real shoe is emptied and refilled at a defined point before empty
       if @shoe.empty?
         puts("Refilling shoe with #{DecksInShoe} decks")
         shuffle!

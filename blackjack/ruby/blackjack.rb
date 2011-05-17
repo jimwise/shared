@@ -120,6 +120,8 @@ module Blackjack
   end
 
   class PlayerHand < Hand
+    attr_reader :purse
+
     def initialize (shoe, purse)
       super shoe
       @purse = purse
