@@ -122,9 +122,9 @@ module Blackjack
   class PlayerHand < Hand
     attr_reader :purse
 
-    def initialize (shoe, purse)
+    def initialize shoe, stake, min, limit
       super shoe
-      @purse = purse
+      @purse = Blackjack::Purse.new stake, min, limit
     end
 
     def show

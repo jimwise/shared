@@ -3,6 +3,7 @@
 require 'cards'
 require 'blackjack'
 
+Stake = 1000.00
 TableMin = 5.00
 TableLimit = 1000.00
 
@@ -59,8 +60,7 @@ def play_one_hand player_hand, dealer_hand
 end
 
 shoe = Cards::Shoe.new
-player_hand = Blackjack::PlayerHand.new(shoe,
-                                        Blackjack::Purse.new(1000.00, TableMin, TableLimit))
+player_hand = Blackjack::PlayerHand.new(shoe, Stake, TableMin, TableLimit)
 dealer_hand = Blackjack::DealerHand.new(shoe)
 
 puts ("You have: %.2f" % player_hand.purse.purse)
