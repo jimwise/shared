@@ -12,12 +12,9 @@ def play_one_hand player_hand, dealer_hand
   player_hand.deal!
   dealer_hand.deal!
 
-  puts ""
   dealer_hand.show false
-  puts ""
   player_hand.show
   printf "Bet: %.2f\n", player_hand.purse.curr_bet
-  puts ""
 
   playersbest = player_hand.play!
   if playersbest == 0
@@ -32,8 +29,6 @@ def play_one_hand player_hand, dealer_hand
     return
   end
 
-  puts ""
-
   dealersbest = dealer_hand.play!
   if dealersbest == 0
     puts "Player wins"
@@ -41,10 +36,9 @@ def play_one_hand player_hand, dealer_hand
     return
   end
 
-  puts ""
   dealer_hand.show true
-  puts ""
   player_hand.show
+
   puts ""
 
   if dealersbest > playersbest
@@ -64,7 +58,8 @@ player_hand = Blackjack::PlayerHand.new(shoe, Stake, TableMin, TableLimit)
 dealer_hand = Blackjack::DealerHand.new(shoe)
 
 puts ("You have: %.2f" % player_hand.purse.purse)
-while true do
+
+loop do
   player_hand.muck!
   dealer_hand.muck!
 

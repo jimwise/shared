@@ -90,6 +90,7 @@ module Blackjack
 
   class DealerHand < Hand
     def show (reveal=false)
+      puts ""
       puts "Dealer has:"
       super reveal
     end
@@ -100,6 +101,7 @@ module Blackjack
     end
 
     def play!
+      puts ""
       if blackjack?
         puts "[BLACKJACK]"
         return 21
@@ -128,6 +130,7 @@ module Blackjack
     end
 
     def show
+      puts ""
       puts "Player has:"
       super true
     end
@@ -138,6 +141,7 @@ module Blackjack
     end
 
     def play!
+      puts ""
       if blackjack?
         puts "[BLACKJACK]"
         return 21
