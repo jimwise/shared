@@ -198,6 +198,10 @@ module Blackjack
       @last_bet = table_min
     end
 
+    def to_s
+      "$%.2f" % @purse
+    end
+
     def broke?
       @purse < @table_min
     end

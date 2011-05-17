@@ -57,7 +57,7 @@ shoe = Cards::Shoe.new
 player_hand = Blackjack::PlayerHand.new(shoe, Stake, TableMin, TableLimit)
 dealer_hand = Blackjack::DealerHand.new(shoe)
 
-puts ("You have: %.2f" % player_hand.purse.purse)
+puts ("You have: #{player_hand.purse}")
 
 loop do
   player_hand.muck!
@@ -70,7 +70,7 @@ loop do
     break
   end
 
-  printf "You have: %.2f\n", player_hand.purse.purse
+  puts "You have: #{player_hand.purse}"
 
   if Blackjack.get_resp("Continue ([Y]es or [N]o) ([Y]N)? ",
                        "Please anser [Y]es or [N]o (default Y): ",
