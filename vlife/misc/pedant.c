@@ -36,8 +36,8 @@
 /* don't touch these */
 typedef enum {LEFT, UP, RIGHT, DOWN} dir_t;
 
-char	*usage = "usage: %s [-ht] [<number-of-steps>]\n";
-char	*help =
+const char	usage[] = "usage: %s [-ht] [<number-of-steps>]\n";
+const char	help[] =
   "  -h	show this help\n"
   "  -t	turn on trace mode\n";
 
