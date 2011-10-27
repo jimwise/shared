@@ -1,3 +1,9 @@
+(defpackage :cards
+  (:use :common-lisp)
+  (:export :draw :card-name :card-val :card-ord))
+
+(in-package :cards)
+
 (defparameter *decksinshoe* 6)
 ;; should be defconstant, but for REPL use
 (defparameter +suits+ '(hearts diamonds clubs spades))
@@ -8,6 +14,9 @@
 (defparameter +one-deck+
   (loop for s in +suits+ appending
        (loop for v in +cards+ collecting (make-card :val v :suit s))))
+
+(defun card-ord (c)
+  (1+ (position (card-val c) +cards+)))
 
 (defun card-name (c)
   (format nil "~a of ~a" (card-val c) (card-suit c)))

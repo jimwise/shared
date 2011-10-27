@@ -1,7 +1,8 @@
 (load "cards.lisp")
+(use-package :cards)
 
 (defun card-values (c)
-  (let ((v (1+ (position (card-val c) +cards+))))
+  (let ((v (card-ord c)))
     (cond
      ((= v 1) (list 1 11))
      ((> v 10) 10)
