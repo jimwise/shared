@@ -3,15 +3,11 @@
 (defparameter +suits+ '(hearts diamonds clubs spades))
 (defparameter +cards+ '(ace two three four five six seven eight nine ten jack queen king))
 
-(defun make-card (val suit)
-  (cons val suit))
+(defstruct card val suit)
 
 (defparameter +one-deck+
   (loop for s in +suits+ appending
-       (loop for v in +cards+ collecting (make-card v s))))
-
-(defun card-val (c) (car c))
-(defun card-suit (c) (cdr c))
+       (loop for v in +cards+ collecting (make-card :val v :suit s))))
 
 (defun card-name (c)
   (format nil "~a of ~a" (card-val c) (card-suit c)))
