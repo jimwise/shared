@@ -119,7 +119,7 @@
 		   ((> dealers-best players-best)
 		    (format t "Dealer wins~%"))
 		   (t
-		    (format t "Push")
+		    (format t "Push~%")
 		    (incf *player-purse* (hand-bet player-hand))))))))))))
 
 ;; main routine
