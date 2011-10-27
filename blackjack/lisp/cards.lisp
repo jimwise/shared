@@ -13,9 +13,8 @@
 (defun card-val (c) (car c))
 (defun card-suit (c) (cdr c))
 
-;; hack? -- not sure if w-o-t-s is best way here
 (defun card-name (c)
-  (with-output-to-string (st) (format st "~a of ~a" (card-val c) (card-suit c))))
+  (format nil "~a of ~a" (card-val c) (card-suit c)))
 
 (defun make-shoe ()
   (nshuffle
