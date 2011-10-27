@@ -9,7 +9,6 @@
 	   :hand-value
 	   :hand-add-card
 	   :hand-bet
-	   :hand-bet-set
 	   :hit))
 
 (in-package :blackjack)
@@ -21,15 +20,12 @@
      ((> v 10) 10)
      (t v))))
 
-;; hand as a record type -- here, manually implemented, can convert as I learn more :-)
-;; pair ((cards) . bet)
-(defun make-hand (&optional (cards '()) (bet 0.00)) (cons cards bet))
-(defun hand-cards (hand) (first hand))
-(defun hand-bet (hand) (cdr hand))
-(defun hand-cards-set (hand cards) (setf (first hand) cards))
-(defun hand-bet-set (hand bet) (setf (cdr hand) bet))
+(defstruct hand
+  (cards '())
+  (bet 0.00))
+
 (defun hand-add-card (hand card)
-  (setf (first hand) (append (first hand) (list card))))
+  (setf (hand-cards hand) (append (hand-cards hand) (list card))))
 
 (defun hand-values (hand)
   (let* ((cvals (mapcar #'card-values (hand-cards hand)))
@@ -78,9 +74,3 @@
     (show-value hand t)
     (when (bustedp hand) (format t "[BUST]~%"))
     (hand-value hand)))
-
-;; for testing
-;; (defparameter h1 (make-hand '((two . clubs) (ten . hearts)) 15))
-;; (defparameter h2 (make-hand '((two . clubs) (ace . hearts)) 15))
-;; (defparameter h3 (make-hand '((two . clubs) (ace . hearts) (three . spades) (ace . spades)) 15))
-;; (defparameter h4 (make-hand '((jack . clubs) (ace . hearts)) 15))

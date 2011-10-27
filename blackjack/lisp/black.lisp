@@ -3,10 +3,10 @@
 
 (use-package '(:blackjack :cards :blackio))
 
-(defparameter +table-min+ 5.00)
-(defparameter +table-limit+ 1000.00)
+(defconstant +table-min+ 5.00)
+(defconstant +table-limit+ 1000.00)
 
-(defparameter *player-purse* 1000.00)
+(defvar player-purse 1000.00)
 
 (defun deal (player-hand dealer-hand)
   (hand-add-card player-hand (draw))
@@ -30,7 +30,7 @@
 		   +table-min+ +table-limit+ player-last-bet)))
       (setf player-last-bet (get-number prompt
 					:min +table-min+
-					:max (min +table-limit+ *player-purse*)
+					:max (min +table-limit+ player-purse)
 					:step +table-min+
 					:default player-last-bet))
       player-last-bet)))
@@ -57,19 +57,19 @@
 	      (format t "You stand~%")
 	      (return (hand-value player-hand)))
 	     ((eq action 'double)
-	      (if (< *player-purse* +table-min+)
+	      (if (< player-purse +table-min+)
 		  (format t "You cannot afford to double down!~%")
 		  (progn
 		    ; XXX XXX new bet should be at most current bet
-		    (hand-bet-set player-hand (+ (hand-bet player-hand) (get-bet)))
-		    (decf *player-purse* (hand-bet player-hand))
+		    (setf (hand-bet player-hand) (+ (hand-bet player-hand) (get-bet)))
+		    (decf player-purse (hand-bet player-hand))
 		    (format t "You draw the ")
 		    (when (zerop (hit player-hand)) (return 0)))))
             ;; XXX - this is `late surrender', early surrender has to be
             ;;       handled at insurance time, if it is to be offered
 	     ((eq action 'surrender)
 	      (format t "You surrender~%")
-	      (decf *player-purse* (* 0.5 (hand-bet player-hand)))
+	      (incf player-purse (* 0.5 (hand-bet player-hand)))
 	      (return 0))))))
 	     
 (defun dealer-play (dealer-hand)
@@ -90,26 +90,26 @@
 	(hand-value dealer-hand))))
 
 (defun play-one-hand ()
-  (let ((player-hand (make-hand '() (get-bet)))
+  (let ((player-hand (make-hand :bet (get-bet)))
 	(dealer-hand (make-hand)))
 
-    (decf *player-purse* (hand-bet player-hand))
+    (decf player-purse (hand-bet player-hand))
 
     (deal player-hand dealer-hand)
 
     (let ((players-best (player-play player-hand)))
       (cond
-       ((zerop (hand-value player-hand)) (format t "Dealer wins~%"))
+       ((zerop players-best) (format t "Dealer wins~%"))
        ((blackjackp player-hand)
         (format t "Player wins~%")
-        (incf *player-purse* (* 2.5 (hand-bet player-hand))))
+        (incf player-purse (* 2.5 (hand-bet player-hand))))
        (t
 	(terpri)
 	(let ((dealers-best (dealer-play dealer-hand)))
 	  (if (zerop dealers-best)
                (progn
 		 (format t "Player wins~%")
-		 (incf *player-purse* (* 2 (hand-bet player-hand))))
+		 (incf player-purse (* 2 (hand-bet player-hand))))
                (progn
 		 (terpri)
 		 (show-hands player-hand dealer-hand t)
@@ -117,22 +117,22 @@
                  (cond
 		   ((< dealers-best players-best)
 		    (format t "Player wins~%")
-		    (incf *player-purse* (* 2 (hand-bet player-hand))))
+		    (incf player-purse (* 2 (hand-bet player-hand))))
 		   ((> dealers-best players-best)
 		    (format t "Dealer wins~%"))
 		   (t
 		    (format t "Push~%")
-		    (incf *player-purse* (hand-bet player-hand))))))))))))
+		    (incf player-purse (hand-bet player-hand))))))))))))
 
 ;; main routine
 
 (defun blackjack ()
-  (format t "You have: ~8,2f~%" *player-purse*)
+  (format t "You have: ~8,2f~%" player-purse)
   (play-one-hand)
-  (if (< *player-purse* +table-min+)
+  (if (< player-purse +table-min+)
       (format t  "You're out of money!~%")
       (progn
-	(format t "You have: ~8,2f~%" *player-purse*)
+	(format t "You have: ~8,2f~%" player-purse)
 	(when (eq (get-response "Continue ([Y]es or [N]) ([Y]N)? "
 				"Please answer [Y]es or [N]o (default Y): "
 				'(("y" yes) ("n" no)) :default 'yes)
