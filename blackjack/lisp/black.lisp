@@ -25,10 +25,8 @@
 (let ((player-last-bet +table-min+))
   (defun get-bet ()
     (let* ((maxbet (min +table-limit+ player-purse))
-	  (prompt
-	   (format nil
-		   "Please enter a bet (min = $~8,2f, max = $~8,2f) [~8,2f]: "
-		   +table-min+ maxbet player-last-bet)))
+	  (prompt  (format nil "Please enter a bet (min = $~8,2f, max = $~8,2f) [~8,2f]: "
+			   +table-min+ maxbet player-last-bet)))
       (setf player-last-bet (get-number prompt
 					:min +table-min+
 					:max maxbet
