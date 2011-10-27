@@ -1,9 +1,7 @@
 (load "blackjack.lisp")
 (load "blackio.lisp")
 
-(use-package :blackjack)
-(use-package :cards)
-(use-package :blackio)
+(use-package '(:blackjack :cards :blackio))
 
 (defparameter +table-min+ 5.00)
 (defparameter +table-limit+ 1000.00)
