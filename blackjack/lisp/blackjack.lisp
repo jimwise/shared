@@ -67,7 +67,7 @@
     (hand-value hand)))
 
 ;; for testing
-(defparameter h1 (make-hand '((two . clubs) (ten . hearts)) 15))
-(defparameter h2 (make-hand '((two . clubs) (ace . hearts)) 15))
-(defparameter h3 (make-hand '((two . clubs) (ace . hearts) (three . spades) (ace . spades)) 15))
-(defparameter h4 (make-hand '((jack . clubs) (ace . hearts)) 15))
+;; (defparameter h1 (make-hand '((two . clubs) (ten . hearts)) 15))
+;; (defparameter h2 (make-hand '((two . clubs) (ace . hearts)) 15))
+;; (defparameter h3 (make-hand '((two . clubs) (ace . hearts) (three . spades) (ace . spades)) 15))
+;; (defparameter h4 (make-hand '((jack . clubs) (ace . hearts)) 15))
