@@ -1,3 +1,10 @@
+(defpackage :blackio
+  (:use :common-lisp)
+  (:export :get-response
+	   :get-number))
+
+(in-package :blackio)
+
 ;; getresp : string string list-of-pair symbol
 ;; allowed is an alist of ( string symbol )
 ;; prompt with prompt1, and get a response character, returning the matching symbol

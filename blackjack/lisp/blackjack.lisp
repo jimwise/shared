@@ -1,5 +1,18 @@
 (load "cards.lisp")
-(use-package :cards)
+
+(defpackage :blackjack
+  (:use :common-lisp :cards)
+  (:export :make-hand
+	   :show-hand
+	   :blackjackp
+	   :hand-cards
+	   :hand-value
+	   :hand-add-card
+	   :hand-bet
+	   :hand-bet-set
+	   :hit))
+
+(in-package :blackjack)
 
 (defun card-values (c)
   (let ((v (card-ord c)))
