@@ -12,6 +12,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <curses.h>
 
 void	getrules (void);
@@ -31,13 +32,12 @@ int	rows, cols;
 int	rules[2][2][2];
 int	*world[2];
 int	current = 0;
-int	allrules = 0, trace = 0;
+int	allrules = 0;
 
-char	*usage = "usage: %s [-ha]\n";
-char	*help =
+const char	usage[] = "usage: %s [-ha]\n";
+const char	help[] =
   "  -h	show this help\n"
-  "  -a	run all 256 possible rulesets, instead of prompting for one\n"
-  "  -t	turn on trace mode\n";
+  "  -a	run all 256 possible rulesets, instead of prompting for one\n";
 
 void	runall (void);
 void	setrules (unsigned int);
@@ -48,7 +48,7 @@ main (int argc, char **argv)
   int c;
   WINDOW *win;
 
-  while ((c = getopt(argc, argv, "hat")) != -1) {
+  while ((c = getopt(argc, argv, "ha")) != -1) {
     switch(c) {
     case 'h':
       printf(usage, argv[0]);
@@ -57,9 +57,6 @@ main (int argc, char **argv)
       break;
     case 'a':
       allrules = 1;
-      break;
-    case 't':
-      trace = 1;
       break;
     case '?':
       fprintf(stderr, usage, argv[0]);

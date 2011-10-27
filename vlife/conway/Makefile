@@ -1,7 +1,6 @@
-# CC=cc
-# CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
-CC=gcc
+CC?=gcc
 CFLAGS=-g -Wall -Werror -ansi -pedantic 
+# CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
 CPPFLAGS= -D__EXTENSIONS__
 LIBS= -lcurses
 
