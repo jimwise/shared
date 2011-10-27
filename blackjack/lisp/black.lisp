@@ -24,13 +24,14 @@
 
 (let ((player-last-bet +table-min+))
   (defun get-bet ()
-    (let ((prompt
+    (let* ((maxbet (min +table-limit+ player-purse))
+	  (prompt
 	   (format nil
-		   "Please enter a bet (min = $~8,2f, limit = $~8,2f) [~8,2f]: "
-		   +table-min+ +table-limit+ player-last-bet)))
+		   "Please enter a bet (min = $~8,2f, max = $~8,2f) [~8,2f]: "
+		   +table-min+ maxbet player-last-bet)))
       (setf player-last-bet (get-number prompt
 					:min +table-min+
-					:max (min +table-limit+ player-purse)
+					:max maxbet
 					:step +table-min+
 					:default player-last-bet))
       player-last-bet)))
@@ -42,35 +43,37 @@
 	(format t "[BLACKJACK]~%")
 	21)
       ;; XXX - split
-      (loop for action = (get-response
-			  "[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)? "
-			  "Please enter [H], [D], [S], or [U]: "
-			  '(("h" hit) ("d" double) ("s" stand) ("u" surrender)))
-	 then (get-response "[H]it or [S]tand (HS)? "
-			    "Please enter [H] or [S]: "
-			    '(("h" hit) ("s" stand))) do
-           (cond
-	     ((eq action 'hit)
-	      (format t "You draw the ")
-	      (when (zerop (hit player-hand)) (return 0)))
-	     ((eq action 'stand)
-	      (format t "You stand~%")
-	      (return (hand-value player-hand)))
-	     ((eq action 'double)
-	      (if (< player-purse +table-min+)
-		  (format t "You cannot afford to double down!~%")
-		  (progn
-		    ; XXX XXX new bet should be at most current bet
-		    (setf (hand-bet player-hand) (+ (hand-bet player-hand) (get-bet)))
-		    (decf player-purse (hand-bet player-hand))
-		    (format t "You draw the ")
-		    (when (zerop (hit player-hand)) (return 0)))))
-            ;; XXX - this is `late surrender', early surrender has to be
-            ;;       handled at insurance time, if it is to be offered
-	     ((eq action 'surrender)
-	      (format t "You surrender~%")
-	      (incf player-purse (* 0.5 (hand-bet player-hand)))
-	      (return 0))))))
+      (progn
+	  (format t "You have: ~8,2f~%" player-purse)
+	  (loop for action = (get-response
+			      "[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)? "
+			      "Please enter [H], [D], [S], or [U]: "
+			      '(("h" hit) ("d" double) ("s" stand) ("u" surrender)))
+	     then (get-response "[H]it or [S]tand (HS)? "
+				"Please enter [H] or [S]: "
+				'(("h" hit) ("s" stand))) do
+	       (cond
+		 ((eq action 'hit)
+		  (format t "You draw the ")
+		  (when (zerop (hit player-hand)) (return 0)))
+		 ((eq action 'stand)
+		  (format t "You stand~%")
+		  (return (hand-value player-hand)))
+		 ((eq action 'double)
+		  (if (< player-purse +table-min+)
+		      (format t "You cannot afford to double down!~%")
+		      (progn
+					; XXX XXX new bet should be at most current bet
+			(setf (hand-bet player-hand) (+ (hand-bet player-hand) (get-bet)))
+			(decf player-purse (hand-bet player-hand))
+			(format t "You draw the ")
+			(when (zerop (hit player-hand)) (return 0)))))
+		 ;; XXX - this is `late surrender', early surrender has to be
+		 ;;       handled at insurance time, if it is to be offered
+		 ((eq action 'surrender)
+		  (format t "You surrender~%")
+		  (incf player-purse (* 0.5 (hand-bet player-hand)))
+		  (return 0)))))))
 	     
 (defun dealer-play (dealer-hand)
   (if (blackjackp dealer-hand)
