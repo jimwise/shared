@@ -135,7 +135,6 @@
 				"Please answer [Y]es or [N]o (default Y): "
 				'(("y" yes) ("n" no)) :default 'yes)
 		  'yes)
-	  (blackjack))))
-  0)
+	  (blackjack)))))
 
 (blackjack)
