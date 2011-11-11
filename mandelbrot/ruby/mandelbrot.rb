@@ -26,6 +26,7 @@ class MandelImage < Mandelbrot
     super cap
     @width = width
     @height = height
+    @scalec = 0xffffff / cap
     zoom                        # start at default zoom
   end
 
@@ -64,13 +65,12 @@ private
   end
 
   def color n
-    return ChunkyPNG::Color::BLACK if n == @cap
-
-    n = n * 255 ** 3 / @cap
-
-    r = n / (255 ** 2)
-    g = (n / 255) % 255
-    b = n % (255 ** 2)
+    return ChunkyPNG::Color::BLACK if n == 0
+    n = n * @scalec
+    
+    r = n & 0xff
+    g = (n & 0xff00) >> 8
+    b = (n & 0xff0000) >> 16
     ChunkyPNG::Color::rgb(r,g,b)
   end  
 end
@@ -79,7 +79,4 @@ width = ARGV[0].to_i
 height = ARGV[1].to_i
 cap = ARGV[2].to_i
 
-m = MandelImage.new width, height, cap
-img = m.image
-
-img.save("mandelbrot.png")
+MandelImage.new(width, height, cap).image.save("mandelbrot.png")
