@@ -22,7 +22,7 @@ def scaley n
 end
 
 def color n
-  return ChunkyPNG::Color::BLACK if n == 0
+  return ChunkyPNG::Color::BLACK if n == $cap
 
   n = n * 256 ** 3 / $cap
 
@@ -41,10 +41,7 @@ end
     
     while (it < $cap) do
       z = z ** 2 + c
-      if z.abs2 > 4.0     # 2.0 * 2.0
-        it = 0
-        break
-      end
+      break if z.abs2 > 4.0     # 2.0 * 2.0
       it = it + 1
     end
     
