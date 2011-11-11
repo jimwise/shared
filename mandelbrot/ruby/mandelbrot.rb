@@ -24,11 +24,11 @@ end
 def color n
   return ChunkyPNG::Color::BLACK if n == $cap
 
-  n = n * 256 ** 3 / $cap
+  n = n * 255 ** 3 / $cap
 
-  r = n / (256 ** 2)
-  g = (n / 256) % 256
-  b = n % (256 ** 2)
+  r = n / (255 ** 2)
+  g = (n / 255) % 255
+  b = n % (255 ** 2)
   ChunkyPNG::Color::rgb(r,g,b)
 end  
 
