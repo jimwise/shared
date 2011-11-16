@@ -4,13 +4,14 @@ package Blackjack;
 use strict;
 use warnings;
 use 5.010;
+use feature qw(say);
+use List::Util qw(max);
 
-BEGIN {
-  use Exporter ();
-  our (@ISA, @EXPORT);
+use Cards;
 
-  @ISA = qw(Exporter);
-  @EXPORT = qw(
+use Exporter 'import';
+use base 'Exporter';
+our  @EXPORT = qw(
 		add
 		blackjack
 		busted
@@ -21,12 +22,7 @@ BEGIN {
 		show
 		showvalue
 	     );
-}
-
-use feature qw(say);
-use List::Util qw(max);
-
-use Cards;
+our @EXPORT_OK = qw();
 
 # yes, ace needs special treatment
 my @vals = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10);

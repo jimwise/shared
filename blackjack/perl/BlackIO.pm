@@ -4,19 +4,15 @@ package BlackIO;
 use strict;
 use warnings;
 use 5.010;
-
-BEGIN {
-  use Exporter ();
-  our (@ISA, @EXPORT);
-
-  @ISA = qw(Exporter);
-  @EXPORT = qw(
-		getbet
-		getresp
-	     );
-}
-
 use feature qw(say);
+
+use Exporter 'import';
+use base 'Exporter';
+our @EXPORT = qw(
+	      getbet
+	      getresp
+	   );
+our @EXPORT_OK = qw();
 
 my $last_bet = 5.00;
 
@@ -58,7 +54,6 @@ sub getbet {
       return $bet;
     }
   }
-
 }
 
 sub getresp {

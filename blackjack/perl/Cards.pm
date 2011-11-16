@@ -4,24 +4,16 @@ package Cards;
 use strict;
 use warnings;
 use 5.010;
-
-BEGIN {
-  use Exporter ();
-  our (@ISA, @EXPORT, @EXPORT_OK);
-
-  @ISA = qw(Exporter);
-  @EXPORT = qw(
-		draw
-		name
-	     );
-  @EXPORT_OK = qw(
-		   @cards
-		   @suits
-		);
-}
-
 use feature qw(say);
 use List::Util qw(shuffle);
+
+use Exporter 'import';
+use base 'Exporter';
+our @EXPORT = qw(
+		  draw
+		  name
+	       );
+our @EXPORT_OK = qw();
 
 my $decksinshoe = 6;
 
