@@ -26,9 +26,9 @@
          [ystep (/ (abs (- ymax ymin)) height)]
          [scalex (lambda (n) (+ (* n xstep) xmin))]
          [scaley (lambda (n) (+ (* n ystep) ymin))]
-         [density-factor 16]
+         [density-factor 4]
          [color (lambda (i) 
-                  (let ([c (* density-factor i (truncate (/ #xffffff cap)))])
+                  (let ([c (modulo (* density-factor i (floor (/ #xffffff cap))) #xffffff)])
                               (make-object color% (red c) (green c) (blue c))))])
     (for* ([x (in-range width)]
            [y (in-range height)])
