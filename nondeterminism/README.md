@@ -8,10 +8,9 @@ few tweaks to bring it into an R6RS world.
 The directory `c' contains choose/fail and the scheme examples demonstrating
 its use reworked in c, using a preprocessor macro for choose, and setjmp/longjmp.
 
-The directory `ruby' contains choose/fail and the scheme examples
-demonstrating its use reworked in ruby.  This is a pretty straight port of
-the scheme version, as ruby has true call/cc (Kernel#callcc).
-
+The directory `ruby' contains examples for my `ambit' gem, which is the same
+code reworked in ruby.  This is a pretty straight port of the scheme
+version, as ruby has true call/cc (Kernel#callcc).
 
   [1] Graham, Paul, _On Lisp_, Prentice Hall, 1993, ISBN 0130305529.
       Available online at
