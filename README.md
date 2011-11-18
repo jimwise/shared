@@ -4,7 +4,7 @@ What's here:
 
 * gallery -- an image gallery learning project in Scala and Liftweb, based on dpp's image upload example
 
-* mandelbrot -- a program to generate mandelbrot set images as PNG graphics files, implemented three times in three languages
+* mandelbrot -- a program to generate mandelbrot set images as PNG graphics files, implemented four times in four languages
 
 * nondeterminism -- implementations of Paul Graham's nondeterminism examples
   from _On Lisp_ Chapter 22 in Ruby and C (the Ruby version has now been
