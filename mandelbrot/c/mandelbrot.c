@@ -2,6 +2,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #include <png.h>
 
@@ -85,8 +86,8 @@ image(unsigned int cap, unsigned int width, unsigned int height,
       err("could not allocate row");
   }
 
-  double xstep = (double)abs(xmax - xmin) / (double)width;
-  double ystep = (double)abs(ymax - ymin) / (double)height;
+  double xstep = (double)fabs(xmax - xmin) / (double)width;
+  double ystep = (double)fabs(ymax - ymin) / (double)height;
 
   for (int y=0; y<height; y++) {
     double y1 = y * ystep + ymin;
@@ -114,9 +115,10 @@ int
 main (int argc, char **argv) {
   const unsigned int width = 1280, height = 800, cap = 1000;
 
-  png_bytep *full = image(cap, width, height, -2.5, 1.0, -1.0 , 1.0);
+  png_bytep *full = image(cap, width, height, -2.5, 1.0, -1.0, 1.0);
   write_png("mandelbrot-c.png", full, width, height);
   free_image(full, height);
+
   png_bytep *zoomed = image(cap, width, height, -0.5, 0.5, 0.0, 0.75);
   write_png("mandelzoom1-c.png", zoomed, width, height);
   free_image(zoomed, height);
