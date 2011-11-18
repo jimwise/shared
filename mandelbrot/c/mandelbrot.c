@@ -103,13 +103,22 @@ image(unsigned int cap, unsigned int width, unsigned int height,
   return rows;
 }
 
+void
+free_image(png_bytep *rows, unsigned int height) {
+  for (int i=0; i<height; i++)
+    free(rows[i]);
+  free(rows);
+}
+
 int
 main (int argc, char **argv) {
   const unsigned int width = 1280, height = 800, cap = 1000;
 
   png_bytep *full = image(cap, width, height, -2.5, 1.0, -1.0 , 1.0);
-  png_bytep *zoomed = image(cap, width, height, -0.5, 0.5, 0 , 0.75);
   write_png("mandelbrot-c.png", full, width, height);
+  free_image(full, height);
+  png_bytep *zoomed = image(cap, width, height, -0.5, 0.5, 0.0, 0.75);
   write_png("mandelzoom1-c.png", zoomed, width, height);
+  free_image(zoomed, height);
   exit(0);
 }
