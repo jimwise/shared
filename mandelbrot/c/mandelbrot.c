@@ -105,9 +105,11 @@ image(unsigned int cap, unsigned int width, unsigned int height,
 
 int
 main (int argc, char **argv) {
-  const unsigned int width = 1024, height = 768, cap = 1000;
+  const unsigned int width = 1280, height = 800, cap = 1000;
 
-  png_bytep *rows = image(cap, width, height, -2.5, 1.0, -1.0 , 1.0);
-  write_png("mandelbrot-c.png", rows, width, height);
+  png_bytep *full = image(cap, width, height, -2.5, 1.0, -1.0 , 1.0);
+  png_bytep *zoomed = image(cap, width, height, -0.5, 0.5, 0 , 0.75);
+  write_png("mandelbrot-c.png", full, width, height);
+  write_png("mandelzoom1-c.png", zoomed, width, height);
   exit(0);
 }
