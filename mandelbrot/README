@@ -1,0 +1,8 @@
+The rules:
+
+* each program shall output two 1280x800 truecolor PNG images:
+  -- a visualization of the mandelbrot set from -2.5-i to 1.0+i
+  -- a zoom of the portion from -0.5 to 0.5+0.75i
+
+* each program shall use complex math; programs in a language without
+  complex math support should implement it, not track two doubles
