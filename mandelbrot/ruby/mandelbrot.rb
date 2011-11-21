@@ -22,11 +22,12 @@ class Mandelbrot
 end
 
 class MandelImage < Mandelbrot
+  DENSITY_FACTOR = 16
   def initialize width, height, cap
     super cap
     @width = width
     @height = height
-    @scalec = 0xffffff / cap
+    @scalec = 0xffffff / cap * DENSITY_FACTOR
     zoom                        # start at default zoom
   end
 
@@ -37,6 +38,7 @@ class MandelImage < Mandelbrot
     @ymax = ymax
     @xstep = (xmax - xmin).abs / @width
     @ystep = (ymax - ymin).abs / @height
+    self
   end
 
   def image
@@ -48,9 +50,7 @@ class MandelImage < Mandelbrot
         it = escape c
         img[x, y] = color it
       end
-      STDERR.print "+"
     end 
-    STDERR.puts ""
     img
   end
 
@@ -75,8 +75,5 @@ private
   end  
 end
 
-width = ARGV[0].to_i
-height = ARGV[1].to_i
-cap = ARGV[2].to_i
-
-MandelImage.new(width, height, cap).image.save("mandelbrot.png")
+MandelImage.new(1280, 800, 1000).image.save("mandelbrot-ruby.png")
+MandelImage.new(1280, 800, 1000).zoom(-0.5, 0.5, 0.0, 0.75).image.save("mandelzoom1-ruby.png")
