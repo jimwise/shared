@@ -35,8 +35,8 @@
 	  (setf (aref image y x 1) (green c))
 	  (setf (aref image y x 0) (blue c))))))))
 
-(with-open-file (f "/tmp/mandelbrot.png" :direction :output :if-exists :supersede)
+(with-open-file (f "/tmp/mandelbrot-lisp.png" :direction :output :if-exists :supersede)
   (write-png (image 1280 800 :cap (expt 2 12)) f))
 
-(with-open-file (f "/tmp/mandelzoom1.png" :direction :output :if-exists :supersede)
+(with-open-file (f "/tmp/mandelzoom1-lisp.png" :direction :output :if-exists :supersede)
   (write-png (image 1280 800 :cap (expt 2 12) :xmin -0.5 :xmax 0.5 :ymin 0 :ymax 0.75) f))
