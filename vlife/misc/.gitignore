@@ -1,1 +1,3 @@
-onedee.o pedant.o
+onedee
+pedant
+*.o
