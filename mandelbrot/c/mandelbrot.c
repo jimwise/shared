@@ -122,5 +122,6 @@ main (int argc, char **argv) {
   png_bytep *zoomed = image(cap, width, height, -0.5, 0.5, 0.0, 0.75);
   write_png("mandelzoom1-c.png", zoomed, width, height);
   free_image(zoomed, height);
+
   exit(0);
 }
