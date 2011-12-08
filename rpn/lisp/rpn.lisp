@@ -37,9 +37,11 @@ below for examples)."
 (def-rpn-op "^" (x y)
     "replace top two values on stack, x and y with x^y"
   (cons (expt y x) rest))
-(def-rpn-op "." ()
+(def-rpn-op "." (x)
     "display the top value on the stack"
-  (princ (first rest)) (terpri) rest)
+  (princ x)
+  (terpri)
+  stack)
 (def-rpn-op "drop" (x)
     "remove the top value from the stack"
   rest)
