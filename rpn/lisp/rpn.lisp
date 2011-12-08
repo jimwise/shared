@@ -8,28 +8,51 @@ first n = (length args) values on the stack, 'rest' bound to the stack with
 those argument dropped, and 'stack' bound to the stack without those
 arguments dropped.  The body must return the new value of the stack (see
 below for examples)."
-  `(setf (gethash ,name *ops-docs* ,doc))
   `(setf (gethash ,name *ops*)
 	 #'(lambda (stack)
-	   (let ((rest (nthcdr ,(length args) stack))
+	     (let ((rest (nthcdr ,(length args) stack))
 		   ,@(loop for i from 0 to (1- (length args))
-			 collect (list (nth i args) (list 'nth i 'stack))))
-	     (if (some #'null (list ,@args))
-		 (progn
-		   (signal-error "stack underflow")
-		   stack)
-		 (progn
-		 ,@bod))))))
+			collect (list (nth i args) (list 'nth i 'stack))))
+	       (declare (ignorable rest))
+	       (if (some #'null (list ,@args))
+		   (progn
+		     (signal-error "stack underflow")
+		     stack)
+		   (progn
+		     ,@bod))))
+	 (gethash ,name *ops-docs*) ,doc))
 
-(def-rpn-op "+" (x y) "" (cons (+ x y) rest))
-(def-rpn-op "-" (x y) "" (cons (- x y) rest))
-(def-rpn-op "*" (x y) "" (cons (* x y) rest))
-(def-rpn-op "/" (x y) "" (cons (/ x y) rest))
-(def-rpn-op "^" (x y) "" (cons (expt y x) rest))
-(def-rpn-op "." () "" (princ (first rest)) (terpri) rest)
-(def-rpn-op "drop" (x) "" rest)
-(def-rpn-op "dup" (x) "" (cons x stack))
-(def-rpn-op "swap" (x y) "" (cons y (cons x stack)))
+(def-rpn-op "+" (x y)
+    "replace top two values on stack with their sum"
+  (cons (+ x y) rest))
+(def-rpn-op "-" (x y)
+    "replace top two values on stack with their difference"
+  (cons (- x y) rest))
+(def-rpn-op "*" (x y)
+    "replace top two values on stack with their product"
+  (cons (* x y) rest))
+(def-rpn-op "/" (x y)
+    "replace top two values on stack with their quotient"
+  (cons (/ x y) rest))
+(def-rpn-op "^" (x y)
+    "replace top two values on stack, x and y with x^y"
+  (cons (expt y x) rest))
+(def-rpn-op "." ()
+    "display the top value on the stack"
+  (princ (first rest)) (terpri) rest)
+(def-rpn-op "drop" (x)
+    "remove the top value from the stack"
+  rest)
+(def-rpn-op "dup" (x)
+    "duplicate the top value on the stack"
+    (cons x stack))
+(def-rpn-op "swap" (x y)
+    "swap the top two values on the stack"
+  (cons y (cons x stack)))
+(def-rpn-op "help" ()
+    "display this help"
+  (format *query-io* "~a Commands:~%" (hash-table-count *ops-docs*))
+  (maphash #'(lambda (key val) (format *query-io* "  ~a -- ~a~%" key val)) *ops-docs*) stack)
 
 (defun op-lookup (name) (gethash name *ops*))
 (defun doc-lookup (name) (gethash name *ops-docs*))
