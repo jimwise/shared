@@ -1,26 +1,38 @@
 (defvar *ops* (make-hash-table :test 'equal))
+(defvar *ops-docs* (make-hash-table :test 'equal))
 
-(defmacro def-rpn-op (sym args &body bod)
-  `(setf (gethash ,sym *ops*)
-	 #'(lambda (list)
-	   (let ((rest (nthcdr ,(length args) list))
+(defmacro def-rpn-op (name args doc &body bod)
+  "Define an RPN operation given a name, a doc string, a list of arguments
+and a body.  The body is invoked with each argument bound to one of the
+first n = (length args) values on the stack, 'rest' bound to the stack with
+those argument dropped, and 'stack' bound to the stack without those
+arguments dropped.  The body must return the new value of the stack (see
+below for examples)."
+  `(setf (gethash ,name *ops-docs* ,doc))
+  `(setf (gethash ,name *ops*)
+	 #'(lambda (stack)
+	   (let ((rest (nthcdr ,(length args) stack))
 		   ,@(loop for i from 0 to (1- (length args))
-			 collect (list (nth i args) (list 'nth i 'list))))
+			 collect (list (nth i args) (list 'nth i 'stack))))
 	     (if (some #'null (list ,@args))
 		 (progn
 		   (signal-error "stack underflow")
-		   list)
+		   stack)
 		 (progn
 		 ,@bod))))))
 
-(def-rpn-op "+" (x y) (cons (+ x y) rest))
-(def-rpn-op "-" (x y) (cons (- x y) rest))
-(def-rpn-op "*" (x y) (cons (* x y) rest))
-(def-rpn-op "/" (x y) (cons (/ x y) rest))
-(def-rpn-op "^" (x y) (cons (expt y x) rest))
-(def-rpn-op "." () (princ (first rest)) (terpri) rest)
+(def-rpn-op "+" (x y) "" (cons (+ x y) rest))
+(def-rpn-op "-" (x y) "" (cons (- x y) rest))
+(def-rpn-op "*" (x y) "" (cons (* x y) rest))
+(def-rpn-op "/" (x y) "" (cons (/ x y) rest))
+(def-rpn-op "^" (x y) "" (cons (expt y x) rest))
+(def-rpn-op "." () "" (princ (first rest)) (terpri) rest)
+(def-rpn-op "drop" (x) "" rest)
+(def-rpn-op "dup" (x) "" (cons x stack))
+(def-rpn-op "swap" (x y) "" (cons y (cons x stack)))
 
-(defun op-lookup (sym) (gethash sym *ops*))
+(defun op-lookup (name) (gethash name *ops*))
+(defun doc-lookup (name) (gethash name *ops-docs*))
 
 (defun rpn-eval (str stack)
   (let ((val (parse-number str))
