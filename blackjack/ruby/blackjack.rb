@@ -217,25 +217,23 @@ module Blackjack
 
       while s = gets.strip do
         return @last_bet if s == ""
-               
-        begin
-          bet = s.gsub(/^\$/, "").to_f
-        rescue
-          next
-        end
+
+        # this will return 0.0 if they enter a non-number.
+        # good enough for here, as @table_min will be > 0
+        bet = s.gsub(/^\$/, "").to_f
 
         if bet < @table_min
-          print "Bet must be at least #{@table_min}, try again: "
+          printf "Bet must be at least $%.2f, try again: ", @table_min
           next
         end
 
         if (bet % @table_min) != 0
-          print  "Bet must be a multiple of #{@table_min}, try again: "
+          print  "Bet must be a multiple of $%.2f, try again: ", @table_min
           next
         end
 
         if bet > @table_limit
-          print "Bet must be less than or equal to #{max}, try again: "
+          print "Bet must be less than or equal to $%.2f, try again: ", @table_min
           next
         end
 
