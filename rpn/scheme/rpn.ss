@@ -1,27 +1,5 @@
 #!r6rs
 
-;; two funcs from (draga utils)
-;; asss : string alist -> alist or boolean
-;; as assq, but uses string=? for comparisons
-(define (asss str alist)
-  (cond
-   [(null? alist) #f]
-   [(and (string? (caar alist)) (string=? str (caar alist))) (car alist)]
-   [else (asss str (cdr alist))]))
-
-;; asss/ci : string alist -> alist or boolean
-;; as assq, but uses string-ci=? for comparisons
-(define (asss/ci str alist)
-  (cond
-   [(null? alist) #f]
-   [(and (string? (caar alist)) (string-ci=? str (caar alist))) (car alist)]
-   [else (asss str (cdr alist))]))
-
-;; signal-error : str -> void
-;; given an error message, pass it to the user in a standardish way
-(define (signal-error str)
-  (display (format "*** ERROR: ~a~%" str)))
-
 ;; op data structure
 ;; an op is a list of (str num str func)
 ;; which are (name arity doc code)
@@ -78,6 +56,20 @@
                        (display (format "~a Commands:~%" (length action-list)))
                        (map (lambda (a) (display (format "  ~a -- ~a~%" (op-name a) (op-doc a)))) action-list)
                        stack))))
+
+;; from (draga utils)
+;; asss/ci : string alist -> alist or boolean
+;; as assq, but uses string-ci=? for comparisons
+(define (asss/ci str alist)
+  (cond
+   [(null? alist) #f]
+   [(and (string? (caar alist)) (string-ci=? str (caar alist))) (car alist)]
+   [else (asss/ci str (cdr alist))]))
+
+;; signal-error : str -> void
+;; given an error message, pass it to the user in a standardish way
+(define (signal-error str)
+  (display (format "*** ERROR: ~a~%" str)))
 
 (define (rpn)
   (display "> ")
