@@ -1,3 +1,5 @@
+#!r6rs
+
 ;; two funcs from (draga utils)
 ;; asss : string alist -> alist or boolean
 ;; as assq, but uses string=? for comparisons
@@ -15,6 +17,10 @@
    [(and (string? (caar alist)) (string-ci=? str (caar alist))) (car alist)]
    [else (asss str (cdr alist))]))
 
+;; signal-error : str -> void
+;; given an error message, pass it to the user in a standardish way
+(define (signal-error str)
+  (display (format "*** ERROR: ~a~%" str)))
 
 ;; action : line stack -> stack
 ;; given an input line and the current stack, take the action requested and return
@@ -23,8 +29,8 @@
   (cond
    [(eof-object? line) (newline) (exit)]
    [(string->number line) => (lambda (n) (cons n stack))]
-   [(asss/ci line action-list) => (lambda (a) ((cdr a) stack))]
-   [else (display "ERROR\n") (exit #f)]))
+   [(asss/ci line action-list) => (lambda (a) ((cadddr a) stack))]
+   [else (signal-error "unknown operation") stack]))
 
 (define (rpn-top stack)
   (display (car stack))
@@ -56,15 +62,15 @@
   (cons (cadr stack) (cons (car stack) (cddr stack))))
 
 (define action-list
-  `(("." . ,rpn-top)
-    ("+" . ,rpn-plus)
-    ("-" . ,rpn-minus)
-    ("*" . ,rpn-times)
-    ("/" . ,rpn-divby)
-    ("^" . ,rpn-expt)
-    ("drop" . ,rpn-drop)
-    ("dup" . ,rpn-dup)
-    ("swap" . ,rpn-swap)))
+  `(("." 1 "" ,rpn-top)
+    ("+" 2 "" ,rpn-plus)
+    ("-" 2 "" ,rpn-minus)
+    ("*" 2 "" ,rpn-times)
+    ("/" 2 "" ,rpn-divby)
+    ("^" 2 "" ,rpn-expt)
+    ("drop" 1 "" ,rpn-drop)
+    ("dup" 1 "" ,rpn-dup)
+    ("swap" 2 "" ,rpn-swap)))
 
 (define (rpn)
   (display "> ")
