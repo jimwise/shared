@@ -22,6 +22,15 @@
 (define (signal-error str)
   (display (format "*** ERROR: ~a~%" str)))
 
+;; op data structure
+;; an op is a list of (str num str func)
+;; which are (name arity doc code)
+(define (make-action name arity doc action) (list name arity doc action))
+(define (op-name op) (car op))
+(define (op-arity op) (cadr op))
+(define (op-doc op) (caddr op))
+(define (op-action op) (cadddr op))
+
 ;; action : line stack -> stack
 ;; given an input line and the current stack, take the action requested and return
 ;; the updated stack
@@ -29,7 +38,12 @@
   (cond
    [(eof-object? line) (newline) (exit)]
    [(string->number line) => (lambda (n) (cons n stack))]
-   [(asss/ci line action-list) => (lambda (a) ((cadddr a) stack))]
+   [(asss/ci line action-list) => (lambda (a)
+                                    (if (>= (length stack) (op-arity a))
+                                        ((op-action a) stack)
+                                        (begin
+                                          (signal-error "stack underflow")
+                                          stack)))]
    [else (signal-error "unknown operation") stack]))
 
 (define (rpn-top stack)
@@ -62,15 +76,15 @@
   (cons (cadr stack) (cons (car stack) (cddr stack))))
 
 (define action-list
-  `(("." 1 "" ,rpn-top)
-    ("+" 2 "" ,rpn-plus)
-    ("-" 2 "" ,rpn-minus)
-    ("*" 2 "" ,rpn-times)
-    ("/" 2 "" ,rpn-divby)
-    ("^" 2 "" ,rpn-expt)
-    ("drop" 1 "" ,rpn-drop)
-    ("dup" 1 "" ,rpn-dup)
-    ("swap" 2 "" ,rpn-swap)))
+  (list (make-action "." 1 "" rpn-top)
+        (make-action "+" 2 "" rpn-plus)
+        (make-action "-" 2 "" rpn-minus)
+        (make-action "*" 2 "" rpn-times)
+        (make-action "/" 2 "" rpn-divby)
+        (make-action "^" 2 "" rpn-expt)
+        (make-action "drop" 1 "" rpn-drop)
+        (make-action "dup" 1 "" rpn-dup)
+        (make-action "swap" 2 "" rpn-swap)))
 
 (define (rpn)
   (display "> ")
