@@ -46,51 +46,38 @@
                                           stack)))]
    [else (signal-error "unknown operation") stack]))
 
-(define (rpn-top stack)
-  (display (car stack))
-  (newline)
-  stack)
-
-(define (rpn-plus stack)
-  (cons (+ (cadr stack) (car stack)) (cddr stack)))
-
-(define (rpn-minus stack)
-  (cons (- (cadr stack) (car stack)) (cddr stack)))
-
-(define (rpn-times stack)
-  (cons (* (cadr stack) (car stack)) (cddr stack)))
-
-(define (rpn-divby stack)
-  (cons (/ (cadr stack) (car stack)) (cddr stack)))
-
-(define (rpn-expt stack)
-  (cons (expt (car stack) (cadr stack)) (cddr stack)))
-
-(define (rpn-drop stack)
-  (cdr stack))
-
-(define (rpn-dup stack)
-  (cons (car stack) stack))
-
-(define (rpn-swap stack)
-  (cons (cadr stack) (cons (car stack) (cddr stack))))
-
-(define (rpn-help stack)
-  (display (format "~a Commands:~%" (length action-list)))
-  (map (lambda (a) (display (format "  ~a -- ~a~%" (op-name a) (op-doc a)))) action-list)
-  stack)
-
 (define action-list
-  (list (make-action "." 1 "display top value on stack" rpn-top)
-        (make-action "+" 2 "replace top two values on stack with their sum" rpn-plus)
-        (make-action "-" 2 "replace top two values on stack with their difference" rpn-minus)
-        (make-action "*" 2 "replace top two values on stack with their product" rpn-times)
-        (make-action "/" 2 "replace top two values on stack with their quotient" rpn-divby)
-        (make-action "^" 2 "replace top two values on stack, x and y, with x^y " rpn-expt)
-        (make-action "drop" 1 "remove top value on stack" rpn-drop)
-        (make-action "dup" 1 "duplicate top value on stack" rpn-dup)
-        (make-action "swap" 2 "swap top two values on stack" rpn-swap)
-        (make-action "help" 0 "show this help" rpn-help)))
+  (list (make-action "." 1 "display top value on stack"
+                     (lambda (stack)
+                         (display (car stack))
+                         (newline)
+                         stack))
+        (make-action "+" 2 "replace top two values on stack with their sum"
+                       (lambda (stack) (cons (+ (cadr stack) (car stack)) (cddr stack))))
+        (make-action "-" 2 "replace top two values on stack with their difference"
+                     (lambda (stack)
+                       (cons (- (cadr stack) (car stack)) (cddr stack))))
+        (make-action "*" 2 "replace top two values on stack with their product"
+                     (lambda (stack)
+                       (cons (* (cadr stack) (car stack)) (cddr stack))))
+        (make-action "/" 2 "replace top two values on stack with their quotient"
+                     (lambda (stack)
+                       (cons (/ (cadr stack) (car stack)) (cddr stack))))
+        (make-action "^" 2 "replace top two values on stack, x and y, with x^y "
+                     (lambda (stack)
+                       (cons (expt (car stack) (cadr stack)) (cddr stack))))
+        (make-action "drop" 1 "remove top value on stack"
+                     (lambda (stack) (cdr stack)))
+        (make-action "dup" 1 "duplicate top value on stack"
+                     (lambda (stack) (cons (car stack) stack)))
+        (make-action "swap" 2 "swap top two values on stack"
+                     (lambda (stack)
+                       (cons (cadr stack) (cons (car stack) (cddr stack)))))
+        (make-action "help" 0 "show this help"
+                     (lambda (stack)
+                       (display (format "~a Commands:~%" (length action-list)))
+                       (map (lambda (a) (display (format "  ~a -- ~a~%" (op-name a) (op-doc a)))) action-list)
+                       stack))))
 
 (define (rpn)
   (display "> ")
