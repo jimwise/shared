@@ -16,7 +16,7 @@ module RPNCalc
 
     def call stack
       if stack.size < @arity
-        signal_error "stack underflow"
+        RPNCalc::signal_error "stack underflow"
         stack
       else
         @bod.call(stack)
@@ -44,6 +44,12 @@ module RPNCalc
       }
       self.add_op("/", 1, "replace top two values on stack with their quotient") {|stack|
         stack[0,2] = stack[1] / stack[0]
+      }
+      self.add_op("help", 0, "display this help") {|stack|
+        puts "#{@ops.size} Commands:"
+        @ops.map {|k, v|
+          puts "  #{k} -- #{v.doc}"
+        }
       }
     end
 
