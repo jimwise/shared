@@ -45,6 +45,15 @@ module RPNCalc
       self.add_op("/", 1, "replace top two values on stack with their quotient") {|stack|
         stack[0,2] = stack[1] / stack[0]
       }
+      self.add_op("drop", 1, "remove top value on stack") {|stack|
+        stack[0,1] = nil
+      }
+      self.add_op("dup", 1, "duplicate top value on stack") {|stack|
+        stack.unshift stack[0]
+      }
+      self.add_op("swap", 1, "swap top two values on stack") {|stack|
+        stack[0], stack[1] = stack[1], stack[0]
+      }
       self.add_op("help", 0, "display this help") {|stack|
         puts "#{@ops.size} Commands:"
         @ops.map {|k, v|
@@ -62,7 +71,7 @@ module RPNCalc
         @ops[str].call(@stack)
       else
         begin
-          @stack.push(Float(str))
+          @stack.unshift(Float(str))
         rescue
           RPNCalc::signal_error("unknown operation")
         end
