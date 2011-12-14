@@ -1,7 +1,5 @@
 #include <iostream>
-#include <map>
 #include <stack>
-#include <sstream>
 #include <string>
 
 #ifndef OPS_H

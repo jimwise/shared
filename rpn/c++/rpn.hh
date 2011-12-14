@@ -1,3 +1,16 @@
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+
+#include "ops.hh"
+#include "calc.hh"
+
+#ifndef RPN_H
+#define RPN_H
+
+using namespace std;
+
 class ShowOp : public UnaryOp {
 public:
   ShowOp(void) : UnaryOp("display the top value on the stack") {}
@@ -56,11 +69,23 @@ public:
 };
 class SwapOp : public BinaryOp {
 public:
-  SwapOp(void) : BinaryOp("duplicate the top value on the stack") {}
+  SwapOp(void) : BinaryOp("swap the top two values on the stack") {}
   virtual void action (double x, double y, Stack &s) {
     s.push(x);
     s.push(y);
   }
+};
+class HelpOp : public NullaryOp {
+public:
+  HelpOp(Dict *d) : NullaryOp("show this help") {ops = d;}
+  virtual void action (Stack &s) {
+    cout << ops->size() << " Commands:" << endl;
+    for (Dict::iterator i=ops->begin(); i!=ops->end(); ++i) {
+      cout << i->first << " -- " << i->second->doc() << endl;
+    }
+  }
+private:
+  Dict *ops;
 };
 
 
@@ -77,5 +102,8 @@ public:
     ops["drop"] = new DropOp();
     ops["dup"] = new DupOp();
     ops["swap"] = new SwapOp();
+
+    ops["help"] = new HelpOp(&ops);
   }
 };
+#endif
