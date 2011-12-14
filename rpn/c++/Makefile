@@ -1,5 +1,5 @@
 CXX= CC
-CXXFLAGS= -g -errwarn -v -errtags=yes
+CXXFLAGS= -g -errwarn -errtags=yes
 # CXX= g++
 # CXXFLAGS= -g -Wall -Werror -pedantic
 CCC= $(CXX)
@@ -7,17 +7,19 @@ CCCFLAGS= $(CXXFLAGS)
 CPPFLAGS= -D__EXTENSIONS__
 
 BIN= rpn
+TESTBIN= test
 OBJS= main.o
+TESTOBJS= test.o
 LIBOBJS= 
 LIBS=
 INCS= calc.hh ops.hh
 
-all: $(BIN)
+all: $(BIN) $(TESTBIN)
 
 $(BIN): $(OBJS) $(LIBOBJS)
 	$(CXX) -o $@ $^ $(LIBS)
 
-test: test.o $(LIBOBJS)
+$(TESTBIN): $(TESTOBJS) $(LIBOBJS)
 	$(CXX) -o $@ $^ $(LIBS)
 
 clean:
