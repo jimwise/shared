@@ -22,6 +22,8 @@ $(BIN): $(OBJS) $(LIBOBJS)
 $(TESTBIN): $(TESTOBJS) $(LIBOBJS)
 	$(CXX) -o $@ $^ $(LIBS)
 
+$(OBJS) $(TESTOBJS): $(INCS)
+
 clean:
 	rm -f $(BIN) test test.o $(OBJS) $(LIBOBJS)
 
