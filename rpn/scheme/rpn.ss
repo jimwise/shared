@@ -41,7 +41,7 @@
         (make-action "/" 2 "replace top two values on stack with their quotient"
                      (lambda (stack)
                        (cons (/ (cadr stack) (car stack)) (cddr stack))))
-        (make-action "^" 2 "replace top two values on stack, x and y, with x^y "
+        (make-action "^" 2 "replace top two values on stack, x and y, with x to the yth power "
                      (lambda (stack)
                        (cons (expt (car stack) (cadr stack)) (cddr stack))))
         (make-action "drop" 1 "remove top value on stack"

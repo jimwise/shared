@@ -49,7 +49,7 @@ public:
 };
 class ExptOp : public BinaryOp {
 public:
-  ExptOp(void) : BinaryOp("replace the top two values on the stack, x and y,  with x^y") {}
+  ExptOp(void) : BinaryOp("replace the top two values on the stack, x and y,  with x to the yth power") {}
   virtual void action (double x, double y, Stack &s) {
     s.push(pow(x,y));
   }

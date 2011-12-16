@@ -45,6 +45,9 @@ module RPNCalc
       self.add_op("/", 1, "replace top two values on stack with their quotient") {|stack|
         stack[0,2] = stack[1] / stack[0]
       }
+      self.add_op("^", 1, "replace top two values on stack, x and y, with x to the yth power") {|stack|
+        stack[0,2] = stack[1] ** stack[0]
+      }
       self.add_op("drop", 1, "remove top value on stack") {|stack|
         stack[0,1] = nil
       }

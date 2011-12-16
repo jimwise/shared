@@ -35,7 +35,7 @@ below for examples)."
     "replace top two values on stack with their quotient"
   (cons (/ x y) rest))
 (def-rpn-op "^" (x y)
-    "replace top two values on stack, x and y with x^y"
+    "replace top two values on stack, x and y with x to the yth power"
   (cons (expt y x) rest))
 (def-rpn-op "." (x)
     "display the top value on the stack"
