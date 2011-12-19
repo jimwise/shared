@@ -3,28 +3,21 @@
 
 op_names(X) :- X = ['.', '+', '-', '*', '/', '^', 'drop', 'dup', 'swap', 'quit', 'help'].
 
-op_doc('.', 'display the top value on the stack').
-op_doc('+', 'replace top two values on the stack with their sum').
-op_doc('-', 'replace top two values on the stack with their difference').
-op_doc('*', 'replace top two values on the stack with their product').
-op_doc('/', 'replace top two values on the stack with their quotient').
-op_doc('^', 'replace top two values on the stack, x and y, with x to the yth power').
-op_doc('drop', 'remove the top value from the stack').
-op_doc('dup', 'duplicate the top value on the stack').
-op_doc('swap', 'swap the top two values on the stack').
-op_doc('quit', 'quit the calculator').
-op_doc('help', 'show this help').
+%% op(Name, Arity, Doc)
+rpn_op('.', 1, 'display the top value on the stack').
+rpn_op('+', 2, 'replace top two values on the stack with their sum').
+rpn_op('-', 2, 'replace top two values on the stack with their difference').
+rpn_op('*', 2, 'replace top two values on the stack with their product').
+rpn_op('/', 2, 'replace top two values on the stack with their quotient').
+rpn_op('^', 2, 'replace top two values on the stack, x and y, with x to the yth power').
+rpn_op('drop', 1, 'remove the top value from the stack').
+rpn_op('dup', 1, 'duplicate the top value on the stack').
+rpn_op('swap', 2, 'swap the top two values on the stack').
+rpn_op('quit', 0, 'quit the calculator').
+rpn_op('help', 0, 'show this help').
 
-arity('.', 1).
-arity('+', 2).
-arity('-', 2).
-arity('*', 2).
-arity('/', 2).
-arity('^', 2).
-arity('drop', 1).
-arity('dup', 1).
-arity('swap', 2).
-
+op_arity(O, N) :- rpn_op(O, N, _).
+op_doc(O, D) :- rpn_op(O, _, D).
 
 act('.', [X|Stack], [X|Stack]) :- !, writeln(X).
 act('+', [Y,X|Stack], [Z|Stack]) :- !, Z is X + Y.
@@ -36,7 +29,6 @@ act('drop', [_|Stack], Stack) :- !.
 act('dup', [X|Stack], [X,X|Stack]) :- !.
 act('swap', [Y,X|Stack], [X,Y|Stack]) :- !.
 
-%% no arity, please -- we're nullary
 act('quit', _, _) :- halt.
 act('help', X, X) :- 
 	op_names(O),
@@ -57,7 +49,7 @@ op_help([O|Ops]) :-
 	write(O), write(' -- '), writeln(H),
 	op_help(Ops).
 
-bad_arity(Op, S) :- arity(Op, N), length(S, L), N > L, signal_error('stack underflow').
+bad_arity(Op, S) :- op_arity(Op, N), length(S, L), N > L, signal_error('stack underflow').
 
 signal_error(S) :- atom_concat('*** ERROR: ', S, T), writeln(T).
 
