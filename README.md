@@ -14,8 +14,8 @@ What's here:
   published as the `ambit' gem, with documentation and examples -- these are
   just the examples)
 
-* rpn -- a four (or more) function rpn calculator, currently implemented five
-  time in five languages
+* rpn -- a four (or more) function rpn calculator, currently implemented six
+  time in six languages
 
 * vlife -- some toy virtual life programs I wrote in 1995, updated to work
   with modern Unix/C/Curses
