@@ -4,16 +4,16 @@
 op_names(X) :- X = ['.', '+', '-', '*', '/', '^', 'drop', 'dup', 'swap', 'quit', 'help'].
 
 op_doc('.', 'display the top value on the stack').
-op_doc('+', '').
-op_doc('-', '').
-op_doc('*', '').
-op_doc('/', '').
-op_doc('^', '').
-op_doc('drop', '').
-op_doc('dup', '').
-op_doc('swap', '').
-op_doc('quit', '').
-op_doc('help', '').
+op_doc('+', 'replace top two values on the stack with their sum').
+op_doc('-', 'replace top two values on the stack with their difference').
+op_doc('*', 'replace top two values on the stack with their product').
+op_doc('/', 'replace top two values on the stack with their quotient').
+op_doc('^', 'replace top two values on the stack, x and y, with x to the yth power').
+op_doc('drop', 'remove the top value from the stack').
+op_doc('dup', 'duplicate the top value on the stack').
+op_doc('swap', 'swap the top two values on the stack').
+op_doc('quit', 'quit the calculator').
+op_doc('help', 'show this help').
 
 arity('.', 1).
 arity('+', 2).
