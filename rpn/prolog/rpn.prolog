@@ -10,7 +10,6 @@ rpn_op('^', 2, 'replace top two values on the stack, x and y, with x to the yth 
 rpn_op('drop', 1, 'remove the top value from the stack').
 rpn_op('dup', 1, 'duplicate the top value on the stack').
 rpn_op('swap', 2, 'swap the top two values on the stack').
-rpn_op('quit', 0, 'quit the calculator').
 rpn_op('help', 0, 'show this help').
 
 op_arity(O, N) :- rpn_op(O, N, _).
@@ -27,7 +26,6 @@ act('drop', [_|Stack], Stack) :- !.
 act('dup', [X|Stack], [X,X|Stack]) :- !.
 act('swap', [Y,X|Stack], [X,Y|Stack]) :- !.
 
-act('quit', _, _) :- halt.
 act('help', X, X) :- 
 	op_names(O),
 	length(O, N),
@@ -52,5 +50,6 @@ bad_arity(Op, S) :- op_arity(Op, N), length(S, L), N > L, signal_error('stack un
 signal_error(S) :- atom_concat('*** ERROR: ', S, T), writeln(T).
 
 repl1(Stack, NewStack) :- readln(S), !, act(S, Stack, NewStack).
+repl(Stack, NewStack) :- at_end_of_stream, !, writeln(''), halt.
 repl(Stack, NewStack) :- !, repl1(Stack, TmpStack), repl(TmpStack, NewStack).
 repl :- repl([], _).
