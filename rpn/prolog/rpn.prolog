@@ -8,6 +8,7 @@ arity('+', 2).
 arity('-', 2).
 arity('*', 2).
 arity('/', 2).
+arity('^', 2).
 arity('drop', 1).
 arity('dup', 1).
 arity('swap', 2).
@@ -17,6 +18,7 @@ act('+', [Y,X|Stack], [Z|Stack]) :- !, Z is X + Y.
 act('-', [Y,X|Stack], [Z|Stack]) :- !, Z is X - Y.
 act('*', [Y,X|Stack], [Z|Stack]) :- !, Z is X * Y.
 act('/', [Y,X|Stack], [Z|Stack]) :- !, Z is X / Y.
+act('^', [Y,X|Stack], [Z|Stack]) :- !, Z is X ** Y.
 act('drop', [_|Stack], Stack) :- !.
 act('dup', [X|Stack], [X,X|Stack]) :- !.
 act('swap', [Y,X|Stack], [X,Y|Stack]) :- !.
