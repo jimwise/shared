@@ -21,7 +21,10 @@ act('drop', [_|Stack], Stack) :- !.
 act('dup', [X|Stack], [X,X|Stack]) :- !.
 act('swap', [Y,X|Stack], [X,Y|Stack]) :- !.
 
+act('quit', _, _) :- halt.
+
 act([X], S1, S2) :- !, act(X, S1, S2).
+act([], S, S).
 act(Op, S, S) :- bad_arity(Op, S), !.
 act(N, Stack, [N|Stack]) :- number(N), !.
 act(_, X, X) :- signal_error('unknown operation').
