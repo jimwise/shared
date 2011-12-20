@@ -32,24 +32,28 @@ act('help', X, X) :-
 	write(N),
 	writeln(' Commands:'),
 	op_help(O).
-	
+
+%% deal with list-ified commands (from readln), empty commands, stack underflow,
+%% numerical values to push to stack, and unknown commands
 act([X], S1, S2) :- !, act(X, S1, S2).
 act([], S, S).
 act(Op, S, S) :- bad_arity(Op, S), !.
 act(N, Stack, [N|Stack]) :- number(N), !.
 act(_, X, X) :- signal_error('unknown operation').
 
+%% support for the help command
 op_help([]).
 op_help([O|Ops]) :-
 	op_doc(O, H),
 	write(O), write(' -- '), writeln(H),
 	op_help(Ops).
 
+%% check arity, and signal error if so (and succeed, for use in rule above)
 bad_arity(Op, S) :- op_arity(Op, N), length(S, L), N > L, signal_error('stack underflow').
 
 signal_error(S) :- atom_concat('*** ERROR: ', S, T), writeln(T).
 
 repl1(Stack, NewStack) :- readln(S), !, act(S, Stack, NewStack).
-repl(Stack, NewStack) :- at_end_of_stream, !, writeln(''), halt.
+repl(_, _) :- at_end_of_stream, !, writeln(''), halt.
 repl(Stack, NewStack) :- !, repl1(Stack, TmpStack), repl(TmpStack, NewStack).
 repl :- repl([], _).
