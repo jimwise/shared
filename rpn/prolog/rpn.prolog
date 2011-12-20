@@ -56,4 +56,4 @@ signal_error(S) :- atom_concat('*** ERROR: ', S, T), writeln(T).
 repl1(Stack, NewStack) :- readln(S), !, act(S, Stack, NewStack).
 repl(_, _) :- at_end_of_stream, !, writeln(''), halt.
 repl(Stack, NewStack) :- !, repl1(Stack, TmpStack), repl(TmpStack, NewStack).
-repl :- repl([], _).
+repl :- prompt(_, '> '), repl([], _).
