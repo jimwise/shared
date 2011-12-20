@@ -12,7 +12,7 @@ OBJS= main.o
 TESTOBJS= test.o
 LIBOBJS= 
 LIBS=
-INCS= calc.hh ops.hh
+INCS= calc.hh ops.hh rpn.hh
 
 all: $(BIN) $(TESTBIN)
 
