@@ -25,30 +25,35 @@
    [else (signal-error "unknown operation") stack]))
 
 (define action-list
-  (list (make-action "." 1 "display top value on stack"
+  (list (make-action "." 1 "display top value on the stack"
                      (lambda (stack)
                          (display (car stack))
                          (newline)
                          stack))
-        (make-action "+" 2 "replace top two values on stack with their sum"
+        (make-action "#" 0 "display number of values on the stack"
+                     (lambda (stack)
+                         (display (length stack))
+                         (newline)
+                         stack))
+        (make-action "+" 2 "replace top two values on the stack with their sum"
                        (lambda (stack) (cons (+ (cadr stack) (car stack)) (cddr stack))))
-        (make-action "-" 2 "replace top two values on stack with their difference"
+        (make-action "-" 2 "replace top two values on the stack with their difference"
                      (lambda (stack)
                        (cons (- (cadr stack) (car stack)) (cddr stack))))
-        (make-action "*" 2 "replace top two values on stack with their product"
+        (make-action "*" 2 "replace top two values on the stack with their product"
                      (lambda (stack)
                        (cons (* (cadr stack) (car stack)) (cddr stack))))
-        (make-action "/" 2 "replace top two values on stack with their quotient"
+        (make-action "/" 2 "replace top two values on the stack with their quotient"
                      (lambda (stack)
                        (cons (/ (cadr stack) (car stack)) (cddr stack))))
-        (make-action "^" 2 "replace top two values on stack, x and y, with x to the yth power "
+        (make-action "^" 2 "replace top two values on the stack, x and y, with x to the yth power "
                      (lambda (stack)
                        (cons (expt (car stack) (cadr stack)) (cddr stack))))
-        (make-action "drop" 1 "remove top value on stack"
+        (make-action "drop" 1 "remove top value from the stack"
                      (lambda (stack) (cdr stack)))
-        (make-action "dup" 1 "duplicate top value on stack"
+        (make-action "dup" 1 "duplicate top value on the stack"
                      (lambda (stack) (cons (car stack) stack)))
-        (make-action "swap" 2 "swap top two values on stack"
+        (make-action "swap" 2 "swap top two values on the stack"
                      (lambda (stack)
                        (cons (cadr stack) (cons (car stack) (cddr stack)))))
         (make-action "help" 0 "show this help"

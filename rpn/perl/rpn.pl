@@ -16,11 +16,20 @@ sub make_op {
 
 make_op('.',
 	arity => 1,
-	doc => "show the top value on the stack",
+	doc => "display the top value on the stack",
 	op => sub {
 	  my ($x, $s) = @_;
 	  say $x;
 	  push @$s, $x;
+	  $s;
+	});
+
+make_op('#',
+	arity => 0,
+	doc => "display the number of values on the stack",
+	op => sub {
+	  my ($s) = @_;
+	  say scalar(@$s);
 	  $s;
 	});
 

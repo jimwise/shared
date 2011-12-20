@@ -30,31 +30,34 @@ module RPNCalc
       @stack = []
       @ops = {}
 
-      self.add_op(".", 1, "display top value on stack") {|stack|
+      self.add_op(".", 1, "display top value on the stack") {|stack|
         puts stack[0]
       }
-      self.add_op("+", 1, "replace top two values on stack with their sum") {|stack|
+      self.add_op("#", 0, "display number of values on the stack") {|stack|
+        puts stack.size
+      }
+      self.add_op("+", 1, "replace top two values on the stack with their sum") {|stack|
         stack[0,2] = stack[1] + stack[0]
       }
-      self.add_op("-", 1, "replace top two values on stack with their difference") {|stack|
+      self.add_op("-", 1, "replace top two values on the stack with their difference") {|stack|
         stack[0,2] = stack[1] - stack[0]
       }
-      self.add_op("*", 1, "replace top two values on stack with their product") {|stack|
+      self.add_op("*", 1, "replace top two values on the stack with their product") {|stack|
         stack[0,2] = stack[1] * stack[0]
       }
-      self.add_op("/", 1, "replace top two values on stack with their quotient") {|stack|
+      self.add_op("/", 1, "replace top two values on the stack with their quotient") {|stack|
         stack[0,2] = stack[1] / stack[0]
       }
-      self.add_op("^", 1, "replace top two values on stack, x and y, with x to the yth power") {|stack|
+      self.add_op("^", 1, "replace top two values on the stack, x and y, with x to the yth power") {|stack|
         stack[0,2] = stack[1] ** stack[0]
       }
-      self.add_op("drop", 1, "remove top value on stack") {|stack|
+      self.add_op("drop", 1, "remove top value from the stack") {|stack|
         stack[0,1] = nil
       }
-      self.add_op("dup", 1, "duplicate top value on stack") {|stack|
+      self.add_op("dup", 1, "duplicate top value on the stack") {|stack|
         stack.unshift stack[0]
       }
-      self.add_op("swap", 1, "swap top two values on stack") {|stack|
+      self.add_op("swap", 1, "swap top two values on the stack") {|stack|
         stack[0], stack[1] = stack[1], stack[0]
       }
       self.add_op("help", 0, "display this help") {|stack|

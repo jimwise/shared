@@ -42,6 +42,11 @@ below for examples)."
   (princ x)
   (terpri)
   stack)
+(def-rpn-op "#" ()
+    "display the number of values on the stack"
+  (princ (length stack))
+  (terpri)
+  stack)
 (def-rpn-op "drop" (x)
     "remove the top value from the stack"
   rest)

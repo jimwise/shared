@@ -2,6 +2,7 @@
 
 %% op(Name, Arity, Doc)
 rpn_op('.', 1, 'display the top value on the stack').
+rpn_op('#', 0, 'display the number of values on the stack').
 rpn_op('+', 2, 'replace top two values on the stack with their sum').
 rpn_op('-', 2, 'replace top two values on the stack with their difference').
 rpn_op('*', 2, 'replace top two values on the stack with their product').
@@ -17,6 +18,7 @@ op_doc(O, D) :- rpn_op(O, _, D).
 op_names(Names) :- findall(N, rpn_op(N, _, _), Names).
 
 act('.', [X|Stack], [X|Stack]) :- !, writeln(X).
+act('#', Stack, Stack) :- !, length(Stack, X), writeln(X).
 act('+', [Y,X|Stack], [Z|Stack]) :- !, Z is X + Y.
 act('-', [Y,X|Stack], [Z|Stack]) :- !, Z is X - Y.
 act('*', [Y,X|Stack], [Z|Stack]) :- !, Z is X * Y.

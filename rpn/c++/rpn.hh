@@ -19,6 +19,13 @@ public:
     s.push(x);
   }
 };
+class CountOp : public NullaryOp {
+public:
+  CountOp(void) : NullaryOp("display the number of values on the stack") {}
+  virtual void action (Stack &s) {
+    cout << s.size() << endl;
+  }
+};
 class AddOp : public BinaryOp {
 public:
   AddOp(void) : BinaryOp("replace the top two values on the stack with their sum") {}
@@ -99,6 +106,7 @@ public:
     ops["^"] = new ExptOp();
 
     ops["."] = new ShowOp();
+    ops["#"] = new CountOp();
     ops["drop"] = new DropOp();
     ops["dup"] = new DupOp();
     ops["swap"] = new SwapOp();
