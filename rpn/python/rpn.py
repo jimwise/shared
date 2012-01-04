@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-import sys
+from sys import stdin
 
 ops = {}
 
@@ -94,7 +94,7 @@ def action(string):
 
 while True:
     print("> ", end='')
-    string = sys.stdin.readline()
+    string = stdin.readline()
     if string == '':
         break
     elif string == '\n':
