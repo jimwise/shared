@@ -5,27 +5,31 @@ from __future__ import print_function
 import sys
 
 ops = {}
-docs = {}
 
 def signalError(string):
     print("*** ERROR: " + string)
 
+class Operation (object):
+    def __init__ (self, arity, doc, op):
+        self.arity = arity
+        self.doc = doc
+        self.op = op
+
+    def __call__ (self, stack):
+        args = []
+        if len(stack) < self.arity:
+            signalError("stack underflow")
+        else:
+            for i in range(self.arity):
+                args.append(stack.pop())
+            args.reverse()
+            self.op(stack, *args)
+
 # given an arity, return a decorator for that arity
 def operation(name, arity, doc):
     def decorate(op):
-        def decorated(stack):
-            args = []
-            if len(stack) < arity:
-                signalError("stack underflow")
-                return stack
-            else:
-                for i in range(arity):
-                    args.append(stack.pop())
-                args.reverse()
-                op(stack, *args)
-        ops[name] = decorated
-        docs[name] = doc
-        return decorated
+       ops[name] = Operation(arity, doc, op)
+       return ops[name]
     return decorate
 
 @operation ('.', 1, 'display the top value on the stack')
@@ -73,9 +77,9 @@ def op_swap (stack, x, y):
 
 @operation ('help', 0, 'display this help')
 def op_help (stack):
-    print(str(len(docs.keys())) + " Commands:")
-    for c in docs.keys():
-        print(c + " -- " + docs[c])
+    print(str(len(ops.keys())) + " Commands:")
+    for c in ops.keys():
+        print(c + " -- " + ops[c].doc)
 
 stack = []
 
@@ -93,8 +97,9 @@ while True:
     string = sys.stdin.readline()
     if string == '':
         break
-    if string == '\n':
+    elif string == '\n':
         continue
-    action(string[:-1])
+    else:
+        action(string[:-1])
 
 print('')
