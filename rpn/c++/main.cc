@@ -9,6 +9,8 @@
 #include "calc.hh"
 #include "rpn.hh"
 
+using namespace std;
+
 int main (int argc, char **argv) {
   RPNCalc c;
   string s;
