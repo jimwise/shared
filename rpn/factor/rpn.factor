@@ -1,6 +1,6 @@
 #! /usr/local/lib/factor/factor
 
-USING: accessors assocs fry io kernel locals math math.functions math.parser prettyprint sequences vectors ;
+USING: accessors assocs fry io kernel locals math math.functions math.parser prettyprint sequences system vectors ;
 
 IN: rpn
 
@@ -71,10 +71,7 @@ TUPLE: op doc act ;
   setup-ops setup-stack
   "> " write flush
   readln dup [ action main ] [ drop ] if
-  "" print
-  drop drop ;
-
-"foo" "bar" <op>
-drop
+  "" print flush
+  0 exit ;
 
 main
