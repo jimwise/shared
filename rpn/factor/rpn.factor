@@ -1,6 +1,6 @@
 #! /usr/local/lib/factor/factor
 
-USING: assocs io kernel locals math math.functions math.parser prettyprint sequences vectors ;
+USING: assocs fry io kernel locals math math.functions math.parser prettyprint sequences vectors ;
 
 IN: rpn
 
@@ -9,25 +9,33 @@ IN: rpn
 : literal ( oldstack str -- newstack )
   string>number dup [ >float over push ] [ drop "unknown operation" signal-error ] if ;
 
-: nullary ( oldstack -- oldstack ) ;
-: unary ( oldstack -- newstack x ) dup pop ;
-: binary ( oldstack -- newstack x y ) dup [ pop ] [ pop ] bi swap ;
+: unary-arg-setup ( oldstack -- newstack x ) dup pop ;
+: binary-arg-setup ( oldstack -- newstack x y ) dup [ pop ] [ pop ] bi swap ;
 : ret ( oldstack value -- newstack ) over push ;
+
+! nullary/unary/binary take the body of a unary operation (as a quotation,
+! and return a quotation implementing that op with proper underflow checking
+! and arg setup
+
+: nullary ( quot -- quot ) ;
+: unary ( quot -- quot ) '[ dup length 1 >= [ unary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
+: binary ( quot -- quot ) '[ dup length 2 >= [ binary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
+
 
 : add-op ( assoc quot sym -- assoc ) rot dup [ set-at ] dip ;
 
 : setup-ops ( -- assoc )
   H{ }
-  [ unary dup . ret ] "." add-op
-  [ nullary dup length . ] "#" add-op
-  [ binary + ret ] "+" add-op
-  [ binary - ret ] "-" add-op
-  [ binary * ret ] "*" add-op
-  [ binary / ret ] "/" add-op
-  [ binary ^ ret ] "^" add-op
-  [ unary drop ] "drop" add-op
-  [ unary dup [ over push ] dip ret ] "dup" add-op
-  [ binary swap [ ret ] dip ret ] "swap" add-op
+  [ dup . ret ]                 unary   "." add-op
+  [ dup length . ]              nullary "#" add-op
+  [ + ret ]                     binary  "+" add-op
+  [ - ret ]                     binary  "-" add-op
+  [ * ret ]                     binary  "*" add-op
+  [ / ret ]                     binary  "/" add-op
+  [ ^ ret ]                     binary  "^" add-op
+  [ drop ]                      unary   "drop" add-op
+  [ dup [ over push ] dip ret ] unary   "dup" add-op
+  [ swap [ ret ] dip ret ]      binary  "swap" add-op
   ;
 
 : setup-stack ( -- stack )
