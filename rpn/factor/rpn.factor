@@ -50,9 +50,7 @@ TUPLE: op doc act ;
   [ show-help ] nullary "display this help" "help" add-op
   ;
 
-: setup-stack ( -- stack )
-  V{ }
-  ;
+: setup-stack ( -- stack ) V{ } ;
 
 : action ( ops oldstack str -- ops newstack )
   3dup swap drop
@@ -65,9 +63,11 @@ TUPLE: op doc act ;
   if
   ;
 
+: prompt ( -- ) "> " write flush ;
+
 : main ( -- )
   setup-ops setup-stack
-  "> " write flush
+  prompt
   readln dup [ action main ] [ drop ] if
   "" print flush
   0 exit ;
