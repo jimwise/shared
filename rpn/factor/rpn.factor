@@ -1,8 +1,12 @@
 #! /usr/local/lib/factor/factor
 
-USING: assocs fry io kernel locals math math.functions math.parser prettyprint sequences vectors ;
+USING: accessors assocs fry io kernel locals math math.functions math.parser prettyprint sequences vectors ;
 
 IN: rpn
+
+TUPLE: op doc act ;
+
+: <op> ( quot doc -- op ) op new swap >>doc swap >>act ;
 
 : signal-error ( str -- ) "*** ERROR: " prepend print ;
 
@@ -23,30 +27,23 @@ IN: rpn
 : binary ( quot -- quot )
   '[ dup length 2 >= [ binary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
 
-: add-op ( assoc quot sym doc -- assoc ) drop rot dup [ set-at ] dip ;
+! : add-op ( assoc quot doc sym -- assoc ) swap drop rot dup [ set-at ] dip ;
+
+: add-op ( assoc quot doc sym -- assoc ) [ <op> ] dip rot dup [ set-at ] dip ;
 
 : setup-ops ( -- assoc )
   H{ }
-  [ dup . ret ]                 unary   "."
-  "display the top value on the stack" add-op
-  [ dup length . ]              nullary "#"
-  "display the number of values on the stack" add-op
-  [ + ret ]                     binary  "+"
-  "replace the top two values on the stack with their sum" add-op
-  [ - ret ]                     binary  "-"
-  "replace the top two values on the stack with their difference" add-op
-  [ * ret ]                     binary  "*"
-  "replace the top two values on the stack with their product" add-op
-  [ / ret ]                     binary  "/"
-  "replace the top two values on the stack with their quotient" add-op
-  [ ^ ret ]                     binary  "^"
-  "replace the top two values on the stack, x and y, with their x to the yth power" add-op
-  [ drop ]                      unary   "drop"
-  "remove the top value from the stack" add-op
-  [ dup [ over push ] dip ret ] unary   "dup"
-  "duplicate the top value on the stack" add-op
-  [ swap [ ret ] dip ret ]      binary  "swap"
-  "swap the top two values on the stack" add-op
+  [ dup . ret ] unary "display the top value on the stack" "." add-op
+  [ dup length . ] nullary "display the number of values on the stack" "#" add-op
+  [ + ret ] binary "replace the top two values on the stack with their sum" "+" add-op
+  [ - ret ] binary "replace the top two values on the stack with their difference" "-" add-op
+  [ * ret ] binary "replace the top two values on the stack with their product" "*" add-op
+  [ / ret ] binary "replace the top two values on the stack with their quotient" "/" add-op
+  [ ^ ret ] binary
+    "replace the top two values on the stack, x and y, with x to the yth power" "^" add-op
+  [ drop ] unary "remove the top value from the stack" "drop" add-op
+  [ dup [ over push ] dip ret ] unary "duplicate the top value on the stack" "dup" add-op
+  [ swap [ ret ] dip ret ] binary "swap the top two values on the stack" "swap" add-op
   ;
 
 : setup-stack ( -- stack )
@@ -59,7 +56,7 @@ IN: rpn
   swap at
   ! ops oldstack str quot-or-f
   dup
-  [ swap drop call( oldstack -- newstack ) ]
+  [ swap drop act>> call( oldstack -- newstack ) ]
   [ drop literal ]
   if
   ;
@@ -70,5 +67,8 @@ IN: rpn
   readln dup [ action main ] [ drop ] if
   "" print
   drop drop ;
+
+"foo" "bar" <op>
+drop
 
 main
