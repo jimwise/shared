@@ -18,24 +18,35 @@ IN: rpn
 ! and arg setup
 
 : nullary ( quot -- quot ) ;
-: unary ( quot -- quot ) '[ dup length 1 >= [ unary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
-: binary ( quot -- quot ) '[ dup length 2 >= [ binary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
+: unary ( quot -- quot )
+  '[ dup length 1 >= [ unary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
+: binary ( quot -- quot )
+  '[ dup length 2 >= [ binary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
 
-
-: add-op ( assoc quot sym -- assoc ) rot dup [ set-at ] dip ;
+: add-op ( assoc quot sym doc -- assoc ) drop rot dup [ set-at ] dip ;
 
 : setup-ops ( -- assoc )
   H{ }
-  [ dup . ret ]                 unary   "." add-op
-  [ dup length . ]              nullary "#" add-op
-  [ + ret ]                     binary  "+" add-op
-  [ - ret ]                     binary  "-" add-op
-  [ * ret ]                     binary  "*" add-op
-  [ / ret ]                     binary  "/" add-op
-  [ ^ ret ]                     binary  "^" add-op
-  [ drop ]                      unary   "drop" add-op
-  [ dup [ over push ] dip ret ] unary   "dup" add-op
-  [ swap [ ret ] dip ret ]      binary  "swap" add-op
+  [ dup . ret ]                 unary   "."
+  "display the top value on the stack" add-op
+  [ dup length . ]              nullary "#"
+  "display the number of values on the stack" add-op
+  [ + ret ]                     binary  "+"
+  "replace the top two values on the stack with their sum" add-op
+  [ - ret ]                     binary  "-"
+  "replace the top two values on the stack with their difference" add-op
+  [ * ret ]                     binary  "*"
+  "replace the top two values on the stack with their product" add-op
+  [ / ret ]                     binary  "/"
+  "replace the top two values on the stack with their quotient" add-op
+  [ ^ ret ]                     binary  "^"
+  "replace the top two values on the stack, x and y, with their x to the yth power" add-op
+  [ drop ]                      unary   "drop"
+  "remove the top value from the stack" add-op
+  [ dup [ over push ] dip ret ] unary   "dup"
+  "duplicate the top value on the stack" add-op
+  [ swap [ ret ] dip ret ]      binary  "swap"
+  "swap the top two values on the stack" add-op
   ;
 
 : setup-stack ( -- stack )
