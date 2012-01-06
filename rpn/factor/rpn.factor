@@ -31,6 +31,11 @@ TUPLE: op doc act ;
 
 : add-op ( assoc quot doc sym -- assoc ) [ <op> ] dip rot dup [ set-at ] dip ;
 
+: show-help ( ops stack -- ops stack )
+  over dup keys length number>string write " Commands: " print
+  [ swap write " -- " write doc>> print ] assoc-each
+  ;
+
 : setup-ops ( -- assoc )
   H{ }
   [ dup . ret ] unary "display the top value on the stack" "." add-op
@@ -44,6 +49,7 @@ TUPLE: op doc act ;
   [ drop ] unary "remove the top value from the stack" "drop" add-op
   [ dup [ over push ] dip ret ] unary "duplicate the top value on the stack" "dup" add-op
   [ swap [ ret ] dip ret ] binary "swap the top two values on the stack" "swap" add-op
+  [ show-help ] nullary "display this help" "help" add-op
   ;
 
 : setup-stack ( -- stack )
