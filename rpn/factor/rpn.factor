@@ -60,7 +60,7 @@ TUPLE: op doc act ;
   3dup swap drop
   ! ops oldstack str ops str
   swap at
-  ! ops oldstack str quot-or-f
+  ! ops oldstack str op-or-f
   dup
   [ swap drop act>> call( oldstack -- newstack ) ]
   [ drop literal ]
