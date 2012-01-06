@@ -17,7 +17,7 @@ TUPLE: op doc act ;
 : binary-arg-setup ( oldstack -- newstack x y ) dup [ pop ] [ pop ] bi swap ;
 : ret ( oldstack value -- newstack ) over push ;
 
-! nullary/unary/binary take the body of a unary operation (as a quotation,
+! nullary/unary/binary take the body of a unary operation (as a quotation),
 ! and return a quotation implementing that op with proper underflow checking
 ! and arg setup
 
@@ -26,8 +26,6 @@ TUPLE: op doc act ;
   '[ dup length 1 >= [ unary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
 : binary ( quot -- quot )
   '[ dup length 2 >= [ binary-arg-setup @ ] [ "stack underflow" signal-error ] if ] ;
-
-! : add-op ( assoc quot doc sym -- assoc ) swap drop rot dup [ set-at ] dip ;
 
 : add-op ( assoc quot doc sym -- assoc ) [ <op> ] dip rot dup [ set-at ] dip ;
 
