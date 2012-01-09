@@ -20,21 +20,21 @@ extern "C" {
 
   /* Must be a macro, as we cannot longjmp into a function we've returned from  */
   /* chcs is T[n], x gets choice */
-#define choose(x, n, chcs)						\
-  {									\
-    int nd_chc = n - 1;							\
-    nd_currpath++;							\
-    nd_paths[nd_currpath].t = 0;					\
-    setjmp(nd_paths[nd_currpath].j);					\
-    if (nd_debug)							\
-      printf("CHOOSE (%p): _chc = %d\n", &nd_chc, nd_chc);		\
-    if (nd_chc == -1) {							\
-      if (nd_debug)							\
-	printf ("CHOOSE (%p): empty choices -- failing\n", &nd_chc);	\
-      nd_currpath--;							\
-      fail();								\
-    }									\
-    x = chcs[nd_chc--];							\
+#define choose(x, n, chcs)						     \
+  {									     \
+    int nd_chc = n - 1;							     \
+    nd_currpath++;							     \
+    nd_paths[nd_currpath].t = 0;					     \
+    setjmp(nd_paths[nd_currpath].j);					     \
+    if (nd_debug)							     \
+      printf("CHOOSE (%p): _chc = %d\n", (void *)&nd_chc, nd_chc);	     \
+    if (nd_chc == -1) {							     \
+      if (nd_debug)							     \
+	printf ("CHOOSE (%p): empty choices -- failing\n", (void *)&nd_chc); \
+      nd_currpath--;							     \
+      fail();								     \
+    }									     \
+    x = chcs[nd_chc--];							     \
   }
 
   void fail (void);
