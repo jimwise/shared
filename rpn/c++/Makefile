@@ -1,7 +1,7 @@
 #CXX= CC
 #CXXFLAGS= -g -errwarn -errtags=yes
 CXX= g++
-CXXFLAGS= -g -Wall -Werror -pedantic
+CXXFLAGS= -g -Wall -Wextra -Wno-unused-parameter -Werror -pedantic
 CCC= $(CXX)
 CCCFLAGS= $(CXXFLAGS)
 CPPFLAGS= -D__EXTENSIONS__

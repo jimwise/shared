@@ -9,7 +9,7 @@
 int
 escape (double complex c, unsigned int cap) {
   double complex z = 0.0 + (0.0 * I);
-  for (int i=0; i<cap; i++) {
+  for (unsigned int i=0; i<cap; i++) {
     z = cpow(z, 2.0) + c;
     if (cabs(z) > 2.0) {
       return i;
@@ -80,7 +80,7 @@ image(unsigned int cap, unsigned int width, unsigned int height,
   png_bytep *rows = malloc(sizeof(png_bytep) * height);
   if (!rows)
     err("could not allocate image space");
-  for (int i=0; i<height; i++) {
+  for (unsigned int i=0; i<height; i++) {
     rows[i] = malloc(3 * width * sizeof(png_byte));
     if (!rows[i])
       err("could not allocate row");
@@ -89,9 +89,9 @@ image(unsigned int cap, unsigned int width, unsigned int height,
   double xstep = (double)fabs(xmax - xmin) / (double)width;
   double ystep = (double)fabs(ymax - ymin) / (double)height;
 
-  for (int y=0; y<height; y++) {
+  for (unsigned int y=0; y<height; y++) {
     double y1 = y * ystep + ymin;
-    for (int x=0; x<width; x++) {
+    for (unsigned int x=0; x<width; x++) {
       double x1 = x * xstep + xmin;
       unsigned int c = color(escape(x1 + (y1 * I), cap), cap);
       png_byte *pix = &(rows[y][x*3]);
@@ -106,7 +106,7 @@ image(unsigned int cap, unsigned int width, unsigned int height,
 
 void
 free_image(png_bytep *rows, unsigned int height) {
-  for (int i=0; i<height; i++)
+  for (unsigned int i=0; i<height; i++)
     free(rows[i]);
   free(rows);
 }

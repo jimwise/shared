@@ -2,7 +2,7 @@
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes \
 # 	-erroff=E_STATEMENT_NOT_REACHED
 CC=gcc
-CFLAGS=-g -Wall -Werror -ansi -pedantic 
+CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic 
 CPPFLAGS= -D__EXTENSIONS__
 
 BIN= blackjack

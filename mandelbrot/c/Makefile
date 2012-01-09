@@ -1,7 +1,7 @@
 # CC=cc
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
 CC=gcc
-CFLAGS=-g -Wall -Werror -ansi -pedantic -std=c99
+CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic -std=c99
 CPPFLAGS= -D__EXTENSIONS__ -I/opt/csw/include
 
 BIN= mandelbrot

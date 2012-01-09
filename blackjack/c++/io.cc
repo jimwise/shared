@@ -11,7 +11,6 @@ getbet(double min, double limit) {
   /* XXX check actual min/table_limit rules */
   double bet = 0.0L;
   static double last_bet = 5.00;
-  char c;
   string s;
 
   cout << fixed << setprecision(2);
@@ -62,11 +61,12 @@ getresp(string ps1, string ps2, string allowed, char def) {
   while (1) {
     getline(cin, s);
 
-    if (s.length() == 0)
+    if (s.length() == 0) {
       if (def)
 	return def;
       else
 	continue;
+    }
 
     char c = tolower(s[0]);
 

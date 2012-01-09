@@ -165,6 +165,7 @@ play_one_hand(void) {
   }
 }
 
+/*ARGSUSED*/
 int
 main (int argc, char **argv) {
   char c;

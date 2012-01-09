@@ -34,7 +34,7 @@ public:
   double getMin (void) {return table_min;}
   double getLimit (void) {return table_limit;}
 private:
-  double purse, currbet, table_min, table_limit;;
+  double purse, currbet, table_min, table_limit;
 };
 
 class Hand {
