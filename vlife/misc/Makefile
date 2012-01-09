@@ -1,7 +1,7 @@
 # CC=cc
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
-CC?=gcc
-CFLAGS=-Wall -Werror -ansi -pedantic 
+CC=gcc
+CFLAGS=-Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic 
 CPPFLAGS= -D__EXTENSIONS__
 LIBS= -lcurses
 

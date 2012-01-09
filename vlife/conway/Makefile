@@ -1,5 +1,5 @@
-CC?=gcc
-CFLAGS=-g -Wall -Werror -ansi -pedantic 
+CC=gcc
+CFLAGS=-g -Wall -Werror -Wextra -Wno-unused-parameter -ansi -pedantic 
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
 CPPFLAGS= -D__EXTENSIONS__
 LIBS= -lcurses
