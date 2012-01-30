@@ -52,7 +52,7 @@ module RPNCalc
         stack[0,2] = stack[1] ** stack[0]
       }
       self.add_op("drop", 1, "remove top value from the stack") {|stack|
-        stack[0,1] = nil
+        stack[0,1] = []
       }
       self.add_op("dup", 1, "duplicate top value on the stack") {|stack|
         stack.unshift stack[0]
