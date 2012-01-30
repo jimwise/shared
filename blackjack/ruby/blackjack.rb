@@ -1,4 +1,4 @@
-#!/opt/csw/bin/ruby
+#!/opt/csw/bin/ruby -I.
 
 require 'cards'
 

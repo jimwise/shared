@@ -1,4 +1,4 @@
-#!/opt/csw/bin/ruby
+#!/usr/bin/ruby -I.
 
 require 'cards'
 require 'blackjack'
