@@ -8,21 +8,19 @@
 
 using namespace std;
 
-static const int cardvals[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+namespace {
+  const int cardvals[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10};
+}
 
 int
 BlackjackCard::value (void) {
   return cardvals[va];
 }
 
-Hand::Hand (Shoe *s) {
-  shoe = s;
-}
-
 void
 Hand::deal (void) {
-  add(shoe->draw());
-  add(shoe->draw());
+  add(shoe.draw());
+  add(shoe.draw());
 }
 
 void
@@ -37,7 +35,7 @@ Hand::muck (void) {
 
 int
 Hand::hit (void) {
-  Card *card = shoe->draw();
+  Card *card = shoe.draw();
   cout << card->name() << endl;
   add(card);
   showvalue(true);
@@ -58,7 +56,9 @@ Hand::blackjack (void) {
   return ((value() == 21) && (cards.size() == 2));
 }
 
-static bool gt21 (int n) {return n > 21;} // my kingdom for a lambda operator
+namespace {
+  bool gt21 (int n) {return n > 21;} // my kingdom for a lambda operator
+}
 
 int
 Hand::value (void) {
@@ -187,17 +187,17 @@ PlayerHand::play (void) {
       return value();
       break;
     case 'd':
-      if (purse->getPurse() < purse->getMin()) {
+      if (purse.getPurse() < purse.getMin()) {
 	cout << "You cannot afford to double down!" << endl;
 	continue;
       }
-      newbet = getbet(purse->getMin(), min(purse->getBet(), purse->getLimit()));
-      purse->doubledown(newbet);
+      newbet = getbet(purse.getMin(), min(purse.getBet(), purse.getLimit()));
+      purse.doubledown(newbet);
       return hit();
       break;
     case 'u':
       cout << "You surrender" << endl;
-      purse->surrender();
+      purse.surrender();
       return 0;
       break;
     }

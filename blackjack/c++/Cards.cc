@@ -8,9 +8,12 @@
 
 using namespace std;
 
-static const string suit_names[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
-static const string val_names[] = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven",
+namespace {
+  const string suit_names[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
+  const string val_names[] = {"Ace", "Two", "Three", "Four", "Five", "Six", "Seven",
 				      "Eight", "Nine", "Ten", "Jack", "Queen", "King"};
+}
+
 string
 Card::name (void) {
   return val_names[va] + " of " + suit_names[su];
@@ -46,7 +49,9 @@ public:
   int operator() (const int &n) {return lrand48() % n;}
 };
 
-static ShoeRNG sr;
+namespace {
+  ShoeRNG sr;
+}
 
 void
 Shoe::refill (void) {

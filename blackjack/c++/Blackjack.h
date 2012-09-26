@@ -39,7 +39,7 @@ private:
 
 class Hand {
 public:
-  Hand (Shoe *s);
+  Hand (Shoe &s) : shoe(s) {};
   void deal (void);
   void add (Card *c);
   void muck (void);
@@ -53,7 +53,7 @@ public:
   virtual void show (bool reveal);
 
 protected:
-  Shoe *shoe;
+  Shoe &shoe;
   vector<Card *> cards;
 
   vector<int> values (void);
@@ -62,17 +62,17 @@ protected:
 
 class PlayerHand : public Hand {
 public:
-  PlayerHand (Shoe *s, Purse *p) : Hand(s) {purse = p;}
+  PlayerHand (Shoe &s, Purse &p) : Hand(s) , purse(p) {}
   virtual int hit (void);
   virtual int play (void);
   virtual void show (bool reveal);
 private:
-  Purse *purse;
+  Purse purse;
 };
 
 class DealerHand : public Hand {
 public:
-  DealerHand (Shoe *s) : Hand(s) {}
+  DealerHand (Shoe &s) : Hand(s) {}
   virtual int hit (void);
   virtual int play (void);
   virtual void show (bool reveal);
