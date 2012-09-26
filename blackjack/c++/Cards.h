@@ -15,7 +15,7 @@ public:
   typedef unsigned int suit;
   typedef unsigned int val;
 
-  Card (suit s, val v) {su = s; va = v;}
+  Card (suit s, val v) : su(s), va(v) {}
   string name (void);
   virtual int value (void) {return 0;};
 protected:
