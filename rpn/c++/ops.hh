@@ -27,13 +27,6 @@ protected:
   }
 private:
   string _doc;
-  bool stack_ok (int arity, Stack &s) {
-    if (s.size() < arity) {
-      signal_error("stack underflow");
-      return false;
-    } else {
-      return true;
-    }
 };
 
 class NullaryOp : public Op {
