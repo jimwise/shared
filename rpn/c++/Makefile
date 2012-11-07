@@ -1,6 +1,6 @@
 #CXX= CC
 #CXXFLAGS= -g -errwarn -errtags=yes
-CXX= g++
+CXX?= g++
 CXXFLAGS= -g -Wall -Wextra -Wno-unused-parameter -Werror -pedantic
 CCC= $(CXX)
 CCCFLAGS= $(CXXFLAGS)

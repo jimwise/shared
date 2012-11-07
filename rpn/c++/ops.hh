@@ -16,6 +16,15 @@ public:
   Op(string d) {_doc = d;}
   virtual void act(Stack &s) = 0;
   string &doc (void) {return _doc;}
+protected:
+  bool stack_ok (Stack &s, Stack::size_type arity) {
+    if (s.size() < arity) {
+      signal_error("stack underflow");
+      return false;
+    } else {
+      return true;
+    }
+  }
 private:
   string _doc;
 };
@@ -34,9 +43,7 @@ class UnaryOp : public Op {
 public:
   UnaryOp(string d) : Op(d) {};
   virtual void act(Stack &s) {
-    if (s.size() < 1) {
-      signal_error("stack underflow");
-    } else {
+    if (stack_ok(s, 1)) {
       double x = s.top(); s.pop();
       action(x, s);
     }
@@ -49,9 +56,7 @@ class BinaryOp : public Op {
 public:
   BinaryOp(string d) : Op(d) {};
   virtual void act(Stack &s) {
-    if (s.size() < 2) {
-      signal_error("stack underflow");
-    } else {
+    if (stack_ok(s, 2)) {
       double y = s.top(); s.pop();
       double x = s.top(); s.pop();
       action(x, y, s);
