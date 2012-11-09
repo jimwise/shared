@@ -17,7 +17,7 @@ void
 push(stack s, num n) {
   if (s->sz == s->bufsz) {
     s->bufsz *= 2;
-    if ((s->buf = realloc(s->buf, s->bufsz)) == NULL) {
+    if ((s->buf = realloc(s->buf, s->bufsz * sizeof(num))) == NULL) {
       fputs("*** Stack resize failed\n", stderr);
       exit(1);
     }
