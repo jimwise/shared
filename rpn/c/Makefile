@@ -7,7 +7,7 @@ TESTBIN=
 OBJS= rpn.o
 TESTOBJS=
 LIBOBJS= numstack.o op.o ops.o
-LIBS=
+LIBS= -lm
 INCS= numstack.h op.h ops.h
 
 all: $(BIN) $(TESTBIN)

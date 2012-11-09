@@ -1,6 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <strings.h>
 #include "numstack.h"
 #include "op.h"
 #include "ops.h"
@@ -23,18 +24,18 @@ act (stack st, char *s) {
 
 int
 main (int argc, char **argv) {
-  char *ln=NULL;
-  size_t lnc=0, len;
+  char buf[128];
   stack st = make_stack();
 
   printf("> ");
-  while ((len = getline(&ln, &lnc, stdin)) != -1) {
-    if (len == 0)
+  while (fgets(buf, sizeof(buf), stdin) != NULL) {
+    char *nl;
+    if ((nl = strchr(buf, '\n')) != NULL)
+      *nl = '\0';
+    if (strlen(buf) == 0)
       continue;
-    if (ln[len-1] == '\n')
-      ln[len-1] = '\0';
 
-    act(st, ln);
+    act(st, buf);
 
     printf("> ");
   }
