@@ -26,6 +26,18 @@ MAKE_UNARY_ACTION(drop, (void)x;) /* cast silences unused parameter warning more
 MAKE_UNARY_ACTION(dup, push(s, x); push(s, x);)
 MAKE_BINARY_ACTION(swap, push(s, y); push(s, x);)
 
+void
+_help_action (stack s) {
+  size_t n = 0;
+  for (op *o = dict; op_found(*o); o++) {
+    n++;
+  }
+  printf("%zd Commands:\n", n);
+  for (op *o = dict; op_found(*o); o++) {
+    printf("%s -- %s\n", o->name, o->doc);
+  }
+}
+
 /* must end with op_unknown */
 opdict dict = {
   make_op(show, ".", "display top value on the stack", 1),
@@ -40,6 +52,8 @@ opdict dict = {
   make_op(drop, "drop", "remove top value from the stack", 1),
   make_op(dup, "dup", "duplicate top value on the stack", 1),
   make_op(swap, "swap", "swap top two values on the stack", 2),
+
+  make_op(help, "help", "show this help", 0),
 
   op_unknown
 };
