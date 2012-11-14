@@ -7,7 +7,7 @@ What's here:
   on dpp's image upload example
 
 * mandelbrot -- a program to generate mandelbrot set images as PNG graphics
-  files, implemented six times in six languages
+  files, implemented seven times in seven languages
 
 * nondeterminism -- implementations of Paul Graham's nondeterminism examples
   from _On Lisp_ Chapter 22 in Ruby and C (the Ruby version has now been

@@ -1,0 +1,18 @@
+Project Mandelbrot is
+  for Main use ("Mandelbrot");
+
+  package Builder is
+     for Default_Switches ("Ada") use ("-g", "-Wall", "-Werror", "-gnat12", "-I/local/src/png_4_5_1", "-I/local/src/zlib-ada-1.3",
+				      "-L/local/src/png_4_5_1", "-L/local/src/zlib-ada-1.3");
+  end Builder;
+
+  package Compiler is
+     for Default_Switches ("Ada") use ("-g", "-Wall", "-Werror", "-gnat12", "-I/local/src/png_4_5_1", "-I/local/src/zlib-ada-1.3",
+				      "-L/local/src/png_4_5_1", "-L/local/src/zlib-ada-1.3");
+  end Compiler;
+
+  package Linker is
+     for Default_Switches ("Ada") use ("-g", "-lz");
+  end Linker;
+
+end Mandelbrot;
