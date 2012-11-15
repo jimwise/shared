@@ -5,6 +5,7 @@
 (use-package :zpng)
 
 (defun escape (c &key (cap 1000))
+"given a complex number, return iterations to escape, up to cap, or zero if no escape occurs"
   (do ((z #c(0 0) (+ c (expt z 2)))
        (i 0 (1+ i)))
       ((= i cap) 0)
@@ -17,6 +18,7 @@
 
 (defun image (width height &key (cap 1000)
 	      (xmin -2.5) (xmax 1.0) (ymin -1.0) (ymax 1.0))
+  "return a png image of the mandelbrot set from xmin + ymin * i to xmax + ymax * i"
   (let* ((png (make-instance 'png
 			     :color-type :truecolor
 			     :width width
@@ -35,8 +37,8 @@
 	  (setf (aref image y x 1) (green c))
 	  (setf (aref image y x 0) (blue c))))))))
 
-(with-open-file (f "/tmp/mandelbrot-lisp.png" :direction :output :if-exists :supersede)
+(with-open-file (f "mandelbrot-lisp.png" :direction :output :if-exists :supersede)
   (write-png (image 1280 800 :cap (expt 2 12)) f))
 
-(with-open-file (f "/tmp/mandelzoom1-lisp.png" :direction :output :if-exists :supersede)
+(with-open-file (f "mandelzoom1-lisp.png" :direction :output :if-exists :supersede)
   (write-png (image 1280 800 :cap (expt 2 12) :xmin -0.5 :xmax 0.5 :ymin 0 :ymax 0.75) f))
