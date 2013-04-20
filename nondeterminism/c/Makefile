@@ -1,7 +1,7 @@
 BIN=	choose2 parlortrick findboxes
 INCS=	nondeterminism.h
 
-CC=gcc
+CC?=gcc
 CFLAGS=	-g -Wall -Werror -Wextra -Wno-unused-parameter -ansi -pedantic
 LIBS = nondeterminism.o
 
