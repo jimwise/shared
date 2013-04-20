@@ -57,7 +57,7 @@ getbet(double min, double limit) {
 char
 getresp(char *ps1, char *ps2, char *allowed, char def) {
   char c;
-  printf(ps1);
+  fputs(ps1, stdout);
   while (1) {
     fgets(buf, sizeof(buf), stdin);
     if ((buf[0] == '\n') && def)
@@ -67,6 +67,6 @@ getresp(char *ps1, char *ps2, char *allowed, char def) {
     if (strchr(allowed, c))
 	return c;
 
-    printf(ps2);
+    fputs(ps2, stdout);
   }
 }

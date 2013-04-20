@@ -1,7 +1,7 @@
 # CC=cc
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes \
 # 	-erroff=E_STATEMENT_NOT_REACHED
-CC=gcc
+CC=cc
 CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic 
 CPPFLAGS= -D__EXTENSIONS__
 
