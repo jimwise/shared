@@ -18,6 +18,7 @@ public:
   Card (suit s, val v) : su(s), va(v) {}
   string name (void);
   virtual int value (void) {return 0;};
+  virtual ~Card (void) {}
 protected:
   suit su;
   val va;
