@@ -1,7 +1,9 @@
 # CXX= CC
-# CXXFLAGS= -g -errwarn -v -errtags=yes
-CXX= g++
+CXX?= g++
+# GCC / CLANG:
 CXXFLAGS= -g -Wall -Wextra -Wno-unused-parameter -Werror -pedantic
+# Solaris CC
+# CXXFLAGS= -g -errwarn -v -errtags=yes
 CCC= $(CXX)
 CCCFLAGS= $(CXXFLAGS)
 CPPFLAGS= -D__EXTENSIONS__
