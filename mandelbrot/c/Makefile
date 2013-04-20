@@ -1,6 +1,6 @@
 # CC=cc
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
-CC=gcc
+CC?=gcc
 CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic -std=c99
 CPPFLAGS= -D__EXTENSIONS__ -I/opt/csw/include
 
