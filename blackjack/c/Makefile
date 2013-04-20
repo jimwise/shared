@@ -1,8 +1,9 @@
-# CC=cc
+CC=cc
+# GCC / CLANG:
+CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic 
+# Solaris CC:
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes \
 # 	-erroff=E_STATEMENT_NOT_REACHED
-CC=cc
-CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic 
 CPPFLAGS= -D__EXTENSIONS__
 
 BIN= blackjack
