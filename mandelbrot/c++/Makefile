@@ -1,6 +1,6 @@
 # CC=cc
 # CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
-CXX=c++
+CXX?=c++
 CFLAGS=-g -Wall
 
 BIN= mandelbrot
