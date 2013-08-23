@@ -33,7 +33,7 @@ make_op "*", "replace top two values on the stack with their product", 2, (stack
 make_op "/", "replace top two values on the stack with their quotient", 2, (stack, x, y) -> [x / y]
 make_op "^", "replace top two values on the stack, x and y, with x to the yth power", 2, (stack, x, y) -> [ Math.pow(x, y) ]
 
-make_op "drop", "remove top value from the stack", 1, []
+make_op "drop", "remove top value from the stack", 1, (stack, x) -> []
 make_op "dup", "duplicate top value on the stack", 1, (stack, x) -> [ x, x ]
 make_op "swap", "swap top two values on the stack", 2, (stack, x, y) -> [ y, x ]
 
