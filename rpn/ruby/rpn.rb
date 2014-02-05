@@ -94,8 +94,8 @@ module RPNCalc
 
     def repl
       print "> "
-      STDIN.each do |s|
-        action s.strip
+      while s = gets.strip
+        action s
         print "> "
       end
       puts
