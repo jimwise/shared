@@ -54,10 +54,10 @@ def play_one_hand player_hand, dealer_hand
 end
 
 shoe = Cards::Shoe.new
-player_hand = Blackjack::PlayerHand.new(shoe, Stake, TableMin, TableLimit)
-dealer_hand = Blackjack::DealerHand.new(shoe)
+player_hand = Blackjack::PlayerHand.new shoe, Stake, TableMin, TableLimit
+dealer_hand = Blackjack::DealerHand.new shoe
 
-puts ("You have: #{player_hand.purse}")
+puts "You have: #{player_hand.purse}"
 
 loop do
   player_hand.muck!
@@ -72,9 +72,7 @@ loop do
 
   puts "You have: #{player_hand.purse}"
 
-  if Blackjack.get_resp("Continue ([Y]es or [N]o) ([Y]N)? ",
-                       "Please anser [Y]es or [N]o (default Y): ",
-                       {"y" => :yes, "n" => :no}, true) == :no
-    break
-  end
+  break unless Blackjack.get_resp "Continue ([Y]es or [N]o) ([Y]N)? ",
+                                  "Please anser [Y]es or [N]o (default Y): ",
+                                  {"y" => true, "n" => false}, true
 end

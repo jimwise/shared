@@ -16,11 +16,11 @@ module Cards
     end
   end
 
-  OneDeck = Suits.map do |s|
+  OneDeck = Suits.flat_map do |s|
     Cards.map do |c|
       Card.new(c, s)
     end
-  end.flatten
+  end
 
   class Shoe
     private_methods :shuffle!
