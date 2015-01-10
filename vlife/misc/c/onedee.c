@@ -196,7 +196,7 @@ setrules (unsigned int ruleno)
       for (r=0;r<=1;r++) {
 	rules[l][m][r] = (ruleno & mask) > 0;
 	mask <<= 1;
-	printw("%1d", rules[l][m][r]);
+	printw(rules[l][m][r] ? "*" : " ");
       }
   refresh();
 }
