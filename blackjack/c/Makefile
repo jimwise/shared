@@ -1,10 +1,5 @@
 CC=cc
-# GCC / CLANG:
-CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic 
-# Solaris CC:
-# CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes \
-# 	-erroff=E_STATEMENT_NOT_REACHED
-CPPFLAGS= -D__EXTENSIONS__
+CFLAGS=-g -std=c99 -Wall -Wextra -Wno-unused-parameter -Werror -Wpedantic 
 
 BIN= blackjack
 OBJS= main.o 
