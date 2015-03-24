@@ -1,12 +1,5 @@
-# CXX= CC
-CXX?= g++
-# GCC / CLANG:
-CXXFLAGS= -g -Wall -Wextra -Wno-unused-parameter -Werror -pedantic
-# Solaris CC
-# CXXFLAGS= -g -errwarn -v -errtags=yes
-CCC= $(CXX)
-CCCFLAGS= $(CXXFLAGS)
-CPPFLAGS= -D__EXTENSIONS__
+CXX?=c++
+CXXFLAGS= -g --std=c++11 -Wall -Wextra -Wno-unused-parameter -Werror -Wpedantic
 
 BIN= blackjack
 OBJS= main.o
