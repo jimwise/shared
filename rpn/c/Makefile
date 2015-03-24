@@ -1,6 +1,5 @@
 CC?= cc
-CFLAGS= -g -Wall -Werror -pedantic -ansi -std=c99
-CPPFLAGS= -D__EXTENSIONS__
+CFLAGS= -g --std=c11 -Wall -Werror -Wpedantic
 
 BIN= rpn
 TESTBIN=

@@ -1,5 +1,5 @@
 CC=cc
-CFLAGS=-g -std=c99 -Wall -Wextra -Wno-unused-parameter -Werror -Wpedantic 
+CFLAGS=-g -std=c11 -Wall -Wextra -Wno-unused-parameter -Werror -Wpedantic 
 
 BIN= blackjack
 OBJS= main.o 

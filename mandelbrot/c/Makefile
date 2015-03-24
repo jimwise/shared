@@ -1,17 +1,15 @@
-# CC=cc
-# CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
-CC?=gcc
-CFLAGS=-g -Wall -Wextra -Wno-unused-parameter -Werror -ansi -pedantic -std=c99
-CPPFLAGS= -D__EXTENSIONS__ -I/opt/csw/include
+CC?=cc
+CFLAGS=-g --std=c11 -Wall -Wextra -Wno-unused-parameter -Werror -Wpedantic
 
 BIN= mandelbrot
 OBJS= mandelbrot.o
-LIBS=-L/opt/csw/lib -R/opt/csw/lib -lpng -lm
+LIBS= -L/usr/local/lib -lpng -lm
+LDFLAGS= -pg
 
 all: $(BIN)
 
 $(BIN): $(OBJS)
-	$(CC) -o $@ $^ $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
 
 clean:
 	rm -f $(BIN) $(OBJS)

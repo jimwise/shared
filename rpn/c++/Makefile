@@ -1,10 +1,5 @@
-#CXX= CC
-#CXXFLAGS= -g -errwarn -errtags=yes
-CXX?= g++
-CXXFLAGS= -g -Wall -Wextra -Wno-unused-parameter -Werror -pedantic
-CCC= $(CXX)
-CCCFLAGS= $(CXXFLAGS)
-CPPFLAGS= -D__EXTENSIONS__
+CXX?=c++
+CXXFLAGS= -g --std=c++11 -Wall -Wextra -Wno-unused-parameter -Werror -Wpedantic
 
 BIN= rpn
 TESTBIN= test

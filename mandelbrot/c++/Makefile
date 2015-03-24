@@ -1,7 +1,5 @@
-# CC=cc
-# CFLAGS= -xc99=all -g -errwarn -Xc -v -xalias_level=strong -errtags=yes
 CXX?=c++
-CFLAGS=-g -Wall
+CFLAGS=-g --std=c++11 -Wall -Wextra -Wpedantic -Werror
 
 BIN= mandelbrot
 OBJS= mandelbrot.o
