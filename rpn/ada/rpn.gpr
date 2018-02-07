@@ -1,8 +1,8 @@
 Project RPN is
+  for Source_Dirs use (".");
   for Object_Dir use "./obj";
   for Exec_Dir use ".";
-
-  for Main use ("Main");
+  for Main use ("main");
 
   package Builder is
      for Executable ("main.adb") use "rpn";
@@ -10,12 +10,15 @@ Project RPN is
   end Builder;
 
   package Compiler is
-     for Default_Switches ("Ada") use ("-Wall", "-Werror", "-gnat12");
+     for Default_Switches ("Ada")
+       use ("-Wall",
+            "-gnat2012",                -- Ada 2012
+            "-gnata",                   -- Assertions enabled
+            "-gnateE",                  -- Richer exception messages
+            "-gnateF",                  -- Check for float overflow
+            "-gnatE",                   -- Full dynamic elaboration checks
+            "-gnato",                   -- handle all overflows in strict mode
+ --            "-gnaty",                   -- Style checks
+            "-fstack-check");
   end Compiler;
-
-	--  package Linker is
-	--	for Default_Switches ("Ada") use ("-g");
-	--	--  "-R/opt/csw/lib", "-L/opt/csw/lib",
-	--  end Linker;
-
 end RPN;
