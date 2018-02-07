@@ -10,15 +10,15 @@ Project RPN is
   end Builder;
 
   package Compiler is
-     for Default_Switches ("Ada")
-       use ("-Wall",
+    for Default_Switches ("Ada")
+       use ("-gnatwa",           --  all warnings
+            "-gnatwe",           --  warnings as errors
             "-gnat2012",                -- Ada 2012
             "-gnata",                   -- Assertions enabled
             "-gnateE",                  -- Richer exception messages
             "-gnateF",                  -- Check for float overflow
-            "-gnatE",                   -- Full dynamic elaboration checks
             "-gnato",                   -- handle all overflows in strict mode
- --            "-gnaty",                   -- Style checks
+            "-gnatyy",                  -- Style checks
             "-fstack-check");
   end Compiler;
 end RPN;
