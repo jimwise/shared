@@ -13,12 +13,12 @@ Project RPN is
     for Default_Switches ("Ada")
        use ("-gnatwa",           --  all warnings
             "-gnatwe",           --  warnings as errors
-            "-gnat2012",                -- Ada 2012
-            "-gnata",                   -- Assertions enabled
-            "-gnateE",                  -- Richer exception messages
-            "-gnateF",                  -- Check for float overflow
-            "-gnato",                   -- handle all overflows in strict mode
-            "-gnatyy",                  -- Style checks
+            "-gnat2012",         -- Ada 2012
+            "-gnata",            -- Assertions enabled
+            "-gnateE",           -- Richer exception messages
+            "-gnateF",           -- Check for float overflow
+            "-gnato",            -- handle all overflows in strict mode
+            "-gnatyy",           -- Style checks
             "-fstack-check");
   end Compiler;
 end RPN;
