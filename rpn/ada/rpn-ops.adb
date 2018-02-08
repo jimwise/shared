@@ -73,6 +73,7 @@ package body RPN.Ops is
 
    procedure Drop (S : in out Num_Stack) is
       X : constant Num := Pop (S);
+      pragma Unreferenced (X);
    begin
       null;
    end Drop;
@@ -93,15 +94,17 @@ package body RPN.Ops is
    end Swap;
 
    procedure Help (S : in out Num_Stack) is
-      procedure Command_Help (C : in Op_Dicts.Cursor) is
-      begin
-         Put_Line (Key (C) & " -- " & Element (C).Doc);
-      end Command_Help;
+      pragma Unreferenced (S);
    begin
       Put (Integer (Dict.Length), 0);
       Put_Line (" commands:");
       Iterate (Dict, Command_Help'Access);
    end Help;
+
+   procedure Command_Help (C : in Op_Dicts.Cursor) is
+   begin
+      Put_Line (Key (C) & " -- " & Element (C).Doc);
+   end Command_Help;
 
 begin
    Make_Op (Str ("."), Str ("display top value on the stack"), 1, Show'Access);
@@ -134,8 +137,8 @@ begin
 
    Make_Op
      (Str ("^"),
-      Str
-        ("replace top two values on the stack, x and y, with x to the yth power"),
+      Str ("replace top two values on the stack," &
+             "x and y, with x to the yth power"),
       2,
       Expt'Access);
 
