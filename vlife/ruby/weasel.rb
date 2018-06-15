@@ -1,9 +1,16 @@
 #!/usr/local/bin/ruby
 
-TARGET = 'METHINKS IT IS LIKE A WEASEL'
 GENERATION_SIZE = 100
 MUTATION_RATE = 0.05
 CHARS = (('A' .. 'Z').to_a << ' ')
+TARGET = if ARGV.size == 0
+         then
+           'METHINKS IT IS LIKE A WEASEL'
+         else
+           ARGV.join(' ').upcase.split('').select {|c| CHARS.any? c}.join
+         end
+
+puts TARGET
 
 def randchar
   CHARS.sample
