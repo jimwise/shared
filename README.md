@@ -3,9 +3,6 @@ What's here:
 * blackjack -- a simple blackjack program, implemented eight times in eight
   languages
 
-* gallery -- an image gallery learning project in Scala and Liftweb, based
-  on dpp's image upload example
-
 * mandelbrot -- a program to generate mandelbrot set images as PNG graphics
   files, implemented seven times in seven languages
 
