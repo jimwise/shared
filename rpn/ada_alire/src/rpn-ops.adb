@@ -7,10 +7,10 @@ package body RPN.Ops is
    use Op_Dicts;
 
    procedure Make_Op
-     (Key    : in Unbounded_String;
-      Doc    : in Unbounded_String;
-      Arity  : in Natural;
-      Action : in Op_Action)
+     (Key    : Unbounded_String;
+      Doc    : Unbounded_String;
+      Arity  : Natural;
+      Action : Op_Action)
    is
       O : constant Op := (Doc => Doc, Arity => Arity, Action => Action);
    begin
@@ -100,7 +100,7 @@ package body RPN.Ops is
       Iterate (Dict, Command_Help'Access);
    end Help;
 
-   procedure Command_Help (C : in Op_Dicts.Cursor) is
+   procedure Command_Help (C : Op_Dicts.Cursor) is
    begin
       Put_Line (Key (C) & " -- " & Element (C).Doc);
    end Command_Help;

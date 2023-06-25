@@ -25,7 +25,8 @@ module RPNCalc
   end
 
   class Calc
-    attr_reader :ops
+    attr_reader :ops, :stack
+
     def initialize
       @stack = []
       @ops = {}
@@ -94,8 +95,8 @@ module RPNCalc
 
     def repl
       print "> "
-      while s = gets.strip
-        action s
+      while cmd = gets.strip
+        action cmd
         print "> "
       end
       puts

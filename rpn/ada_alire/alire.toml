@@ -1,0 +1,9 @@
+name = "rpn"
+description = "RPN Calculator"
+version = "0.1.0-dev"
+
+authors = ["Jim Wise"]
+maintainers = ["Jim Wise <jwise@draga.com>"]
+maintainers-logins = ["jwise"]
+
+executables = ["rpn"]
