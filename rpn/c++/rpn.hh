@@ -40,7 +40,7 @@ public:
   virtual void action (double x, double y, Stack &s) {
     s.push(x - y);
   }
-}; 
+};
 class MulOp : public BinaryOp {
 public:
   MulOp(void) : BinaryOp("replace the top two values on the stack with their product") {}
