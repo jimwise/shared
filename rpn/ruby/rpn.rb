@@ -10,18 +10,20 @@ module RPNCalc
   class Op
     attr_reader :doc
 
-    def initialize calc, arity, doc, &bod
+    def initialize calc, doc, &bod
       @calc = calc
-      @arity = arity
       @doc = doc
       @bod = bod
+      @arity = bod.arity
     end
 
-    def call
+    def call stack
       if @calc.size < @arity
-        RPNCalc.signal_error 'stack underflow'
+        RPNCalc.signal_error "stack underflow"
       else
-        @bod.call
+        args = stack.pop @arity
+        results = @bod.call(*args)
+        stack.push(*results)
       end
     end
   end
@@ -32,54 +34,22 @@ module RPNCalc
       @stack = []
       @ops = {}
 
-      add_op '.', 1, 'display top value on the stack' do
-        puts @stack.last
+      add_op(".", "display top value on the stack") do |first|
+        puts first
+        first
       end
 
-      add_op '#', 0, 'display number of values on the stack' do
-        puts @stack.size
-      end
+      add_op("#", "display number of values on the stack") { puts @stack.size }
+      add_op("+", "replace top two values on the stack with their sum") { |first, second| first + second }
+      add_op("-", "replace top two values on the stack with their difference") { |first, second| first - second }
+      add_op("*", "replace top two values on the stack with their product") { |first, second| first * second }
+      add_op("/", "replace top two values on the stack with their quotient") { |first, second| first / second }
+      add_op("^", "replace top two values on the stack, x and y, with x to the yth power") { |first, second| first**second }
+      add_op("drop", "remove top value from the stack") { |_| }
+      add_op("dup", "duplicate top value on the stack") { |first| [first, first] }
+      add_op("swap", "swap top two values on the stack") { |first, second| [second, first] }
 
-      add_op '+', 2, 'replace top two values on the stack with their sum' do
-        first, second = @stack.pop 2
-        @stack.push first + second
-      end
-
-      add_op '-', 2, 'replace top two values on the stack with their difference' do
-        first, second = @stack.pop 2
-        @stack.push first - second
-      end
-
-      add_op '*', 2, 'replace top two values on the stack with their product' do
-        first, second = @stack.pop 2
-        @stack.push first * second
-      end
-
-      add_op '/', 2, 'replace top two values on the stack with their quotient' do
-        first, second = @stack.pop 2
-        @stack.push first / second
-      end
-
-      add_op '^', 2, 'replace top two values on the stack, x and y, with x to the yth power' do
-        first, second = @stack.pop 2
-        @stack.push first**second
-      end
-
-      add_op 'drop', 1, 'remove top value from the stack' do
-        @stack.pop
-      end
-
-      add_op 'dup', 1, 'duplicate top value on the stack' do
-        num = @stack.pop
-        @stack.push num, num
-      end
-
-      add_op 'swap', 2, 'swap top two values on the stack' do
-        first, second = @stack.pop 2
-        @stack.push first, second
-      end
-
-      add_op 'help', 0, 'display this help' do |_|
+      add_op "help", "display this help" do
         puts "#{@ops.size} Commands:"
         @ops.each do |name, op|
           puts "  #{name} -- #{op.doc}"
@@ -87,8 +57,8 @@ module RPNCalc
       end
     end
 
-    def add_op name, arity, doc, &bod
-      @ops[name] = Op.new self, arity, doc, &bod
+    def add_op name, doc, &bod
+      @ops[name] = Op.new self, doc, &bod
     end
 
     def size
@@ -97,17 +67,17 @@ module RPNCalc
 
     def action str
       if (op = @ops[str])
-        op.call
+        op.call @stack
       elsif (num = Float str, exception: false)
         @stack.push num
       else
-        RPNCalc.signal_error 'unknown operation'
+        RPNCalc.signal_error "unknown operation"
       end
     end
 
     def repl
       loop do
-        print '> '
+        print "> "
         action gets.strip
       end
       puts
