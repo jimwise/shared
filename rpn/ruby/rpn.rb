@@ -40,29 +40,29 @@ module RPNCalc
         puts @stack.size
       end
 
-      add_op '+', 1, 'replace top two values on the stack with their sum' do
-        x, y = @stack.pop 2
-        @stack.push x + y
+      add_op '+', 2, 'replace top two values on the stack with their sum' do
+        first, second = @stack.pop 2
+        @stack.push first + second
       end
 
-      add_op '-', 1, 'replace top two values on the stack with their difference' do
-        x, y = @stack.pop 2
-        @stack.push x - y
+      add_op '-', 2, 'replace top two values on the stack with their difference' do
+        first, second = @stack.pop 2
+        @stack.push first - second
       end
 
-      add_op '*', 1, 'replace top two values on the stack with their product' do
-        x, y = @stack.pop 2
-        @stack.push x * y
+      add_op '*', 2, 'replace top two values on the stack with their product' do
+        first, second = @stack.pop 2
+        @stack.push first * second
       end
 
-      add_op '/', 1, 'replace top two values on the stack with their quotient' do
-        x, y = @stack.pop 2
-        @stack.push x / y
+      add_op '/', 2, 'replace top two values on the stack with their quotient' do
+        first, second = @stack.pop 2
+        @stack.push first / second
       end
 
-      add_op '^', 1, 'replace top two values on the stack, x and y, with x to the yth power' do
-        x, y = @stack.pop 2
-        @stack.push x ** y
+      add_op '^', 2, 'replace top two values on the stack, x and y, with x to the yth power' do
+        first, second = @stack.pop 2
+        @stack.push first**second
       end
 
       add_op 'drop', 1, 'remove top value from the stack' do
@@ -70,13 +70,13 @@ module RPNCalc
       end
 
       add_op 'dup', 1, 'duplicate top value on the stack' do
-        x = @stack.pop
-        @stack.push x, x
+        num = @stack.pop
+        @stack.push num, num
       end
 
-      add_op 'swap', 1, 'swap top two values on the stack' do
-        x, y = @stack.pop 2
-        @stack.push y, x
+      add_op 'swap', 2, 'swap top two values on the stack' do
+        first, second = @stack.pop 2
+        @stack.push first, second
       end
 
       add_op 'help', 0, 'display this help' do |_|
