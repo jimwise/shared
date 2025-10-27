@@ -1,103 +1,114 @@
 #!/usr/bin/ruby
 
+# RPN calculator
 module RPNCalc
   def self.signal_error str
     puts "ERROR: #{str}"
   end
 
+  # an operation
   class Op
     attr_reader :doc
 
-    def initialize arity, doc, &bod
+    def initialize calc, arity, doc, &bod
+      @calc = calc
       @arity = arity
       @doc = doc
       @bod = bod
     end
 
-    def call stack
-      if stack.size < @arity
-        RPNCalc.signal_error "stack underflow"
-        stack
+    def call
+      if @calc.size < @arity
+        RPNCalc.signal_error 'stack underflow'
       else
-        @bod.call stack
+        @bod.call
       end
     end
   end
 
+  # the calculator
   class Calc
-    attr_reader :ops, :stack
-
     def initialize
       @stack = []
       @ops = {}
 
-      add_op ".", 1, "display top value on the stack" do |stack|
-        puts stack[0]
+      add_op '.', 1, 'display top value on the stack' do
+        puts @stack.last
       end
 
-      add_op "#", 0, "display number of values on the stack" do |stack|
-        puts stack.size
+      add_op '#', 0, 'display number of values on the stack' do
+        puts @stack.size
       end
 
-      add_op "+", 1, "replace top two values on the stack with their sum" do |stack|
-        stack[0,2] = stack[1] + stack[0]
+      add_op '+', 1, 'replace top two values on the stack with their sum' do
+        x, y = @stack.pop 2
+        @stack.push x + y
       end
 
-      add_op "-", 1, "replace top two values on the stack with their difference" do |stack|
-        stack[0,2] = stack[1] - stack[0]
+      add_op '-', 1, 'replace top two values on the stack with their difference' do
+        x, y = @stack.pop 2
+        @stack.push x - y
       end
 
-      add_op "*", 1, "replace top two values on the stack with their product" do |stack|
-        stack[0,2] = stack[1] * stack[0]
+      add_op '*', 1, 'replace top two values on the stack with their product' do
+        x, y = @stack.pop 2
+        @stack.push x * y
       end
 
-      add_op "/", 1, "replace top two values on the stack with their quotient" do |stack|
-        stack[0,2] = stack[1] / stack[0]
+      add_op '/', 1, 'replace top two values on the stack with their quotient' do
+        x, y = @stack.pop 2
+        @stack.push x / y
       end
 
-      add_op "^", 1, "replace top two values on the stack, x and y, with x to the yth power" do |stack|
-        stack[0,2] = stack[1] ** stack[0]
+      add_op '^', 1, 'replace top two values on the stack, x and y, with x to the yth power' do
+        x, y = @stack.pop 2
+        @stack.push x ** y
       end
 
-      add_op "drop", 1, "remove top value from the stack" do |stack|
-        stack.slice! 0
+      add_op 'drop', 1, 'remove top value from the stack' do
+        @stack.pop
       end
 
-      add_op "dup", 1, "duplicate top value on the stack" do |stack|
-        stack.unshift stack[0]
+      add_op 'dup', 1, 'duplicate top value on the stack' do
+        x = @stack.pop
+        @stack.push x, x
       end
 
-      add_op "swap", 1, "swap top two values on the stack" do |stack|
-        stack[0], stack[1] = stack[1], stack[0]
+      add_op 'swap', 1, 'swap top two values on the stack' do
+        x, y = @stack.pop 2
+        @stack.push y, x
       end
 
-      add_op "help", 0, "display this help" do |stack|
+      add_op 'help', 0, 'display this help' do |_|
         puts "#{@ops.size} Commands:"
-        @ops.map do |k, v|
-          puts "  #{k} -- #{v.doc}"
+        @ops.each do |name, op|
+          puts "  #{name} -- #{op.doc}"
         end
       end
     end
 
     def add_op name, arity, doc, &bod
-      ops[name] = Op.new arity, doc, &bod
+      @ops[name] = Op.new self, arity, doc, &bod
+    end
+
+    def size
+      @stack.size
     end
 
     def action str
-      if @ops[str]
-        @ops[str].call @stack
+      if (op = @ops[str])
+        op.call
+      elsif (num = Float str, exception: false)
+        @stack.push num
       else
-          @stack.unshift Float str
+        RPNCalc.signal_error 'unknown operation'
       end
-    rescue
-      RPNCalc.signal_error "unknown operation"
     end
 
     def repl
-      print "> "
-      while cmd = gets.strip
-        action cmd
-        print "> "
+      loop do
+        print '> '
+        action gets.strip
       end
       puts
     end
