@@ -5,7 +5,7 @@ require 'cards'
 module Blackjack
 
   Cards::Vals = {}
-  Cards::Cards.zip([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]).each do |(k, v)|
+  Cards::CARDS.zip([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]).each do |(k, v)|
     Cards::Vals[k] = v
   end
 

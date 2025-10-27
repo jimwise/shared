@@ -1,13 +1,13 @@
-#!/opt/csw/bin/ruby
+# frozen_string_literal: true
 
 module Cards
-  Suits = [:hearts, :diamonds, :clubs, :spades]
-  Cards = [:ace, :two, :three, :four, :five, :six, :seven, :eight, :nine, :ten, :jack, :queen, :king]
+  SUITS = %i[hearts diamonds clubs spades].freeze
+  CARDS = %i[ace two three four five six seven eight nine ten jack queen king].freeze
 
   class Card
     attr_reader :suit, :card
-    def initialize (card, suit)
-      raise "Bad Card (#{card} of #{suit})" unless Suits.find {|s| s == suit} and Cards.find {|c| c == card}
+    def initialize card, suit
+      raise "Bad Card (#{card} of #{suit})" unless SUITS.find(suit) && CARDS.find(card)
       @card, @suit = card, suit
     end
 
@@ -16,29 +16,29 @@ module Cards
     end
   end
 
-  OneDeck = Suits.flat_map do |s|
-    Cards.map do |c|
-      Card.new(c, s)
+  OneDeck = SUITS.flat_map do |suit|
+    CARDS.map do |card|
+      Card.new(card, suit)
     end
   end
 
   class Shoe
     private_methods :shuffle!
 
-    DecksInShoe = 6
+    DECKS_IN_SHOE = 6
 
     def initialize
       @shoe = []
     end
 
     def shuffle!
-      @shoe = (OneDeck * DecksInShoe).shuffle!
+      @shoe = (OneDeck * DECKS_IN_SHOE).shuffle!
     end
 
     def draw!
-      # note that a real shoe is emptied and refilled at a defined point before empty
+      # TODO: a real shoe is emptied and refilled at a defined point before empty
       if @shoe.empty?
-        puts("Refilling shoe with #{DecksInShoe} decks")
+        puts("Refilling shoe with #{DECKS_IN_SHOE} decks")
         shuffle!
       end
       @shoe.shift
