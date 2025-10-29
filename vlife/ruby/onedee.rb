@@ -1,26 +1,26 @@
-#!/usr/local/bin/ruby
+#!/opt/homebrew/opt/ruby/bin/ruby
 
-require 'curses'
+require "curses"
 
 class Rules
   def initialize num
-    @rules =  (0..7).collect do |n|
+    @rules = (0..7).collect do |n|
       mask = 1 << n
       num & mask > 0
     end
   end
 
   def [] l, m, r
-    @rules[key(l,m,r)]
+    @rules[key(l, m, r)]
   end
 
   def []= l, m, r, x
-    @rules[key(l,m,r)] = x
+    @rules[key(l, m, r)] = x
   end
 
   def to_s
     (0..7).collect do |x|
-      if @rules[x] then "*" else " " end
+      @rules[x] ? "*" : " "
     end.join
   end
 
@@ -34,22 +34,22 @@ end
 class World
   attr_reader :rules
 
-  def initialize size, rules, blank=false
+  def initialize size, rules, blank = false
     @size = size
     @cells = Array.new size, false
     @rules = rules
 
-    @cells[size/2 + 1] = true unless blank
+    @cells[size / 2 + 1] = true unless blank
   end
 
   def to_s
-    @cells.collect {|cell| if cell then '*' else ' ' end}.join
+    @cells.collect { |cell| cell ? "*" : " " }.join
   end
 
   def generation
-    new = World.new @size, @rules, blank=true
+    new = World.new @size, @rules, true
     @cells.each_index do |i|
-      new[i] = @rules[@cells[i-1], @cells[i], @cells[i+1]]
+      new[i] = @rules[@cells[i - 1], @cells[i], @cells[i + 1]]
     end
     new
   end
@@ -62,17 +62,16 @@ class World
       @cells[n]
     end
   end
-  
+
   def []= n, x
-    
     @cells[n] = x
   end
 end
 #  onedee.c -- a simple two dimensional cellular automoton with a variable
 #  ruleset, based on the work of Stephen Wolfram.
-# 
+#
 #  onedee is copyright (c) 2015, Jim Wise
-# 
+#
 #  You may redistribute this code freely.
 #  You may modify and redistribute this code freely as long as you retain
 #  this paragraph and an indication that the code has been modified.
@@ -95,27 +94,27 @@ def getrules
           printf "%d%d%d --> ", l, m, r
           scanf "%d", x
         end
-  	rules[l][m][r] = x
+        rules[l][m][r] = x
       end
     end
   end
 end
 
 # run -- run the simulation
- 
+
 def run world, rows
-  Curses::setpos 0,0
-  Curses::attron Curses::A_REVERSE
-  Curses::addstr "01234567"
-  Curses::attroff Curses::A_REVERSE
-  Curses::setpos 1,0
-  Curses::addstr world.rules.to_s
+  Curses.setpos 0, 0
+  Curses.attron Curses::A_REVERSE
+  Curses.addstr "01234567"
+  Curses.attroff Curses::A_REVERSE
+  Curses.setpos 1, 0
+  Curses.addstr world.rules.to_s
   (2..rows).each do |row|
-    Curses::setpos row, 0
-    Curses::addstr world.to_s
+    Curses.setpos row, 0
+    Curses.addstr world.to_s
     world = world.generation
   end
-  Curses::refresh
+  Curses.refresh
 end
 
 # setrules -- given an int, convert it into a rule and store it in @rules[][][]
@@ -138,28 +137,28 @@ allrules = true
 #     }
 #   }
 
-Curses::init_screen
-win = Curses::Window.new 0,0,0,0
+Curses.init_screen
+win = Curses::Window.new 0, 0, 0, 0
 
 rows = win.maxy
 cols = win.maxx
 
-Curses::curs_set 0
-Curses::cbreak
-Curses::noecho
-Curses::clear
-Curses::refresh
+Curses.curs_set 0
+Curses.cbreak
+Curses.noecho
+Curses.clear
+Curses.refresh
 
 begin
   if allrules
     (0..255).each do |n|
       run World.new(cols, Rules.new(n)), rows
-      Curses::getch
+      Curses.getch
     end
   else
     run World.new(cols, getrules), rows
-    Curses::getch
+    Curses.getch
   end
 ensure
-  Curses::close_screen
+  Curses.close_screen
 end
