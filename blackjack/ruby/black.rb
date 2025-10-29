@@ -1,17 +1,13 @@
-#!/usr/bin/ruby -I.
+#!/opt/homebrew/opt/ruby/bin/ruby
 
-require 'cards'
-require 'blackjack'
+require_relative "cards"
+require_relative "blackjack"
 
-Stake = 1000.00
-TableMin = 5.00
-TableLimit = 1000.00
+STAKE = 1000.00
+TABLE_MIN = 5.00
+TABLE_LIMIT = 1000.00
 
 def play_one_hand player_hand, dealer_hand
-  player_hand.purse.bet!
-  player_hand.deal!
-  dealer_hand.deal!
-
   dealer_hand.show false
   player_hand.show
   printf "Bet: %.2f\n", player_hand.purse.curr_bet
@@ -23,7 +19,7 @@ def play_one_hand player_hand, dealer_hand
     return
   end
 
-  if player_hand.blackjack? and not dealer_hand.blackjack?
+  if player_hand.blackjack? && !dealer_hand.blackjack?
     puts "Player wins"
     player_hand.purse.blackjack!
     return
@@ -53,8 +49,8 @@ def play_one_hand player_hand, dealer_hand
   end
 end
 
-shoe = Cards::Shoe.new
-player_hand = Blackjack::PlayerHand.new shoe, Stake, TableMin, TableLimit
+shoe = Cards::Shoe.new Blackjack::Card
+player_hand = Blackjack::PlayerHand.new shoe, STAKE, TABLE_MIN, TABLE_LIMIT
 dealer_hand = Blackjack::DealerHand.new shoe
 
 puts "You have: #{player_hand.purse}"
@@ -62,6 +58,9 @@ puts "You have: #{player_hand.purse}"
 loop do
   player_hand.muck!
   dealer_hand.muck!
+  player_hand.purse.bet!
+  player_hand.deal!
+  dealer_hand.deal!
 
   play_one_hand player_hand, dealer_hand
 
@@ -73,6 +72,5 @@ loop do
   puts "You have: #{player_hand.purse}"
 
   break unless Blackjack.get_resp "Continue ([Y]es or [N]o) ([Y]N)? ",
-                                  "Please anser [Y]es or [N]o (default Y): ",
-                                  {"y" => true, "n" => false}, true
+    "Please answer [Y]es or [N]o (default Y): ", { "y" => true, "n" => false }, true
 end

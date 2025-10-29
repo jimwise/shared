@@ -4,6 +4,7 @@ module Cards
   SUITS = %i[hearts diamonds clubs spades].freeze
   CARDS = %i[ace two three four five six seven eight nine ten jack queen king].freeze
 
+  # one card, inherit to override contents of one deck, or add functionality
   class Card
     attr_reader :suit, :card
     def initialize card, suit
@@ -14,31 +15,31 @@ module Cards
     def to_s
       "#{@card.to_s.capitalize} of #{@suit.to_s.capitalize}"
     end
-  end
 
-  OneDeck = SUITS.flat_map do |suit|
-    CARDS.map do |card|
-      Card.new(card, suit)
+    def self.deck
+      @deck ||= SUITS.product(CARDS).map { |suit, card| new(card, suit) }.freeze
+      @deck
     end
   end
 
+  # an N-card (default 6) shoe which refills when empty
+  # TODO: a real shoe is emptied and refilled at a defined point before empty
   class Shoe
     private_methods :shuffle!
 
-    DECKS_IN_SHOE = 6
-
-    def initialize
+    def initialize klass, decks = 6
+      @card = klass
+      @decks = decks
       @shoe = []
     end
 
     def shuffle!
-      @shoe = (OneDeck * DECKS_IN_SHOE).shuffle!
+      @shoe = (@card.deck * @decks).shuffle!
     end
 
     def draw!
-      # TODO: a real shoe is emptied and refilled at a defined point before empty
       if @shoe.empty?
-        puts("Refilling shoe with #{DECKS_IN_SHOE} decks")
+        puts("Refilling shoe with #{@decks} decks")
         shuffle!
       end
       @shoe.shift

@@ -1,17 +1,16 @@
 #!/opt/csw/bin/ruby -I.
 
-require 'cards'
+require_relative "cards"
 
 module Blackjack
+  class Card < Cards::Card
+    VALS = {
+      ace: [1, 11], two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7,
+      eight: 8, nine: 9, ten: 10, jack: 10, queen: 10, king: 10
+    }.freeze
 
-  Cards::Vals = {}
-  Cards::CARDS.zip([ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10 ]).each do |(k, v)|
-    Cards::Vals[k] = v
-  end
-
-  class Cards::Card
     def val
-      Cards::Vals[@card]
+      VALS[@card]
     end
   end
 
@@ -42,20 +41,20 @@ module Blackjack
         puts "[BUST]"
         return 0
       end
-      return value
+      value
     end
 
-    def show reveal=false
+    def show reveal = false
       if @cards.empty?
         puts "[no cards]"
       else
-        puts (reveal ? "  #{@cards[0]}" :"  one face down card")
-        @cards.drop(1).each {|c| puts "  #{c}"}
+        puts(reveal ? "  #{@cards.first}" : "  one face down card")
+        @cards.drop(1).each { |c| puts "  #{c}" }
         show_value reveal
       end
     end
 
-    def show_value reveal=false
+    def show_value reveal = false
       if reveal
         puts "Total value: #{values.join('/')}"
       else
@@ -72,27 +71,27 @@ module Blackjack
     end
 
     def values
-      # push zero in case only cards are aces
-      vals = [@cards.reject {|c| c.card == :ace}.map {|c| c.val}.push(0).reduce(:+)]
-
-      @cards.count {|c| c.card == :ace}.times do
-        vals = vals.map {|v| [v+1, v+11]}.flatten.uniq.sort
+      @cards.inject [0] do |vals, card|
+        card_val = card.val
+        if card_val.is_a? Enumerable
+          vals.flat_map { |old_val| card_val.map { |new_val| old_val + new_val } }
+        else
+          vals.map { |val| val + card_val }
+        end
       end
-
-      vals
     end
 
     def value
       # push 0 in case busted
-      values.push(0).reject {|x| x > 21}.max
+      values.push(0).reject { |x| x > 21 }.max
     end
   end
 
   class DealerHand < Hand
-    def show reveal=false
+    def show reveal = false
       puts ""
       puts "Dealer has:"
-      super reveal
+      super
     end
 
     def hit!
@@ -101,23 +100,21 @@ module Blackjack
     end
 
     def play!
-      puts ""
+      puts
+      puts "The dealer reveals the #{@cards.first}"
+
       if blackjack?
         puts "[BLACKJACK]"
         return 21
       end
 
-      puts "The dealer reveals the #{@cards[0]}"
-
       show_value true
-      
-      # XXX XXX should dealer hit a soft 17?  should this be configurable?
-      until value >= 17 do
-        return 0 if hit! == 0
-      end
 
-      puts "Dealer stands"
-      return value
+      # XXX XXX should dealer hit a soft 17?  should this be configurable?
+      hit! while value in 1..17
+
+      puts "Dealer stands" unless value == 0
+      value
     end
   end
 
@@ -125,14 +122,14 @@ module Blackjack
     attr_reader :purse
 
     def initialize shoe, stake, min, limit
-      super shoe
+      super(shoe)
       @purse = Blackjack::Purse.new stake, min, limit
     end
 
     def show
       puts ""
       puts "Player has:"
-      super true
+      super(true)
     end
 
     def hit!
@@ -149,29 +146,31 @@ module Blackjack
 
       first_draw = true
       # XXX - insurance
-  
-      while true do            # actually, until we bust, surrender or stand
+
+      # actually, until we bust, surrender or stand
+      loop do
         # XXX - split
         # XXX - this is `late surrender', early surrender has to be
         # handled at insurance time, if it is to be offered
-        case if first_draw
-               action = Blackjack::get_resp "[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)? ",
-                                            "Please enter [H], [D], [S], or [U]: ",
-                                            {"h" => :hit, "d" => :doubledown, "s" => :stand,
-                                              "u" => :surrender}
-             else
-               action = Blackjack::get_resp "[H]it or [S]tand (HS)? ",
-                                            "Please enter [H] or [S]: ",
-                                            {"h" => :hit,  "s" => :stand}
-             end
+        case
+            if first_draw
+              Blackjack.get_resp "[H]it, [D]ouble down, [S]tand, or S[u]rrender (HDSU)? ",
+                                 "Please enter [H], [D], [S], or [U]: ",
+                                 { "h" => :hit, "d" => :double_down, "s" => :stand,
+                                   "u" => :surrender }
+            else
+              Blackjack.get_resp "[H]it or [S]tand (HS)? ",
+                                 "Please enter [H] or [S]: ",
+                                 { "h" => :hit, "s" => :stand }
+            end
         when :hit
-          return 0 if hit! == 0 
+          return 0 if hit! == 0
           # XXX some casinos allow DD after split.  some don't (confirm)
           first_draw = false
         when :stand
           puts "You stand"
           return value
-        when :doubledown
+        when :double_down
           if @purse.broke?
             puts "You cannot afford to double down!"
             next
@@ -199,15 +198,15 @@ module Blackjack
     end
 
     def to_s
-      "$%.2f" % @purse
+      format "$%.2f", @purse
     end
 
     def broke?
       @purse < @table_min
     end
 
-    def get_bet max=false
-      max = @table_limit unless max
+    def get_bet max = false
+      max ||= @table_limit
 
       @last_bet = [@last_bet, @purse].min
 
@@ -215,7 +214,7 @@ module Blackjack
       printf "Please enter a bet (min = $%.2f, limit = $%.2f) [%.2f]: ",
              @table_min, max, @last_bet
 
-      while s = gets.strip.sub(/^\$/, "")
+      while (s = gets.strip.sub(/^\$/, ""))
         return @last_bet if s.empty?
 
         # this will return 0.0 if they enter a non-number.
@@ -229,7 +228,7 @@ module Blackjack
         end
 
         if (bet % @table_min) != 0
-          print  "Bet must be a multiple of $%.2f, try again: ", @table_min
+          print "Bet must be a multiple of $%.2f, try again: ", @table_min
           next
         end
 
@@ -278,11 +277,11 @@ module Blackjack
   end
 
   # class utility method;  in other ports, this goes in its own module, but it's so tiny here :-)
-  def Blackjack::get_resp prompt1, prompt2, allowed, default=false
+  def self.get_resp prompt1, prompt2, allowed, default = nil
     print prompt1, " "
-    while r = gets.strip.downcase
-      return default if default and r == ""
-      return allowed[r] if allowed.has_key? r
+    while (resp = gets.strip.downcase)
+      return default if default && resp == ""
+      return allowed[resp] if allowed.key? resp
       print prompt2, " "
     end
   end
