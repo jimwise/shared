@@ -56,7 +56,7 @@ class World
 
   def [] n
     # allow edge cells to apply rules normally
-    if n < 0 or n > size - 1
+    if n < 0 || n > size - 1
       false
     else
       @cells[n]
@@ -90,7 +90,7 @@ def getrules
   (0..1).each do |l|
     (0..1).each do |m|
       (0..1).each do |r|
-        until x == 0 or x == 1
+        until x == 0 || x == 1
           printf "%d%d%d --> ", l, m, r
           scanf "%d", x
         end
