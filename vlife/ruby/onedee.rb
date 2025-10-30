@@ -2,11 +2,13 @@
 
 require "curses"
 
+OFF = " "
+ON = "+"
+
 class Rules
   def initialize num
-    @rules = (0..7).collect do |n|
-      mask = 1 << n
-      num & mask > 0
+    @rules = (0..7).collect do |rule|
+      num & (1 << rule) > 0
     end
   end
 
@@ -19,8 +21,8 @@ class Rules
   end
 
   def to_s
-    (0..7).collect do |x|
-      @rules[x] ? "*" : " "
+    (0..7).collect do |rule|
+      @rules[rule] ? ON : OFF
     end.join
   end
 
@@ -43,7 +45,7 @@ class World
   end
 
   def to_s
-    @cells.collect { |cell| cell ? "*" : " " }.join
+    @cells.collect { |cell| cell ? ON : OFF }.join
   end
 
   def generation

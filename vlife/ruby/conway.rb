@@ -1,28 +1,29 @@
-#!/usr/local/bin/ruby
+#!/opt/homebrew/opt/ruby/bin/ruby
 
-require 'curses'
-require './world'
+require "curses"
+require_relateive "./world"
 
 class ConwayWorld < World
   def generation
-    new = self.class.new @rows, @cols, @age + 1
+    next_world = self.class.new @rows, @cols, @age + 1
     @rows.times do |row|
       @cols.times do |col|
         count = neighbors(row, col).count(true)
-        new[row, col] = if self[row, col]
-                          (2..3).include? count
-                        else
-                          count == 3
-                        end
+        new[row, col] =
+          if self[row, col]
+            (2..3).cover? count
+          else
+            count == 3
+          end
       end
     end
-    new
+    next_world
   end
 end
 
 def put world, win, infowin
   win.clear
-  win.setpos 0,0
+  win.setpos 0, 0
   win.addstr world.to_s
   win.refresh
 
@@ -32,8 +33,8 @@ def put world, win, infowin
   infowin.refresh
 end
 
-Curses::init_screen()
-Curses::curs_set 0
+Curses.init_screen
+Curses.curs_set 0
 win = Curses::Window.new 0, 0, 1, 0
 infowin = Curses::Window.new 1, 0, 0, 0
 infowin.attron Curses::A_REVERSE
@@ -50,7 +51,7 @@ if randomize
     end
   end
 elsif acorn
-  world[41,40] = world[43,41] = world[40,42] = world[41,42] = world[44,42] = world[45,42] = world[46,42] = true
+  world[41, 40] = world[43, 41] = world[40, 42] = world[41, 42] = world[44, 42] = world[45, 42] = world[46, 42] = true
 else
   # glider
   world[0, 1] = world[1, 2] = world[2, 0] = world[2, 1] = world[2, 2] = true
@@ -59,15 +60,15 @@ else
   world[20, 10] = world[20, 11] = world[21, 10] = world[21, 11] = true
 
   # blinker
-  world[5,20] = world[5,21] = world[5,22] = true
+  world[5, 20] = world[5, 21] = world[5, 22] = true
 
   # T-tetromino (evolves into traffic light)
-  world[20,21] = world[20,22] = world[20,23] = world[21,22] = true
+  world[20, 21] = world[20, 22] = world[20, 23] = world[21, 22] = true
 end
 
-while true
+loop do
   put world, win, infowin
   world = world.generation
 end
 
-Curses::close_screen
+Curses.close_screen
