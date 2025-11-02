@@ -37,15 +37,30 @@ class World
 
   protected
 
-  def neighbors row, col
-    # I know, but measurably faster open coded this way
-    pairs =
-      [[row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
-       [row, col - 1],                     [row, col + 1],
-       [row + 1, col - 1], [row + 1, col], [row + 1, col + 1]]
+  DIRECTIONS = {
+    northwest: [-1, -1],
+    north: [-1, 0],
+    northeast: [-1, 1],
+    west: [0, -1],
+    east: [0, 1],
+    southwest: [1, -1],
+    south: [1, 0],
+    southeast: [1, 1],
+  }.freeze
 
-    pairs.map do |pair|
-      self[pair[0], pair[1]]
+  def count_neighbors row, col
+    DIRECTIONS.count do |_, pair|
+      self[row + pair.first, col + pair.last]
     end
   end
+    # I know, but measurably faster open coded this way
+  #   pairs =
+  #     [[row - 1, col - 1], [row - 1, col], [row - 1, col + 1],
+  #      [row, col - 1],                     [row, col + 1],
+  #      [row + 1, col - 1], [row + 1, col], [row + 1, col + 1]]
+
+  #   pairs.map do |pair|
+  #     self[pair[0], pair[1]]
+  #   end
+  # end
 end

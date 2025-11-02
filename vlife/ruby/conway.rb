@@ -1,15 +1,15 @@
 #!/opt/homebrew/opt/ruby/bin/ruby
 
 require "curses"
-require_relateive "./world"
+require_relative "world"
 
 class ConwayWorld < World
   def generation
     next_world = self.class.new @rows, @cols, @age + 1
     @rows.times do |row|
       @cols.times do |col|
-        count = neighbors(row, col).count(true)
-        new[row, col] =
+        count = count_neighbors(row, col)
+        next_world[row, col] =
           if self[row, col]
             (2..3).cover? count
           else
@@ -69,6 +69,7 @@ end
 loop do
   put world, win, infowin
   world = world.generation
+  sleep 0.1
 end
 
 Curses.close_screen
