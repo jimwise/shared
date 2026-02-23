@@ -64,11 +64,10 @@ show (hand *h, int reveal) {
 }
 
 void
-showvalue (hand *h, int reveal) {
-  int *vs;
+showvalue (const hand *h, int reveal) {
   if (reveal) {
     printf("Total value: ");
-    vs = handvalues(h);
+   const int *vs = handvalues(h);
     printf("%d", *(vs++));
     while (*vs != -1)
       printf(" / %d", *(vs++));
@@ -79,12 +78,12 @@ showvalue (hand *h, int reveal) {
 }
 
 int
-busted (hand *h) {
+busted (const hand *h) {
   return handvalue(h) == 0;
 }
 
 int
-blackjack (hand *h) {
+blackjack (const hand *h) {
   return (clist_length(h->cards) == 2) && (handvalue(h) == 21);
 }
 
@@ -92,7 +91,7 @@ blackjack (hand *h) {
 static int handvalbuf[44];
 
 int *
-handvalues (hand *h) {
+handvalues (const hand *h) {
   int val = 0, aces = 0;
   int i, j, k, t, p, oldp;
   card *c;
@@ -133,10 +132,9 @@ handvalues (hand *h) {
 }
 
 int
-handvalue (hand *h) {
-  int *vs;
+handvalue (const hand *h) {
   int v = 0;
-  vs = handvalues(h);
+  const int *vs = handvalues(h);
   while (*vs != -1) {
     if ((*vs <= 21) && (*vs > v))
       v = *vs;

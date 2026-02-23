@@ -12,12 +12,11 @@ double
 getbet(double min, double limit) {
   /* XXX check actual min/table_limit rules */
   double bet = 0.0L;
-  char *s = buf;
 
   printf("Please enter a bet (min = $%0.2f, limit = $%0.2f) [$%0.2f]: ", min, limit, last_bet);
 
   while (1) {
-    s = buf;
+    char *s = buf;
     fgets(buf, sizeof(buf), stdin);
     if (buf[0] == '\n')
       return last_bet;
