@@ -11,7 +11,7 @@
 
 using namespace std;
 
-int main (int argc, char **argv) {
+int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) {
   RPNCalc c;
   string s;
   cout << "> ";

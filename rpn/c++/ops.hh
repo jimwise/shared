@@ -7,7 +7,7 @@
 
 using namespace std;
 
-void signal_error (string str) {cout << "ERROR: " << str << endl;}
+void signal_error (const string &str) {cout << "ERROR: " << str << endl;}
 
 typedef stack<double> Stack;
 
@@ -17,7 +17,7 @@ public:
   virtual void act(Stack &s) = 0;
   string &doc (void) {return _doc;}
 protected:
-  bool stack_ok (Stack &s, Stack::size_type arity) {
+  static bool stack_ok (const Stack &s, Stack::size_type arity) {
     if (s.size() < arity) {
       signal_error("stack underflow");
       return false;
@@ -32,7 +32,7 @@ private:
 class NullaryOp : public Op {
 public:
   NullaryOp(string d) : Op(d) {};
-  virtual void act(Stack &s) {
+  virtual void act (Stack &s) override {
       action(s);
   }
 protected:
@@ -42,7 +42,7 @@ protected:
 class UnaryOp : public Op {
 public:
   UnaryOp(string d) : Op(d) {};
-  virtual void act(Stack &s) {
+  virtual void act(Stack &s) override {
     if (stack_ok(s, 1)) {
       double x = s.top(); s.pop();
       action(x, s);
@@ -55,7 +55,7 @@ protected:
 class BinaryOp : public Op {
 public:
   BinaryOp(string d) : Op(d) {};
-  virtual void act(Stack &s) {
+  virtual void act(Stack &s) override {
     if (stack_ok(s, 2)) {
       double y = s.top(); s.pop();
       double x = s.top(); s.pop();
