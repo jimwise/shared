@@ -23,15 +23,17 @@ public:
       istringstream i(str);
       double d;
       if (!(i >> d)) {
-	signal_error("unknown operation");
+        signal_error("unknown operation");
       } else {
-	s.push(d);
+        s.push(d);
       }
     }
   }
+
   // used in test routines
-  double top(void) {return s.top();}
-  unsigned int size(void) {return s.size();}
+  double top(void) { return s.top(); }
+  unsigned int size(void) { return s.size(); }
+
 protected:
   Stack s;
   Dict ops;
