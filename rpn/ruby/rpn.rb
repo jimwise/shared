@@ -2,8 +2,28 @@
 
 # RPN calculator
 module RPNCalc
-  def self.signal_error str
-    puts "ERROR: #{str}"
+  # Base class for all custom exceptions
+  class CalculatorError < StandardError; end
+
+  # Custom exception for stack underflow errors, inheriting from CalculatorError
+  class StackUnderflowError < CalculatorError
+    attr_reader :stack_size, :arity
+
+    def initialize stack_size, arity
+      @stack_size = stack_size
+      @arity = arity
+      super("Stack underflow: expected #{@arity} elements, but only #{@stack_size} are available")
+    end
+  end
+
+  # Custom exception for unknown operation errors, inheriting from CalculatorError
+  class UnknownOperationError < CalculatorError
+    attr_reader :unrecognized_str
+
+    def initialize unrecognized_str
+      @unrecognized_str = unrecognized_str
+      super("Unknown operation: '#{unrecognized_str}'")
+    end
   end
 
   # an operation
@@ -19,7 +39,7 @@ module RPNCalc
 
     def call stack
       if @calc.size < @arity
-        RPNCalc.signal_error "stack underflow"
+        raise StackUnderflowError.new(@calc.size, @arity)
       else
         args = stack.pop @arity
         results = @bod.call(*args)
@@ -71,14 +91,17 @@ module RPNCalc
       elsif (num = Float str, exception: false)
         @stack.push num
       else
-        RPNCalc.signal_error "unknown operation"
+        raise UnknownOperationError.new(str)
       end
     end
 
     def repl
       loop do
         print "> "
-        action gets.strip
+        str = gets or break
+        action str.strip
+      rescue CalculatorError => err
+        puts "ERROR: #{err.message}"
       end
       puts
     end
