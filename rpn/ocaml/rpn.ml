@@ -20,15 +20,15 @@ let show_help () =
 
 make_op "." "display top value on the stack" (function
   | x :: stack ->
-      Printf.printf "%f\n" x;
-      x :: stack
+    Printf.printf "%f\n" x;
+    x :: stack
   | stack -> underflow stack)
 ;;
 
 make_op "#" "display number of values on the stack" (function stack ->
-    print_int (List.length stack);
-    print_newline ();
-    stack)
+  print_int (List.length stack);
+  print_newline ();
+  stack)
 ;;
 
 make_op "+" "replace top two values on the stack with their sum" (function
@@ -38,8 +38,8 @@ make_op "+" "replace top two values on the stack with their sum" (function
 
 make_op "-" "replace top two values on the stack with their difference"
   (function
-  | y :: x :: stack -> (x -. y) :: stack
-  | stack -> underflow stack)
+    | y :: x :: stack -> (x -. y) :: stack
+    | stack -> underflow stack)
 ;;
 
 make_op "*" "replace top two values on the stack with their product" (function
@@ -55,8 +55,8 @@ make_op "/" "replace top two values on the stack with their quotient" (function
 make_op "^"
   "replace top two values on the stack, x and y, with x to the yth power"
   (function
-  | y :: x :: stack -> (x ** y) :: stack
-  | stack -> underflow stack)
+    | y :: x :: stack -> (x ** y) :: stack
+    | stack -> underflow stack)
 ;;
 
 make_op "drop" "remove top value from the stack" (function
@@ -75,8 +75,8 @@ make_op "swap" "swap top two values on the stack" (function
 ;;
 
 make_op "help" "display this help" (function stack ->
-    show_help ();
-    stack)
+  show_help ();
+  stack)
 
 let act stack s =
   try (Hashtbl.find dict s).action stack

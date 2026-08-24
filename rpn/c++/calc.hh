@@ -15,7 +15,7 @@ typedef map<string, Op *> Dict;
 
 class Calc {
 public:
-  void act(string str) {
+  void act(const string &str) {
     Dict::iterator opi = ops.find(str);
     if (opi != ops.end()) {
       opi->second->act(s);
