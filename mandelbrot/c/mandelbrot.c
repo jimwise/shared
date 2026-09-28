@@ -3,15 +3,23 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
+#include <time.h>
 
 #include <png.h>
 
 int
 escape (double complex c, unsigned int cap) {
-  double complex z = 0.0 + (0.0 * I);
+  double z_real = 0.0;
+  double z_imag = 0.0;
+  double c_real = creal(c);
+  double c_imag = cimag(c);
+
   for (unsigned int i=0; i<cap; i++) {
-    z = cpow(z, 2.0) + c;
-    if (cabs(z) > 2.0) {
+    double next_real = z_real * z_real - z_imag * z_imag + c_real;
+    z_imag = 2.0 * z_real * z_imag + c_imag;
+    z_real = next_real;
+    if (z_real * z_real + z_imag * z_imag > 4.0) {
       return i;
     }
   }
@@ -80,22 +88,27 @@ image(unsigned int cap, unsigned int width, unsigned int height,
   png_bytep *rows = malloc(sizeof(png_bytep) * height);
   if (!rows)
     err("could not allocate image space");
+
+  png_byte *data = malloc(height * width * 3 * sizeof(png_byte));
+  if (!data)
+    err("could not allocate image data");
+
   for (unsigned int i=0; i<height; i++) {
-    rows[i] = malloc(3 * width * sizeof(png_byte));
-    if (!rows[i])
-      err("could not allocate row");
+    rows[i] = &data[i * width * 3];
   }
 
-  double xstep = (double)fabs(xmax - xmin) / (double)width;
-  double ystep = (double)fabs(ymax - ymin) / (double)height;
+  double xstep = (xmax - xmin) / (double)width;
+  double ystep = (ymax - ymin) / (double)height;
 
+  #pragma omp parallel for
   for (unsigned int y=0; y<height; y++) {
     double y1 = y * ystep + ymin;
+    double complex c_imag = y1 * I;
     for (unsigned int x=0; x<width; x++) {
       double x1 = x * xstep + xmin;
-      unsigned int c = color(escape(x1 + (y1 * I), cap), cap);
+      unsigned int c = color(escape(x1 + c_imag, cap), cap);
       png_byte *pix = &(rows[y][x*3]);
-	
+
       pix[0] = red(c);
       pix[1] = green(c);
       pix[2] = blue(c);
@@ -106,14 +119,21 @@ image(unsigned int cap, unsigned int width, unsigned int height,
 
 void
 free_image(png_bytep *rows, unsigned int height) {
-  for (unsigned int i=0; i<height; i++)
-    free(rows[i]);
-  free(rows);
+  if (rows) {
+    free(rows[0]);
+    free(rows);
+  }
 }
+
 
 int
 main (int argc, char **argv) {
   const unsigned int width = 1280, height = 800, cap = 1000;
+
+  printf("OpenMP max threads: %d\n", omp_get_max_threads());
+
+  struct timespec start, end;
+  clock_gettime(CLOCK_MONOTONIC, &start);
 
   png_bytep *full = image(cap, width, height, -2.5, 1.0, -1.0, 1.0);
   write_png("mandelbrot-c.png", full, width, height);
@@ -122,6 +142,12 @@ main (int argc, char **argv) {
   png_bytep *zoomed = image(cap, width, height, -0.5, 0.5, 0.0, 0.75);
   write_png("mandelzoom1-c.png", zoomed, width, height);
   free_image(zoomed, height);
+
+  clock_gettime(CLOCK_MONOTONIC, &end);
+  double elapsed = (end.tv_sec - start.tv_sec) +
+                   (end.tv_nsec - start.tv_nsec) / 1e9;
+
+  printf("Execution time: %.4f seconds\n", elapsed);
 
   exit(0);
 }
